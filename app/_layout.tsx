@@ -1,39 +1,58 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Tabs } from "expo-router";
+import { View, Text, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// Define the icons for each screen
+const tabIcons: Record<string, keyof typeof MaterialIcons.glyphMap> = {
+    index: "store",
+    wallet: "account-balance-wallet",
+    profile: "account-circle",
+};
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Custom Bottom Tab Bar Component
+function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+    return (
+        <View
+            style={{
+                flexDirection: "row",
+                backgroundColor: "#1c2a3a",
+                paddingVertical: 10,
+                borderTopWidth: 1,
+                borderTopColor: "#2a3b4d",
+            }}
+        >
+            {state.routes.filter(route => tabIcons[route.name]).map((route, index) => {
+                const iconName = tabIcons[route.name];
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+                const isFocused = state.index === index;
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+                return (
+                    <TouchableOpacity
+                        key={route.name}
+                        onPress={() => navigation.navigate(route.name as never)}
+                        style={{ flex: 1, alignItems: "center", padding: 5 }}
+                    >
+                        <MaterialIcons name={iconName} size={30} color={isFocused ? "#FFFFFF" : "#7596F3"} />
+                    </TouchableOpacity>
+                );
+            })}
+        </View>
+    );
+}
 
-  if (!loaded) {
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+export default function Layout() {
+    return (
+        <Tabs
+            screenOptions={{
+                tabBarShowLabel: false,
+                headerShown: false,
+            }}
+            tabBar={(props) => <CustomTabBar {...props} />}
+        >
+            <Tabs.Screen name="profile" options={{ title: "Profile" }} />
+            <Tabs.Screen name="wallet" options={{ title: "Wallet" }} />
+            <Tabs.Screen name="index" options={{ title: "Market" }} />
+        </Tabs>
+    );
 }
