@@ -10,7 +10,7 @@ const tokens = [
 
 export default function MarketScreen() {
     return (
-        <View style={{ flex: 1, backgroundColor: '#0e1625', padding: 20 }}>
+        <View style={{ flex: 1, backgroundColor: '#0E1A32', padding: 20 }}>
             <Text style={{ fontSize: 24, color: '#fff', marginBottom: 10 }}>
                 Currently on market you have 3 tokens
             </Text>

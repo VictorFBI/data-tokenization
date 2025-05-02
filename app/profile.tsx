@@ -1,13 +1,44 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import React from 'react';
+import {SafeAreaView, ScrollView} from 'react-native';
+import Options, {OptionProps} from "@/src/components/profile/ProfileOption";
+import {BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
+import {ProfileHeader} from "@/src/components/profile/ProfileHeader";
+
 
 export default function ProfileScreen() {
+    // Todo: change somehow
+    const profileSettingsOptions: OptionProps[] = [
+        {
+            icon: 'notifications-none',
+            label: 'Notifications',
+            value: 'On',
+        },
+        {
+            icon: 'key',
+            label: 'Change account',
+        },
+        {
+            icon: 'language',
+            label: 'Language',
+            value: 'English',
+        },
+    ];
+    const sendFeedbackOption: OptionProps[] = [
+        {
+            icon: 'feedback',
+            label: 'Send feedback',
+        },
+    ]
+
     return (
-        <View style={{ flex: 1, backgroundColor: '#0e1625', alignItems: 'center', padding: 20 }}>
-            <Image source={{ uri: 'https://placekitten.com/200/200' }} style={{ width: 80, height: 80, borderRadius: 40, marginBottom: 10 }} />
-            <Text style={{ fontSize: 22, color: '#fff' }}>George</Text>
-            <TouchableOpacity style={{ backgroundColor: '#1c2a3a', padding: 15, marginTop: 20, borderRadius: 5 }}>
-                <Text style={{ color: '#fff' }}>Change Account</Text>
-            </TouchableOpacity>
-        </View>
+        <BackgroundView>
+            <SafeAreaView style={{flex: 1, marginHorizontal: 20,}}>
+                <ScrollView>
+                    <ProfileHeader/>
+                    <Options options={profileSettingsOptions}/>
+                    <Options options={sendFeedbackOption}/>
+                </ScrollView>
+            </SafeAreaView>
+        </BackgroundView>
     );
 }

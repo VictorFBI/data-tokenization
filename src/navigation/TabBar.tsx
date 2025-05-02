@@ -1,0 +1,50 @@
+import {MaterialIcons} from "@expo/vector-icons";
+import {BottomTabBarProps} from "@react-navigation/bottom-tabs/lib/typescript/src";
+import {TouchableOpacity, View} from "react-native";
+import {iconStyle, styles} from "@/src/styles/TabBar";
+import {BG_COLOR} from "@/src/constants/colors";
+import {BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
+import {MaterialIconName} from "@/src/types/MaterialIconName";
+
+const tabIcons: Record<string, keyof typeof MaterialIcons.glyphMap> = {
+    index: "store",
+    wallet: "account-balance-wallet",
+    profile: "account-circle",
+};
+
+function TabBar({state, navigation}: BottomTabBarProps) {
+
+    const getTouchableIcon = (route: { name: string }, iconName: MaterialIconName, isFocused: boolean) => {
+        return (
+            <TouchableOpacity
+                key={route.name}
+                onPress={() => navigation.navigate(route.name as never)}
+                style={styles.tabButton}
+            >
+                <MaterialIcons name={iconName} size={iconStyle.size}
+                               color={isFocused ? iconStyle.focusedColor : iconStyle.unfocusedColor}/>
+            </TouchableOpacity>
+        );
+    }
+
+    const getTabs = () => {
+        return state.routes
+            .filter((route: { name: string }) => tabIcons[route.name])
+            .map((route: { name: string }, index: number) => {
+                const iconName = tabIcons[route.name];
+                const isFocused = state.index === index;
+
+                return getTouchableIcon(route, iconName, isFocused);
+            });
+    }
+
+    return (
+        <BackgroundView style={{flex: 0}}>
+            <View style={styles.tabBar}>
+                {getTabs()}
+            </View>
+        </BackgroundView>
+    );
+}
+
+export default TabBar;
