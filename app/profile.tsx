@@ -1,8 +1,8 @@
 import React from 'react';
-import {SafeAreaView, ScrollView} from 'react-native';
-import Options, {OptionProps} from "@/src/components/profile/ProfileOption";
-import {BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
-import {ProfileHeader} from "@/src/components/profile/ProfileHeader";
+import {SafeAreaView, ScrollView, View} from 'react-native';
+import Options, {OptionProps} from "@/src/components/screens/profile/ProfileOption";
+import {BackgroundSafeAreaView, BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
+import {ProfileHeader} from "@/src/components/screens/profile/ProfileHeader";
 
 
 export default function ProfileScreen() {
@@ -31,14 +31,14 @@ export default function ProfileScreen() {
     ]
 
     return (
-        <BackgroundView>
-            <SafeAreaView style={{flex: 1, marginHorizontal: 20,}}>
-                <ScrollView>
-                    <ProfileHeader/>
+        <BackgroundSafeAreaView>
+            <ScrollView>
+                <ProfileHeader/>
+                <View style={{gap: 16}}>
                     <Options options={profileSettingsOptions}/>
                     <Options options={sendFeedbackOption}/>
-                </ScrollView>
-            </SafeAreaView>
-        </BackgroundView>
+                </View>
+            </ScrollView>
+        </BackgroundSafeAreaView>
     );
 }

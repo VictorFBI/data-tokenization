@@ -1,8 +1,9 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {MaterialIcons} from '@expo/vector-icons';
-import {ICON_BG_COLOR, ICON_COLOR, TAB_COLOR} from "@/src/constants/colors";
+import {DIVIDER_COLOR, ICON_BG_COLOR, ICON_COLOR, TAB_COLOR, TEXT_COLOR} from "@/src/constants/colors";
 import {MaterialIconName} from "@/src/types/MaterialIconName";
+import {MaterialIconWrapper} from "@/src/components/default-elements-overridings/MaterialIconWrapper";
 
 export interface OptionProps {
     icon: MaterialIconName;
@@ -34,9 +35,7 @@ export default function Options({ options }: OptionsProps) {
 function ProfileOption({icon, label, value, onPress}: OptionProps) {
     return (
         <TouchableOpacity style={styles.option} onPress={onPress}>
-            <View style={styles.iconContainer}>
-                <MaterialIcons name={icon} size={22} color={ICON_COLOR}/>
-            </View>
+            <MaterialIconWrapper icon={icon}/>
             <Text style={styles.label}>{label}</Text>
             {value && <Text style={styles.value}>{value}</Text>}
         </TouchableOpacity>
@@ -46,28 +45,26 @@ function ProfileOption({icon, label, value, onPress}: OptionProps) {
 const styles = StyleSheet.create({
     card: {
         backgroundColor: TAB_COLOR,
-        padding: 8,
+        padding: 16,
         borderRadius: 16,
-        marginBottom: 12,
+        gap: 8,
     },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
-        margin: 8,
         backgroundColor: TAB_COLOR,
     },
     iconContainer: {
-        width: 30,
+        padding: 4,
         borderRadius: 4,
-        color: '#3A548E',
+        color: DIVIDER_COLOR,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: ICON_BG_COLOR,
-        height: 30,
     },
     label: {
         flex: 1,
-        color: '#E0E6ED',
+        color: TEXT_COLOR,
         fontSize: 16,
         marginLeft: 10,
         fontFamily: 'monospace',
