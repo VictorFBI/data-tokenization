@@ -3,6 +3,7 @@ import SimpleText from "@/src/components/default-elements-overridings/SimpleText
 import MonoText from "@/src/components/default-elements-overridings/MonoText";
 import styles from "@/src/styles/CurrentBalance";
 import {MAIN_COLOR, SECOND_MAIN_COLOR} from "@/src/constants/colors";
+import {View} from "react-native";
 
 export default function BalanceView() {
     return <LinearGradient

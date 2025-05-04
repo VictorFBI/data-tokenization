@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View, ViewProps} from 'react-native';
+import {SafeAreaView, StyleProp, View, ViewProps, ViewStyle} from 'react-native';
 import {BG_COLOR} from '@/src/constants/colors';
 
 export function BackgroundView({children, style, ...props}: ViewProps) {
@@ -10,9 +10,14 @@ export function BackgroundView({children, style, ...props}: ViewProps) {
     );
 }
 
-export function BackgroundSafeAreaView({children, style, ...props}: ViewProps) {
+interface BackgroundSafeAreaViewProps {
+    children: React.ReactNode;
+    style?: StyleProp<ViewStyle>;
+}
+
+export function BackgroundSafeAreaView({children, style}: BackgroundSafeAreaViewProps) {
     return (
-        <View style={[{backgroundColor: BG_COLOR, flex: 1}, style]} {...props}>
+        <View style={[{backgroundColor: BG_COLOR, flex: 1}, style]}>
             <SafeAreaView style={{flex: 1, marginHorizontal: 16}}>
                 {children}
             </SafeAreaView>
