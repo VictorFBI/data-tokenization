@@ -4,7 +4,7 @@ import {BackgroundSafeAreaView, BackgroundView} from "@/src/components/default-e
 import {Token} from "@/src/types/Token";
 import {WalletButtonProps} from "@/src/types/WalletButtonProps";
 import {useTokens} from "@/src/hooks/useTokens";
-import {SearchAndTokens} from "@/src/components/screens/wallet/SearchAndTokens";
+import {YourTokensWithSearch} from "@/src/components/screens/wallet/YourTokens";
 
 
 export default function WalletScreen() {
@@ -25,7 +25,7 @@ export default function WalletScreen() {
         <BackgroundSafeAreaView>
             <BalanceView tokenNumber={5}/>
             <WalletButtons walletButtons={walletButtons}/>
-            <SearchAndTokens
+            <YourTokensWithSearch
                 tokens={tokens}
                 onSearch={handleSearch}
                 onFilter={() => {/* Реализуйте фильтрацию */}}

@@ -1,9 +1,9 @@
 import {BackgroundSafeAreaView} from "@/src/components/default-elements-overridings/BackgroundView";
-import {BalanceView, MarketBalanceView} from "@/src/components/screens/wallet/BalanceView";
-import {SearchAndTokens} from "@/src/components/screens/wallet/SearchAndTokens";
+import {MarketBalanceView} from "@/src/components/screens/wallet/BalanceView";
 import {Token} from "@/src/types/Token";
 import {useTokens} from "@/src/hooks/useTokens";
-import {WalletButtonProps} from "@/src/types/WalletButtonProps";
+import {YourTokensWithSearch} from "@/src/components/screens/wallet/YourTokens";
+import {YourMarketTokens} from "@/src/components/screens/market/YourMarketTokens";
 
 export default function MarketScreen() {
     const {tokens, setFilterParams, handleAddToken} = useTokens();
@@ -12,21 +12,30 @@ export default function MarketScreen() {
         setFilterParams(prev => ({...prev, search: query}));
     };
 
-    const noFunc = () => {};
-    const walletButtons: WalletButtonProps[] = [
-        {iconName: 'add-circle-outline', buttonText: 'add', onPress: noFunc},
-        {iconName: 'history', buttonText: 'history', onPress: noFunc},
-    ];
-
     return (
         <BackgroundSafeAreaView>
             <MarketBalanceView tokenNumber={3}/>
-            <SearchAndTokens
-                tokens={tokens}
-                onSearch={handleSearch}
-                onFilter={() => {/* Реализуйте фильтрацию */}}
-                onTokenPress={(token: Token) => {}}
-            />
+            <YourMarketTokens
+                marketTokensProps={
+                    {
+                        tokens,
+                        onSearch: handleSearch,
+                        onFilter: () => {/* Реализуйте фильтрацию */
+                        },
+                        onTokenPress: (token: Token) => {
+                        },
+                    }
+                }
+                yourTokensProps={
+                    {
+                        tokens,
+                        onSearch: handleSearch,
+                        onFilter: () => {/* Реализуйте фильтрацию */
+                        },
+                        onTokenPress: (token: Token) => {
+                        },
+                    }
+                }/>
         </BackgroundSafeAreaView>
     );
 }
