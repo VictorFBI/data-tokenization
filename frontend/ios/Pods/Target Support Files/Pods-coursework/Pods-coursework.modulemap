@@ -1,0 +1,6 @@
+module Pods_coursework {
+  umbrella header "Pods-coursework-umbrella.h"
+
+  export *
+  module * { export * }
+}
