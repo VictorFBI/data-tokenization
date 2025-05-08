@@ -1,2 +1,2 @@
-export const USUAL_FONT = 'Roboto';
-export const MONO_FONT = 'RobotoMono';
+export const USUAL_FONT = 'Roboto'
+export const MONO_FONT = 'RobotoMono'

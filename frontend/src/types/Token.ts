@@ -1,7 +1,7 @@
-import {MaterialIconName} from "@/src/types/MaterialIconName";
+import { MaterialIconName } from '@/src/types/MaterialIconName'
 
 export interface Token {
-    id: string;
-    name: string;
-    icon: MaterialIconName;
+  id: string
+  name: string
+  icon: MaterialIconName
 }

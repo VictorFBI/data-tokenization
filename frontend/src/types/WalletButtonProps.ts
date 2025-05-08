@@ -1,7 +1,7 @@
-import {MaterialIconName} from "@/src/types/MaterialIconName";
+import { MaterialIconName } from '@/src/types/MaterialIconName'
 
 export interface WalletButtonProps {
-    iconName: MaterialIconName;
-    buttonText: string;
-    onPress: () => void;
+  iconName: MaterialIconName
+  buttonText: string
+  onPress: () => void
 }

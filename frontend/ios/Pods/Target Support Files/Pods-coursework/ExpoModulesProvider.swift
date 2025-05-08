@@ -8,18 +8,14 @@
 import ExpoModulesCore
 import Expo
 import ExpoAsset
-import ExpoBlur
 import EXConstants
 import ExpoFileSystem
 import ExpoFont
-import ExpoHaptics
 import ExpoKeepAwake
 import ExpoLinearGradient
 import ExpoLinking
 import ExpoHead
 import ExpoSplashScreen
-import ExpoSymbols
-import ExpoSystemUI
 import ExpoWebBrowser
 
 @objc(ExpoModulesProvider)
@@ -28,20 +24,16 @@ public class ExpoModulesProvider: ModulesProvider {
     return [
       ExpoFetchModule.self,
       AssetModule.self,
-      BlurViewModule.self,
       ConstantsModule.self,
       FileSystemModule.self,
       FileSystemNextModule.self,
       FontLoaderModule.self,
       FontUtilsModule.self,
-      HapticsModule.self,
       KeepAwakeModule.self,
       LinearGradientModule.self,
       ExpoLinkingModule.self,
       ExpoHeadModule.self,
       SplashScreenModule.self,
-      SymbolModule.self,
-      ExpoSystemUIModule.self,
       WebBrowserModule.self
     ]
   }
