@@ -2,7 +2,6 @@ import {MaterialIcons} from "@expo/vector-icons";
 import {BottomTabBarProps} from "@react-navigation/bottom-tabs/lib/typescript/src";
 import {TouchableOpacity, View} from "react-native";
 import {iconStyle, styles} from "@/src/styles/TabBar";
-import {BG_COLOR} from "@/src/constants/colors";
 import {BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
 import {MaterialIconName} from "@/src/types/MaterialIconName";
 

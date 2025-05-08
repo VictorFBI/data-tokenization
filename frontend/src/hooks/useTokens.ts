@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useState} from 'react';
 import {Token} from '@/src/types/Token';
-import {FilterParams} from '@/src/types/FilterParams';
+import {FilterProps} from '@/src/types/FilterProps';
 import {fetchTokens, addToken} from '@/src/services/tokenService';
 
-export const useTokens = (initialParams: FilterParams = {}) => {
+export const useTokens = (initialParams: FilterProps = {}) => {
     const [tokens, setTokens] = useState<Token[]>([]);
-    const [filterParams, setFilterParams] = useState<FilterParams>(initialParams);
+    const [filterParams, setFilterParams] = useState<FilterProps>(initialParams);
     const [isLoading, setIsLoading] = useState(false);
 
     const loadTokens = useCallback(async () => {

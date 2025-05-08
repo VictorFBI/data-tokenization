@@ -1,4 +1,4 @@
-export type FilterParams = {
+export type FilterProps = {
     search?: string;
     sort?: 'asc' | 'desc';
 };

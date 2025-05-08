@@ -3,14 +3,35 @@ import SimpleText from "@/src/components/default-elements-overridings/SimpleText
 import MonoText from "@/src/components/default-elements-overridings/MonoText";
 import styles from "@/src/styles/CurrentBalance";
 import {MAIN_COLOR, SECOND_MAIN_COLOR} from "@/src/constants/colors";
-import {View} from "react-native";
+import {BalanceViewProps} from "@/src/types/BalanceViewProps";
 
-export default function BalanceView() {
-    return <LinearGradient
-        colors={[MAIN_COLOR, SECOND_MAIN_COLOR]}
-        style={styles.currentBalance}
-    >
-        <SimpleText style={styles.text}>Current balance</SimpleText>
-        <MonoText style={styles.monospacedText}>5 tokens</MonoText>
-    </LinearGradient>;
+function GradientBalanceView({title, value, style}: {title: string; value: string; style: any}) {
+    return (
+        <LinearGradient colors={[MAIN_COLOR, SECOND_MAIN_COLOR]} style={style}>
+            <SimpleText style={styles.text}>{title}</SimpleText>
+            <MonoText style={styles.monospacedText}>{value}</MonoText>
+        </LinearGradient>
+    );
 }
+
+function BalanceView({tokenNumber}: BalanceViewProps) {
+    return (
+        <GradientBalanceView
+            title="Current balance"
+            value={`${tokenNumber} tokens`}
+            style={styles.currentBalance}
+        />
+    );
+}
+
+function MarketBalanceView({tokenNumber}: BalanceViewProps) {
+    return (
+        <GradientBalanceView
+            title="Currently on market you have"
+            value={`${tokenNumber} tokens`}
+            style={styles.currentMarketBalance}
+        />
+    );
+}
+
+export {BalanceView, MarketBalanceView};

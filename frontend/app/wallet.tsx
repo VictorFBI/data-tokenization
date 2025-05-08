@@ -1,5 +1,4 @@
-import {SafeAreaView} from 'react-native';
-import BalanceView from '@/src/components/screens/wallet/BalanceView';
+import {BalanceView} from '@/src/components/screens/wallet/BalanceView';
 import {WalletButtons} from "@/src/components/screens/wallet/WalletButton";
 import {BackgroundSafeAreaView, BackgroundView} from "@/src/components/default-elements-overridings/BackgroundView";
 import {Token} from "@/src/types/Token";
@@ -16,8 +15,7 @@ export default function WalletScreen() {
         setFilterParams(prev => ({...prev, search: query}));
     };
 
-    const noFunc = () => {
-    };
+    const noFunc = () => {};
     const walletButtons: WalletButtonProps[] = [
         {iconName: 'add-circle-outline', buttonText: 'add', onPress: noFunc},
         {iconName: 'history', buttonText: 'history', onPress: noFunc},
@@ -25,15 +23,13 @@ export default function WalletScreen() {
 
     return (
         <BackgroundSafeAreaView>
-            <BalanceView/>
+            <BalanceView tokenNumber={5}/>
             <WalletButtons walletButtons={walletButtons}/>
             <SearchAndTokens
                 tokens={tokens}
                 onSearch={handleSearch}
-                onFilter={() => {/* Реализуйте фильтрацию */
-                }}
-                onTokenPress={(token: Token) => {
-                }}
+                onFilter={() => {/* Реализуйте фильтрацию */}}
+                onTokenPress={(token: Token) => {}}
             />
         </BackgroundSafeAreaView>
     );

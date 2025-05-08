@@ -1,10 +1,10 @@
 import {Token} from '@/src/types/Token';
-import {FilterParams} from '@/src/types/FilterParams';
+import {FilterProps} from '@/src/types/FilterProps';
 import {MOCK_TOKENS} from "@/src/constants/mock-values";
 
 const API_URL = 'https://your-api-url.com';
 
-export const fetchTokens = async (params: FilterParams): Promise<Token[]> => {
+export const fetchTokens = async (params: FilterProps): Promise<Token[]> => {
     // try {
     //     const response = await fetch(`${API_URL}/tokens`, {
     //         method: 'POST',

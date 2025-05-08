@@ -18,12 +18,12 @@ export const styles = StyleSheet.create({
         padding: 8,
     },
     tabButton: {
-        padding: 10
+        padding: 8
     },
 });
 
 export const iconStyle = {
-    size: 30,
+    size: 32,
     focusedColor: TAB_BAR_ICON_FOCUSED_COLOR,
     unfocusedColor: TAB_BAR_ICON_COLOR,
 }

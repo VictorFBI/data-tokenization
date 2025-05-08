@@ -5,6 +5,7 @@ import {MaterialIcons} from "@expo/vector-icons";
 import {ICON_COLOR, MAIN_COLOR, TAB_COLOR, THIRD_TEXT_COLOR} from "@/src/constants/colors";
 import SimpleText from "@/src/components/default-elements-overridings/SimpleText";
 import {TokensData} from "@/src/components/tokens-data/TokensData";
+import {TokensDataProps} from "@/src/types/TokensDataProps";
 
 interface SearchFilteredTokensParams {
     onSearch: (query: string) => void;
@@ -41,12 +42,8 @@ export const SearchAndTokens = ({
                                     onTokenPress,
                                     onSearch,
                                     onFilter
-                                }: {
-    tokens: Token[];
-    onTokenPress: (token: Token) => void;
-    onSearch: (query: string) => void;
-    onFilter: () => void;
-}) => {
+                                }: TokensDataProps & SearchFilteredTokensParams
+) => {
     return (
         <View style={styles.container}>
             <SimpleText style={styles.sectionTitle}>Your tokens</SimpleText>
