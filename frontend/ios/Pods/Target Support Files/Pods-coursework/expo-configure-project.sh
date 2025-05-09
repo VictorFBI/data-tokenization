@@ -45,7 +45,7 @@ with_node \
   --no-warnings \
   --eval "require(require.resolve('expo-modules-autolinking', { paths: [require.resolve('expo/package.json')] }))(process.argv.slice(1))" \
   generate-modules-provider  \
-  --target "/Users/artemkarapetian/programming/WebstormProjects/coursework/ios/Pods/Target Support Files/Pods-coursework/ExpoModulesProvider.swift" \
-  --entitlement "/Users/artemkarapetian/programming/WebstormProjects/coursework/ios/coursework/coursework.entitlements" \
+  --target "/Users/artemkarapetian/programming/WebstormProjects/coursework/frontend/ios/Pods/Target Support Files/Pods-coursework/ExpoModulesProvider.swift" \
+  --entitlement "/Users/artemkarapetian/programming/WebstormProjects/coursework/frontend/ios/coursework/coursework.entitlements" \
   --platform "apple" \
-  --packages "expo" "expo-asset" "expo-blur" "expo-constants" "expo-file-system" "expo-font" "expo-haptics" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-router" "expo-splash-screen" "expo-symbols" "expo-system-ui" "expo-web-browser"
+  --packages "expo" "expo-asset" "expo-constants" "expo-file-system" "expo-font" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-router" "expo-splash-screen" "expo-web-browser"

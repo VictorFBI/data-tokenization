@@ -1,40 +1,42 @@
-import {Token} from '@/src/types/Token';
-import {FilterProps} from '@/src/types/FilterProps';
-import {MOCK_TOKENS} from "@/src/constants/mock-values";
+import { Token } from '@/src/types/Token'
+import { FilterProps } from '@/src/types/FilterProps'
+import { MOCK_TOKENS } from '@/src/constants/mockValues'
 
-const API_URL = 'https://your-api-url.com';
+// const API_URL = 'https://your-api-url.com';
 
 export const fetchTokens = async (params: FilterProps): Promise<Token[]> => {
-    // try {
-    //     const response = await fetch(`${API_URL}/tokens`, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify(params),
-    //     });
-    //     return await response.json();
-    // } catch (error) {
-    //     console.error('Error fetching tokens:', error);
-    //     return [];
-    // }
+  void params
+  // try {
+  //     const response = await fetch(`${API_URL}/tokens`, {
+  //         method: 'POST',
+  //         headers: {
+  //             'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify(params),
+  //     });
+  //     return await response.json();
+  // } catch (error) {
+  //     console.error('Error fetching tokens:', error);
+  //     return [];
+  // }
 
-    // Mock response for demonstration purposes
-    return MOCK_TOKENS
-};
+  // Mock response for demonstration purposes
+  return MOCK_TOKENS
+}
 
 export const addToken = async (tokenData: Partial<Token>): Promise<Token> => {
-    // try {
-    //     const response = await fetch(`${API_URL}/tokens/add`, {
-    //         method: 'POST',
-    //         body: JSON.stringify(tokenData),
-    //     });
-    //     return await response.json();
-    // } catch (error) {
-    //     console.error('Error adding token:', error);
-    //     throw error;
-    // }
+  void tokenData
+  // try {
+  //     const response = await fetch(`${API_URL}/tokens/add`, {
+  //         method: 'POST',
+  //         body: JSON.stringify(tokenData),
+  //     });
+  //     return await response.json();
+  // } catch (error) {
+  //     console.error('Error adding token:', error);
+  //     throw error;
+  // }
 
-    // Mock response for demonstration purposes
-    return MOCK_TOKENS[0];
-};
+  // Mock response for demonstration purposes
+  return MOCK_TOKENS[0]
+}

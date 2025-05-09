@@ -1,3 +1,3 @@
 export interface BalanceViewProps {
-    tokenNumber: number;
+  tokenNumber: number
 }

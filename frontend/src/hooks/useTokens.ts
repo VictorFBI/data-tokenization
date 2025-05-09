@@ -1,42 +1,45 @@
-import {useCallback, useEffect, useState} from 'react';
-import {Token} from '@/src/types/Token';
-import {FilterProps} from '@/src/types/FilterProps';
-import {fetchTokens, addToken} from '@/src/services/tokenService';
+import { useCallback, useEffect, useState } from 'react'
+import { Token } from '@/src/types/Token'
+import { FilterProps } from '@/src/types/FilterProps'
+import { fetchTokens, addToken } from '@/src/services/tokenService'
 
 export const useTokens = (initialParams: FilterProps = {}) => {
-    const [tokens, setTokens] = useState<Token[]>([]);
-    const [filterParams, setFilterParams] = useState<FilterProps>(initialParams);
-    const [isLoading, setIsLoading] = useState(false);
+  const [tokens, setTokens] = useState<Token[]>([])
+  const [filterParams, setFilterParams] = useState<FilterProps>(initialParams)
+  const [isLoading, setIsLoading] = useState(false)
 
-    const loadTokens = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const data = await fetchTokens(filterParams);
-            setTokens(data);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [filterParams]);
+  const loadTokens = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const data = await fetchTokens(filterParams)
+      setTokens(data)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [filterParams])
 
-    const handleAddToken = useCallback(async (newTokenData: Partial<Token>) => {
-        try {
-            await addToken(newTokenData);
-            await loadTokens();
-        } catch (error) {
-            console.error('Error adding token:', error);
-        }
-    }, [loadTokens]);
+  const handleAddToken = useCallback(
+    async (newTokenData: Partial<Token>) => {
+      try {
+        await addToken(newTokenData)
+        await loadTokens()
+      } catch (error) {
+        alert('Error adding token: ' + error)
+      }
+    },
+    [loadTokens],
+  )
 
-    useEffect(() => {
-        loadTokens();
-    }, [loadTokens]);
+  useEffect(() => {
+    loadTokens()
+  }, [loadTokens])
 
-    return {
-        tokens,
-        isLoading,
-        filterParams,
-        setFilterParams,
-        handleAddToken,
-        refreshTokens: loadTokens,
-    };
-};
+  return {
+    tokens,
+    isLoading,
+    filterParams,
+    setFilterParams,
+    handleAddToken,
+    refreshTokens: loadTokens,
+  }
+}

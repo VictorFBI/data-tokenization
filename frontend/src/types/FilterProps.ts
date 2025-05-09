@@ -1,4 +1,4 @@
 export type FilterProps = {
-    search?: string;
-    sort?: 'asc' | 'desc';
-};
+  search?: string
+  sort?: 'asc' | 'desc'
+}

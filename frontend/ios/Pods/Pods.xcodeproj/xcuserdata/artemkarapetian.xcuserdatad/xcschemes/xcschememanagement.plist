@@ -34,11 +34,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>ExpoBlur.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>ExpoFileSystem-ExpoFileSystem_privacy.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -50,11 +45,6 @@
 			<false/>
 		</dict>
 		<key>ExpoFont.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ExpoHaptics.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -85,21 +75,6 @@
 			<false/>
 		</dict>
 		<key>ExpoSplashScreen.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ExpoSymbols.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ExpoSystemUI-ExpoSystemUI_privacy.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>ExpoSystemUI.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -144,22 +119,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>RNGestureHandler.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>RNReanimated.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RNSVG-RNSVGFilters.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
-		<key>RNSVG.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
