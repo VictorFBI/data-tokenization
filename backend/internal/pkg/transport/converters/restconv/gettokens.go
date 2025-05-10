@@ -1,9 +1,10 @@
 package restconv
 
 import (
-	restgen "data-tokenization/internal/gen/rest"
-	"data-tokenization/internal/pkg/model"
 	"github.com/samber/lo"
+
+	"data-tokenization/internal/gen/restgen"
+	"data-tokenization/internal/pkg/model"
 )
 
 // DTOToGetTokensRequest преобразует DTO в запрос на получение токенов

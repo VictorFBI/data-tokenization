@@ -1,7 +1,7 @@
 package restconv
 
 import (
-	"data-tokenization/internal/gen/rest"
+	"data-tokenization/internal/gen/restgen"
 	"data-tokenization/internal/pkg/model"
 )
 

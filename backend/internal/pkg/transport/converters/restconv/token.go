@@ -1,9 +1,10 @@
 package restconv
 
 import (
-	"data-tokenization/internal/gen/rest"
-	"data-tokenization/internal/pkg/model"
 	"strconv"
+
+	"data-tokenization/internal/gen/restgen"
+	"data-tokenization/internal/pkg/model"
 )
 
 // tokenToDTO преобразует токен в модель DTO

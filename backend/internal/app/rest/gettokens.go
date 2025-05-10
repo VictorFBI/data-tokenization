@@ -1,9 +1,10 @@
 package rest
 
 import (
-	"data-tokenization/internal/gen/rest"
-	"data-tokenization/internal/pkg/transport/converters/rest"
 	"github.com/gin-gonic/gin"
+
+	"data-tokenization/internal/gen/restgen"
+	"data-tokenization/internal/pkg/transport/converters/restconv"
 )
 
 // GetTokens достает токены по фильтру

@@ -1,6 +1,6 @@
 package business
 
-// service – реализует бизнес слой приложения
+// Реализует бизнес слой приложения
 type service struct{}
 
 // NewService – создает новый экземпляр бизнес слоя

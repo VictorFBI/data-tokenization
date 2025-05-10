@@ -1,12 +1,13 @@
 package main
 
 import (
-	"data-tokenization/internal/app/rest"
-	"data-tokenization/internal/gen/rest"
-	"data-tokenization/internal/pkg/business"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+
+	"data-tokenization/internal/app/rest"
+	"data-tokenization/internal/gen/restgen"
+	"data-tokenization/internal/pkg/business"
 )
 
 func main() {
@@ -27,5 +28,7 @@ func main() {
 	router.StaticFile("/api.yaml", "./api/rest/api.yaml")
 
 	// Start the server on port 8080
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		panic(err)
+	}
 }

@@ -17,12 +17,12 @@ import (
 
 const (
 	DeployerPrivateKey  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-	HardhatRpcServerUrl = "http://localhost:8545"
-	BackendServerUrl    = "localhost:8081"
+	HardhatRPCServerURL = "http://localhost:8545"
+	BackendServerURL    = "localhost:8081"
 )
 
 func deployContracts() {
-	client, err := ethclient.Dial(HardhatRpcServerUrl)
+	client, err := ethclient.Dial(HardhatRPCServerURL)
 	if err != nil {
 		panic(err)
 	}
@@ -54,6 +54,7 @@ func deployContracts() {
 		panic(err)
 	}
 
+	// nolint
 	instance.Store(auth, big.NewInt(42))
 
 	number, _ := instance.Retrieve(&bind.CallOpts{})
@@ -77,5 +78,6 @@ func main() {
 
 	router.POST("/upload", handlers.LoadFile)
 
-	router.Run(BackendServerUrl)
+	// nolint
+	router.Run(BackendServerURL)
 }
