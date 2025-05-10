@@ -40,7 +40,7 @@ export function TokensData({
       data={tokens}
       extraData={tokens}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={item => item.id}
     />
   )
 }

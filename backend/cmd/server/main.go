@@ -1,28 +1,20 @@
 package main
 
 import (
-	"net/http"
-
+	"data-tokenization/internal/app/rest"
 	"data-tokenization/internal/gen/rest"
+	"data-tokenization/internal/pkg/business"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
-
-// PingHandler implements the ServerInterface
-type PingHandler struct{}
-
-// GetPing handles the GET /ping endpoint
-func (h *PingHandler) GetPing(c *gin.Context) {
-	c.JSON(http.StatusOK, rest.Pong{Ping: "pong"})
-}
 
 func main() {
 	// Create a Gin router
 	router := gin.Default()
 
 	// Register the handler
-	rest.RegisterHandlers(router, &PingHandler{})
+	restgen.RegisterHandlers(router, rest.NewTokenHandler(business.NewService()))
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(
