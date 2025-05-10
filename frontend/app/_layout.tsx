@@ -10,6 +10,7 @@ import useLoadFonts from '@/src/utils/useLoadFonts'
  */
 export default function Layout() {
   const fontsLoaded = useLoadFonts()
+
   if (!fontsLoaded) {
     return null
   }

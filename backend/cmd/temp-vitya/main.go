@@ -5,8 +5,8 @@ import (
 	"log"
 	"math/big"
 
-	"data-tokenization/backend/contracts"
-	"data-tokenization/backend/handlers"
+	"data-tokenization/contracts"
+	"data-tokenization/handlers"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -15,8 +15,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	DeployerPrivateKey  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+	HardhatRpcServerUrl = "http://localhost:8545"
+	BackendServerUrl    = "localhost:8081"
+)
+
 func deployContracts() {
-	client, err := ethclient.Dial(HARDHAT_RPC_SERVER_URL)
+	client, err := ethclient.Dial(HardhatRpcServerUrl)
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +32,7 @@ func deployContracts() {
 		panic(err)
 	}
 
-	privateKey, err := crypto.HexToECDSA(DEPLOYER_PRIVATE_KEY)
+	privateKey, err := crypto.HexToECDSA(DeployerPrivateKey)
 	if err != nil {
 		panic(err)
 	}
@@ -71,5 +77,5 @@ func main() {
 
 	router.POST("/upload", handlers.LoadFile)
 
-	router.Run(BACKEND_SERVER_URL)
+	router.Run(BackendServerUrl)
 }
