@@ -1,25 +1,71 @@
-openapi: "3.0.0"
+openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Minimal ping API server
+  title: Token Management API
+  description: API for managing and filtering tokens
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
 paths:
-  /ping:
-    get:
+  /tokens:
+    post:
+      summary: Get filtered tokens
+      description: Returns list of tokens filtered by search criteria
+      operationId: getTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterProps'
       responses:
         '200':
-          description: pet response
+          description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pong'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+
 components:
   schemas:
-    # base types
-    Pong:
+    Token:
       type: object
       required:
-        - ping
+        - id
+        - name
       properties:
-        ping:
+        id:
           type: string
-          example: pong
+          example: "1"
+          description: Unique token identifier
+        name:
+          type: string
+          example: "sleep_2024_12"
+          description: Token name
+        icon:
+          type: string
+          example: "hotel"
+          description: Icon representing token type
+          nullable: true
+
+    FilterProps:
+      type: object
+      properties:
+        search:
+          type: string
+          nullable: true
+          example: "sleep"
+          description: Search string to filter tokens by name
+        sort:
+          type: string
+          enum: [asc, desc]
+          nullable: true
+          example: "asc"
+          description: Sort order (ascending or descending)

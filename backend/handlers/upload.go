@@ -43,6 +43,7 @@ func LoadFile(c *gin.Context) {
 	defer tempFile.Close()
 
 	// Saving uploaded file to temp file
+	// nolint
 	if err := c.SaveUploadedFile(file, tempFile.Name()); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error saving uploaded file"})
 		return
