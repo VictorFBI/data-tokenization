@@ -33,6 +33,61 @@ paths:
         '500':
           description: Internal server error
 
+  /tokens/market:
+    post:
+      summary: Get market tokens
+      description: Returns list of tokens available on marketplace
+      operationId: getMarketTokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterProps'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Token'
+
+  /tokens/upload:
+    post:
+      summary: Upload new token
+      description: Create new token with metadata and associated file
+      operationId: uploadToken
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                icon:
+                  type: string
+                file:
+                  type: string
+                  format: binary
+              required:
+                - name
+                - file
+      responses:
+        '201':
+          description: Token created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+
 components:
   schemas:
     Token:
@@ -54,6 +109,15 @@ components:
           example: "hotel"
           description: Icon representing token type
           nullable: true
+        onMarket:
+          type: boolean
+          example: true
+          description: Is token available on marketplace
+        fileUrl:
+          type: string
+          format: uri
+          example: "http://example.com/tokens/1.json"
+          description: URL to token data file
 
     FilterProps:
       type: object
@@ -69,3 +133,8 @@ components:
           nullable: true
           example: "asc"
           description: Sort order (ascending or descending)
+        onMarket:
+          type: boolean
+          nullable: true
+          example: true
+          description: Filter tokens available on marketplace

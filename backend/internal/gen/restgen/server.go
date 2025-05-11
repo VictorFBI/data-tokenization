@@ -5,6 +5,7 @@ package restgen
 
 import (
 	"github.com/gin-gonic/gin"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // Defines values for FilterPropsSort.
@@ -15,6 +16,9 @@ const (
 
 // FilterProps defines model for FilterProps.
 type FilterProps struct {
+	// OnMarket Filter tokens available on marketplace
+	OnMarket *bool `json:"onMarket"`
+
 	// Search Search string to filter tokens by name
 	Search *string `json:"search"`
 
@@ -27,6 +31,9 @@ type FilterPropsSort string
 
 // Token defines model for Token.
 type Token struct {
+	// FileUrl URL to token data file
+	FileUrl *string `json:"fileUrl,omitempty"`
+
 	// Icon Icon representing token type
 	Icon *string `json:"icon"`
 
@@ -35,16 +42,38 @@ type Token struct {
 
 	// Name Token name
 	Name string `json:"name"`
+
+	// OnMarket Is token available on marketplace
+	OnMarket *bool `json:"onMarket,omitempty"`
+}
+
+// UploadTokenMultipartBody defines parameters for UploadToken.
+type UploadTokenMultipartBody struct {
+	File openapi_types.File `json:"file"`
+	Icon *string            `json:"icon,omitempty"`
+	Name string             `json:"name"`
 }
 
 // GetTokensJSONRequestBody defines body for GetTokens for application/json ContentType.
 type GetTokensJSONRequestBody = FilterProps
+
+// GetMarketTokensJSONRequestBody defines body for GetMarketTokens for application/json ContentType.
+type GetMarketTokensJSONRequestBody = FilterProps
+
+// UploadTokenMultipartRequestBody defines body for UploadToken for multipart/form-data ContentType.
+type UploadTokenMultipartRequestBody UploadTokenMultipartBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Get filtered tokens
 	// (POST /tokens)
 	GetTokens(c *gin.Context)
+	// Get market tokens
+	// (POST /tokens/market)
+	GetMarketTokens(c *gin.Context)
+	// Upload new token
+	// (POST /tokens/upload)
+	UploadToken(c *gin.Context)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -67,6 +96,32 @@ func (siw *ServerInterfaceWrapper) GetTokens(c *gin.Context) {
 	}
 
 	siw.Handler.GetTokens(c)
+}
+
+// GetMarketTokens operation middleware
+func (siw *ServerInterfaceWrapper) GetMarketTokens(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetMarketTokens(c)
+}
+
+// UploadToken operation middleware
+func (siw *ServerInterfaceWrapper) UploadToken(c *gin.Context) {
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.UploadToken(c)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -97,4 +152,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.POST(options.BaseURL+"/tokens", wrapper.GetTokens)
+	router.POST(options.BaseURL+"/tokens/market", wrapper.GetMarketTokens)
+	router.POST(options.BaseURL+"/tokens/upload", wrapper.UploadToken)
 }
