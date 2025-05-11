@@ -16,7 +16,7 @@ export default function WalletScreen() {
   const { tokens, setFilterParams } = useTokens()
 
   const handleSearch = (query: string) => {
-    setFilterParams((prev) => ({ ...prev, search: query }))
+    setFilterParams(prev => ({ ...prev, search: query }))
   }
 
   const noFunc = () => {}
@@ -27,13 +27,13 @@ export default function WalletScreen() {
 
   return (
     <BackgroundSafeAreaView>
-      <BalanceView tokenNumber={5} />
+      <BalanceView tokenNumber={tokens.length} />
       <WalletButtons walletButtons={walletButtons} />
       <YourTokensWithSearch
         tokens={tokens}
         onSearch={handleSearch}
         onFilter={() => {
-          /* Реализуйте фильтрацию */
+          /* TODO: Реализуйте фильтрацию */
         }}
         onTokenPress={(token: Token) => {
           void token

@@ -68,36 +68,35 @@ export const YourMarketTokens = ({
   return (
     <View style={styles.container}>
       <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tabButton]}
+        <TabButton
+          isActive={activeTab === 'yourTokens'}
           onPress={() => setActiveTab('yourTokens')}
-        >
-          <SimpleText
-            style={[
-              styles.tabText,
-              activeTab === 'yourTokens' && styles.activeTabText,
-            ]}
-          >
-            Your Tokens
-          </SimpleText>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[styles.tabButton]}
+          label="Your Tokens"
+        />
+        <TabButton
+          isActive={activeTab === 'market'}
           onPress={() => setActiveTab('market')}
-        >
-          <SimpleText
-            style={[
-              styles.tabText,
-              activeTab === 'market' && styles.activeTabText,
-            ]}
-          >
-            Market
-          </SimpleText>
-        </TouchableOpacity>
+          label="Market"
+        />
       </View>
 
       {tabContentMap[activeTab]}
     </View>
+  )
+}
+
+type TabButtonProps = {
+  isActive: boolean
+  onPress: () => void
+  label: string
+}
+
+const TabButton = ({ isActive, onPress, label }: TabButtonProps) => {
+  return (
+    <TouchableOpacity style={[styles.tabButton]} onPress={onPress}>
+      <SimpleText style={[styles.tabText, isActive && styles.activeTabText]}>
+        {label}
+      </SimpleText>
+    </TouchableOpacity>
   )
 }
