@@ -15,18 +15,19 @@ func (s *service) GetTokens(_ context.Context, _ model.GetTokensRequest) (model.
 			{
 				ID:   1,
 				Name: "sleep_2024_12",
-				Icon: lo.ToPtr("hotel"),
-			},
+				Icon: lo.ToPtr("hotel")},
 			{
 				ID:   2,
-				Name: "work_2024_12",
-				Icon: lo.ToPtr("briefcase"),
-			},
+				Name: "fat_percent_2024_11",
+				Icon: lo.ToPtr("pie-chart")},
 			{
 				ID:   3,
-				Name: "work_2024_12",
-				Icon: lo.ToPtr("briefcase"),
-			},
+				Name: "heart_rate_12",
+				Icon: lo.ToPtr("favorite")},
+			{
+				ID:   4,
+				Name: "oxygen_saturation_rate",
+				Icon: lo.ToPtr("air")},
 		},
 	}, nil
 }

@@ -14,33 +14,35 @@ export default function MarketScreen(): JSX.Element {
   const { tokens, setFilterParams } = useTokens()
 
   const handleSearch = (query: string) => {
-    setFilterParams((prev) => ({ ...prev, search: query }))
+    setFilterParams(prev => ({ ...prev, search: query }))
   }
 
+  const marketTokensProps = {
+    tokens,
+    onSearch: handleSearch,
+    onFilter: () => {
+      /* Реализуйте фильтрацию */
+    },
+    onTokenPress: (token: Token) => {
+      void token
+    },
+  }
+  const yourTokensProps = {
+    tokens,
+    onSearch: handleSearch,
+    onFilter: () => {
+      /* Реализуйте фильтрацию */
+    },
+    onTokenPress: (token: Token) => {
+      void token
+    },
+  }
   return (
     <BackgroundSafeAreaView>
-      <MarketBalanceView tokenNumber={3} />
+      <MarketBalanceView tokenNumber={tokens.length} />
       <YourMarketTokens
-        marketTokensProps={{
-          tokens,
-          onSearch: handleSearch,
-          onFilter: () => {
-            /* Реализуйте фильтрацию */
-          },
-          onTokenPress: (token: Token) => {
-            void token
-          },
-        }}
-        yourTokensProps={{
-          tokens,
-          onSearch: handleSearch,
-          onFilter: () => {
-            /* Реализуйте фильтрацию */
-          },
-          onTokenPress: (token: Token) => {
-            void token
-          },
-        }}
+        marketTokensProps={marketTokensProps}
+        yourTokensProps={yourTokensProps}
       />
     </BackgroundSafeAreaView>
   )
