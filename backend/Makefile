@@ -9,3 +9,26 @@ generate:
 
 lint:
 	@PATH=${BINDIR}:$$PATH golangci-lint run
+
+# Define smart contracts names once
+SMART_CONTRACTS_NAMES := Storage
+
+contracts-generate:
+	@echo "Generating files to interact with smart contracts..."
+	@cd ../contracts && \
+	for contract in $(SMART_CONTRACTS_NAMES); do \
+		solc --abi --bin src/$$contract.sol -o build --overwrite; \
+	done
+
+	@mkdir -p ../backend/internal/gen/contracts
+	@cd ../backend/internal/gen/contracts && \
+	for contract in $(SMART_CONTRACTS_NAMES); do \
+		lowercase_contract=$$(echo "$$contract" | tr '[:upper:]' '[:lower:]') && \
+		abigen --bin=../../../../contracts/build/$$contract.bin \
+			--abi=../../../../contracts/build/$$contract.abi \
+			--pkg=contracts \
+			--out=$$lowercase_contract.go \
+			--type $$contract; \
+	done
+
+	@echo "Generation completed"
