@@ -5,8 +5,8 @@ bin-deps:
 	GOBIN=${BINDIR} go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
 
 generate:
-	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen api/rest/api.yaml > internal/gen/restgen/server.go
-
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_user api/rest/user.yaml > internal/gen/restgen/user.go
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_market api/rest/market.yaml > internal/gen/restgen/market.go
 lint:
 	@PATH=${BINDIR}:$$PATH golangci-lint run
 
