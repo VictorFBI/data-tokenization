@@ -1,0 +1,280 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Token Management API for user screen
+  description: API for managing and filtering tokens
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /market/token:
+    get:
+      description: Get info card about token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketTokenGetRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: File content
+        '404':
+          description: No file found with this cid
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      description: Add token to market
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MarketTokenPostRequest'
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Token with this cid already exists
+          schema:
+            type: string
+            example: "Token with this cid already exists"
+
+    delete:
+      description: Delete token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketTokenDeleteRequest'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: No file found with this cid  
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      description: Update token
+      requestBody:
+        required: true  
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketTokenPatchRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No file found with this cid
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+  /market/token/list:
+    get:
+      description: Get list of tokens on market with pagination and filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketTokenListRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketTokenListResponse'
+
+  /market/token/buy:
+    post:
+      description: Buy token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarketTokenBuyRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BuyResponse'
+        '404':
+          description: No file found with this cid
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+      
+components:
+  schemas:
+    MarketTokenBuyRequest:
+      type: object
+      required:
+        - cid
+        - seller_id
+        - buyer_id
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        seller_id:
+          $ref: '#/components/schemas/UserId'
+        buyer_id:
+          $ref: '#/components/schemas/UserId'
+
+    MarketTokenListResponse:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/MarketToken'
+        next_cursor:
+          type: integer
+          description: Next cursor to start from
+          
+    MarketTokenListRequest:
+      type: object
+      required:
+        - cursor
+        - limit
+        - user_id
+      properties:
+        cursor:
+          type: integer
+          description: Cursor to start from
+        limit:
+          type: integer
+          description: Limit of tokens to return
+        user_id:
+          $ref: '#/components/schemas/UserId'
+        filter:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the token
+                
+    MarketTokenGetRequest:
+      type: object
+      required:
+        - cid
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+
+    MarketTokenPostRequest:
+      type: object
+      required:
+        - file
+        - name
+        - cid
+        - price
+      properties:
+        file:
+          type: string
+          format: binary
+          description: Token card to save
+        name:
+          type: string
+          description: Token name
+        cid:
+          $ref: '#/components/schemas/Cid'
+        price:
+          type: number
+          description: Price of the token
+
+    MarketTokenDeleteRequest:
+      type: object
+      required:
+        - cid
+        - user_id
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        user_id:
+          $ref: '#/components/schemas/UserId'
+
+    MarketTokenPatchRequest:
+      type: object
+      required:
+        - cid
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        file:
+          type: string
+          format: binary
+          description: Token card to update
+        name:
+          type: string
+          description: Token name
+        price:
+          type: number
+          description: Price of the token
+
+    Cid:
+      type: string
+      example: "QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR"
+      description: Unique file identifier inside IPFS
+
+    UserId:
+      type: string
+      example: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720"
+      description: User ID inside the blockchain system (address)
+
+    MarketToken:
+      type: object
+      required:
+        - cid
+        - name
+        - icon
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        name:
+          type: string
+        icon:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Token with this cid already exists"
+
+    BuyResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Token bought successfully"

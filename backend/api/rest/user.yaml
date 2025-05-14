@@ -1,0 +1,207 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Token Management API for user screen
+  description: API for managing and filtering tokens
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /user/token:
+    get:
+      description: Get info about concrete token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenGetRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+                description: File content
+        '404':
+          description: No file found with this cid
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      description: Create token with tokenization
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserTokenPostRequest'
+      responses:
+        '200':
+          description: OK
+        '409':
+          description: Token with this cid already exists
+          schema:
+            type: string
+            example: "Token with this cid already exists"
+
+    delete:
+      description: Delete token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenDeleteRequest'
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: No file found with this cid  
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+    patch:
+      description: Update token
+      requestBody:
+        required: true  
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenPatchRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad request
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: No file found with this cid
+          content:
+            application/json:
+                schema:
+                    $ref: '#/components/schemas/ErrorResponse'
+
+  /user/token/list:
+    get:
+      description: Get list of tokens of userwith pagination and filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTokenListRequest'
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+    UserTokenListRequest:
+      type: object
+      required:
+        - cursor
+        - limit
+        - user_id
+      properties:
+        cursor:
+          type: integer
+          description: Cursor to start from
+        limit:
+          type: integer
+          description: Limit of tokens to return
+        user_id:
+          $ref: '#/components/schemas/UserId'
+        filter:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the token
+                
+    UserTokenGetRequest:
+      type: object
+      required:
+        - cid
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+
+    UserTokenPostRequest:
+      type: object
+      required:
+        - file
+        - name
+        - icon
+        - user_id
+      properties:
+        file:
+          type: string
+          format: binary
+          description: File to be tokenized
+        name:
+          type: string
+          description: Token name
+        icon:
+          type: string
+          enum:
+            - "fat"
+            - "steps"
+            - "heart"
+            - "oxygen"
+            - "sleep"
+        user_id:
+          $ref: '#/components/schemas/UserId'
+
+    UserTokenDeleteRequest:
+      type: object
+      required:
+        - cid
+        - user_id
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        user_id:
+          $ref: '#/components/schemas/UserId'
+
+    UserTokenPatchRequest:
+      type: object
+      required:
+        - cid
+      properties:
+        cid:
+          $ref: '#/components/schemas/Cid'
+        file:
+          type: string
+          format: binary
+          description: File to be tokenized
+        name:
+          type: string
+          description: Token name
+
+    Cid:
+      type: string
+      example: "QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR"
+      description: Unique file identifier inside IPFS
+
+    UserId:
+      type: string
+      example: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720"
+      description: User ID inside the blockchain system (address)
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Token with this cid already exists"

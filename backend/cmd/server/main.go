@@ -6,10 +6,7 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"data-tokenization/handlers"
-	"data-tokenization/internal/app/rest"
 	"data-tokenization/internal/gen/contracts"
-	"data-tokenization/internal/gen/restgen"
-	"data-tokenization/internal/pkg/business"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -74,26 +71,24 @@ func main() {
 
 	deployContracts()
 
-	// Create a Gin router
 	router := gin.Default()
 
 	// Setting max file size (8 MB)
 	router.MaxMultipartMemory = 8 << 20
 
-	// Register the handler
-	restgen.RegisterHandlers(router, rest.NewTokenHandler(business.NewService()))
+	// // Register the handler
+	// restgen.RegisterHandlers(router, rest.NewTokenHandler(business.NewService()))
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(
 		swaggerFiles.Handler,
-		ginSwagger.URL("/api.yaml"),
+		ginSwagger.URL("/user.yaml"),
 		ginSwagger.DefaultModelsExpandDepth(-1),
 	))
 
-	// 3. Отдача исходного YAML
-	router.StaticFile("/api.yaml", "../../api/rest/api.yaml")
+	router.StaticFile("/user.yaml", "../../api/rest/user.yaml")
+	router.StaticFile("/market.yaml", "../../api/rest/market.yaml")
 
-	// Start the server on port 8080
 	if err := router.Run(":8080"); err != nil {
 		panic(err)
 	}
