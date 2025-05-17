@@ -5,8 +5,10 @@ bin-deps:
 	GOBIN=${BINDIR} go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
 
 generate:
-	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_user api/rest/user.yaml > internal/gen/restgen/user.go
-	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_market api/rest/market.yaml > internal/gen/restgen/market.go
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,skip-prune -package rest_common api/rest/common.yaml > internal/gen/rest_common/common.go
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package rest_user --import-mapping common.yaml:data-tokenization/internal/gen/rest_common api/rest/user.yaml > internal/gen/rest_user/user.go
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package rest_market --import-mapping common.yaml:data-tokenization/internal/gen/rest_common api/rest/market.yaml > internal/gen/rest_market/market.go
+
 lint:
 	@PATH=${BINDIR}:$$PATH golangci-lint run
 
@@ -15,7 +17,7 @@ SMART_CONTRACTS_NAMES := Storage
 
 contracts-generate:
 	@echo "Generating files to interact with smart contracts..."
-	@cd ../contracts && \
+	@cd ../contract && \
 	for contract in $(SMART_CONTRACTS_NAMES); do \
 		solc --abi --bin src/$$contract.sol -o build --overwrite; \
 	done

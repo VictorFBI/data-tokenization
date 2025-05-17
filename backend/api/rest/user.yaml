@@ -8,33 +8,67 @@ servers:
     description: Development server
 
 paths:
-  /user/token:
+  /user/token/downloadLink:
     get:
-      description: Get info about concrete token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserTokenGetRequest'
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
+        - in: query
+          name: token_name
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/TokenName'
       responses:
         '200':
           description: OK
           content:
-            application/octet-stream:
+            application/json:
               schema:
-                type: string
-                format: binary
-                description: File content
+                $ref: '#/components/schemas/UserTokenDownloadLinkResponse'
         '404':
-          description: No file found with this cid
+          description: File with this token name not found
           content:
             application/json:
-                schema:
-                    $ref: '#/components/schemas/ErrorResponse'
-
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
+  
+  /user/token:
+    get:
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
+        - in: query
+          name: token_name
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/TokenName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenGetResponse'
+        '404':
+          description: File with this token name not found
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
+    
     post:
-      description: Create token with tokenization
+      tags:
+        - User
       requestBody:
         required: true
         content:
@@ -45,13 +79,15 @@ paths:
         '200':
           description: OK
         '409':
-          description: Token with this cid already exists
-          schema:
-            type: string
-            example: "Token with this cid already exists"
+          description: Token with the same content or name already exists
+          content:
+            application/json:
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
 
     delete:
-      description: Delete token
+      tags:
+        - User
       requestBody:
         required: true
         content:
@@ -62,16 +98,17 @@ paths:
         '200':
           description: OK
         '404':
-          description: No file found with this cid  
+          description: File with this token name not found
           content:
             application/json:
-                schema:
-                    $ref: '#/components/schemas/ErrorResponse'
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
 
     patch:
-      description: Update token
+      tags:
+        - User
       requestBody:
-        required: true  
+        required: true
         content:
           application/json:
             schema:
@@ -83,125 +120,137 @@ paths:
           description: Bad request
           content:
             application/json:
-                schema:
-                    $ref: '#/components/schemas/ErrorResponse'
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
         '404':
-          description: No file found with this cid
+          description: File with this token name not found
           content:
             application/json:
-                schema:
-                    $ref: '#/components/schemas/ErrorResponse'
+              schema:
+                $ref: 'common.yaml#/components/schemas/ErrorResponse'
 
   /user/token/list:
     get:
-      description: Get list of tokens of userwith pagination and filters
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserTokenListRequest'
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: cursor
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/Cursor'
+        - in: query
+          name: limit
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/Limit'
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
+
+        # Filters
+        - in: query
+          name: token_name
+          schema:
+            $ref: 'common.yaml#/components/schemas/TokenName'
+        - in: query
+          name: token_type
+          schema:
+            type: string
+        - in: query
+          name: start_date
+          schema:
+            $ref: 'common.yaml#/components/schemas/Date'
+        - in: query
+          name: end_date
+          schema:
+            $ref: 'common.yaml#/components/schemas/Date'
+        - in: query
+          name: sort_direction_on_created_at
+          schema:
+            $ref: 'common.yaml#/components/schemas/SortDirection'
+
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTokenListResponse'
 
 components:
   schemas:
-    UserTokenListRequest:
+    UserTokenDownloadLinkResponse:
       type: object
       required:
-        - cursor
-        - limit
-        - user_id
+        - link
       properties:
-        cursor:
-          type: integer
-          description: Cursor to start from
-        limit:
-          type: integer
-          description: Limit of tokens to return
-        user_id:
-          $ref: '#/components/schemas/UserId'
-        filter:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Name of the token
-                
-    UserTokenGetRequest:
+        link:
+          type: string
+    
+    UserTokenListResponse:
       type: object
-      required:
-        - cid
       properties:
-        cid:
-          $ref: '#/components/schemas/Cid'
-
+        tokens:
+          type: array
+          items:
+            $ref: 'common.yaml#/components/schemas/ListTokenResponse'
+        next_cursor:
+          $ref: 'common.yaml#/components/schemas/Cursor'
+    
+    UserTokenGetResponse:
+      type: object
+      properties:
+        token:
+          $ref: 'common.yaml#/components/schemas/Token'
+    
     UserTokenPostRequest:
       type: object
       required:
-        - file
-        - name
-        - icon
         - user_id
+        - file
+        - token_name
+        - icon
       properties:
-        file:
-          type: string
-          format: binary
-          description: File to be tokenized
-        name:
-          type: string
-          description: Token name
-        icon:
-          type: string
-          enum:
-            - "fat"
-            - "steps"
-            - "heart"
-            - "oxygen"
-            - "sleep"
         user_id:
-          $ref: '#/components/schemas/UserId'
+          $ref: 'common.yaml#/components/schemas/UserId'
+        file:
+          $ref: '#/components/schemas/File'
+        token_name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
+        token_type:
+          type: string
 
     UserTokenDeleteRequest:
       type: object
       required:
-        - cid
         - user_id
+        - token_name
       properties:
-        cid:
-          $ref: '#/components/schemas/Cid'
+        token_name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
         user_id:
-          $ref: '#/components/schemas/UserId'
+          $ref: 'common.yaml#/components/schemas/UserId'
 
     UserTokenPatchRequest:
       type: object
       required:
-        - cid
+        - token_name
       properties:
-        cid:
-          $ref: '#/components/schemas/Cid'
-        file:
+        token_name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
+        new_token_name:
           type: string
-          format: binary
-          description: File to be tokenized
-        name:
+          example: "example_token_name"
+          description: New name of the user's tokenized file
+        token_type:
           type: string
-          description: Token name
-
-    Cid:
+        description:
+          type: string
+    
+    File:
       type: string
-      example: "QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR"
-      description: Unique file identifier inside IPFS
-
-    UserId:
-      type: string
-      example: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720"
-      description: User ID inside the blockchain system (address)
-
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          example: "Token with this cid already exists"
+      format: binary
+      description: File to be tokenized
