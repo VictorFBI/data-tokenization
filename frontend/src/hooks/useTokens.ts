@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Token } from '@/src/types/Token'
 import { FilterProps } from '@/src/types/FilterProps'
 import { fetchTokens, addToken } from '@/src/services/tokenService'
+import log from 'loglevel'
 
 export const useTokens = (initialParams: FilterProps = {}) => {
   const [tokens, setTokens] = useState<Token[]>([])
@@ -24,7 +25,7 @@ export const useTokens = (initialParams: FilterProps = {}) => {
         await addToken(newTokenData)
         await loadTokens()
       } catch (error) {
-        alert('Error adding token: ' + error)
+        log.error('Error adding token: ' + error)
       }
     },
     [loadTokens],

@@ -33,6 +33,8 @@
 #import "react/renderer/components/safeareacontext/States.h"
 #import "RNCWebViewSpec/RNCWebViewSpec.h"
 #import "RNCWebViewSpecJSI.h"
+#import "rndocumentpicker/rndocumentpicker.h"
+#import "rndocumentpickerJSI.h"
 #import "rnreanimated/rnreanimated.h"
 #import "rnreanimatedJSI.h"
 #import "rnscreens/rnscreens.h"
