@@ -20,10 +20,11 @@ export const useTokens = (initialParams: FilterProps = {}) => {
   }, [filterParams])
 
   const handleAddToken = useCallback(
-    async (newTokenData: Partial<Token>) => {
+    async (formData: FormData) => {
       try {
-        await addToken(newTokenData)
+        const result = await addToken(formData)
         await loadTokens()
+        return result
       } catch (error) {
         log.error('Error adding token: ' + error)
       }
