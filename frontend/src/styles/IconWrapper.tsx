@@ -1,5 +1,6 @@
 import { ICON_BG_COLOR } from '@/src/constants/colors'
 import { StyleSheet } from 'react-native'
+import { ICON_SIZE } from '@/src/constants/sizes'
 
 export const styles = StyleSheet.create({
   iconWrapper: {
@@ -8,5 +9,7 @@ export const styles = StyleSheet.create({
     padding: 4,
     justifyContent: 'center',
     alignItems: 'center',
+    width: ICON_SIZE + 8,
+    height: ICON_SIZE + 8,
   },
 })

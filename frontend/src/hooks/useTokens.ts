@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Token } from '@/src/types/Token'
 import { FilterProps } from '@/src/types/FilterProps'
 import { fetchTokens, addToken } from '@/src/services/tokenService'
+import log from 'loglevel'
 
 export const useTokens = (initialParams: FilterProps = {}) => {
   const [tokens, setTokens] = useState<Token[]>([])
@@ -19,12 +20,13 @@ export const useTokens = (initialParams: FilterProps = {}) => {
   }, [filterParams])
 
   const handleAddToken = useCallback(
-    async (newTokenData: Partial<Token>) => {
+    async (formData: FormData) => {
       try {
-        await addToken(newTokenData)
+        const result = await addToken(formData)
         await loadTokens()
+        return result
       } catch (error) {
-        alert('Error adding token: ' + error)
+        log.error('Error adding token: ' + error)
       }
     },
     [loadTokens],

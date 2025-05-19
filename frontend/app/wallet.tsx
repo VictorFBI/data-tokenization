@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import { BalanceView } from '@/src/components/screens/wallet/BalanceView'
 import { WalletButtons } from '@/src/components/screens/wallet/WalletButton'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
@@ -5,6 +6,8 @@ import { Token } from '@/src/types/Token'
 import { WalletButtonProps } from '@/src/types/WalletButtonProps'
 import { useTokens } from '@/src/hooks/useTokens'
 import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens'
+import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
+import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -12,17 +15,29 @@ import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens
  * @returns {JSX.Element} JSX-элемент, представляющий экран кошелька.
  */
 export default function WalletScreen() {
-  // TODO: добавить Modal для handleAddToken
   const { tokens, setFilterParams } = useTokens()
+  const [isAddModalVisible, setAddModalVisible] = useState(false)
+  const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
 
   const handleSearch = (query: string) => {
     setFilterParams(prev => ({ ...prev, search: query }))
   }
 
-  const noFunc = () => {}
   const walletButtons: WalletButtonProps[] = [
-    { iconName: 'add-circle-outline', buttonText: 'add', onPress: noFunc },
-    { iconName: 'history', buttonText: 'history', onPress: noFunc },
+    {
+      iconName: 'add-circle-outline',
+      buttonText: 'add',
+      onPress: () => {
+        setAddModalVisible(true)
+      },
+    },
+    {
+      iconName: 'history',
+      buttonText: 'history',
+      onPress: () => {
+        setHistoryModalVisible(true)
+      },
+    },
   ]
 
   return (
@@ -32,11 +47,19 @@ export default function WalletScreen() {
       <YourTokensWithSearch
         tokens={tokens}
         onSearch={handleSearch}
-        onFilter={() => {
-          /* TODO: Реализуйте фильтрацию */
+        onFilter={() => {}}
+        onTokenPress={(token: Token) => {}}
+      />
+      <AddTokenModal
+        visible={isAddModalVisible}
+        onRequestClose={() => {
+          setAddModalVisible(false)
         }}
-        onTokenPress={(token: Token) => {
-          void token
+      />
+      <HistoryModal
+        visible={isHistoryModalVisible}
+        onRequestClose={() => {
+          setHistoryModalVisible(false)
         }}
       />
     </BackgroundSafeAreaView>
