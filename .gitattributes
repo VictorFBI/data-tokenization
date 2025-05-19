@@ -1,6 +1,6 @@
-frontend/ios -diff
-frontend/android -diff
-backend/internal/gen -diff
-backend/go.sum -diff
-backend/go.work.sum -diff
-*_mock.go -diff
+frontend/ios -diff linguist-generated=true
+frontend/android -diff linguist-generated=true
+backend/internal/gen -diff linguist-generated=true
+backend/go.sum -diff linguist-generated=true
+backend/go.work.sum -diff linguist-generated=true
+*_mock.go -diff linguist-generated=true
