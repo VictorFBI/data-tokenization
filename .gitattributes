@@ -1,0 +1,6 @@
+frontend/ios -diff
+frontend/android -diff
+backend/internal/gen -diff
+backend/go.sum -diff
+backend/go.work.sum -diff
+*_mock.go -diff
