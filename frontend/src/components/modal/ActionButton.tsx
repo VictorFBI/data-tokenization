@@ -3,11 +3,14 @@ import SimpleText from '@/src/components/default-elements-overridings/SimpleText
 import { ACTION_BUTTON_COLOR, TEXT_COLOR } from '@/src/constants/colors'
 
 /**
- *
- * @param root0
- * @param root0.text
- * @param root0.onPress
- * @param root0.style
+ * Компонент `ActionButton` представляет собой кнопку с текстом и обработчиком нажатия.
+ * @param text.text
+ * @param text - текст, отображаемый на кнопке
+ * @param onPress - функция, вызываемая при нажатии на кнопку
+ * @param style - дополнительные стили для кнопки
+ * @param text.onPress
+ * @param text.style
+ * @returns {JSX.Element} - возвращает элемент TouchableOpacity с текстом кнопки
  */
 export function ActionButton({
   text,
@@ -17,7 +20,7 @@ export function ActionButton({
   text: string
   onPress: () => void
   style?: ViewStyle
-}) {
+}): JSX.Element {
   return (
     <TouchableOpacity style={[styles.actionButton, style]} onPress={onPress}>
       <SimpleText style={styles.actionButtonText}>{text}</SimpleText>

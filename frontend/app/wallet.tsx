@@ -7,6 +7,7 @@ import { WalletButtonProps } from '@/src/types/WalletButtonProps'
 import { useTokens } from '@/src/hooks/useTokens'
 import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens'
 import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
+import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -16,28 +17,26 @@ import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
 export default function WalletScreen() {
   const { tokens, setFilterParams } = useTokens()
   const [isAddModalVisible, setAddModalVisible] = useState(false)
+  const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
 
   const handleSearch = (query: string) => {
     setFilterParams(prev => ({ ...prev, search: query }))
-  }
-
-  const handleAddPress = () => {
-    setAddModalVisible(true)
-  }
-  const handleClose = () => {
-    setAddModalVisible(false)
   }
 
   const walletButtons: WalletButtonProps[] = [
     {
       iconName: 'add-circle-outline',
       buttonText: 'add',
-      onPress: handleAddPress,
+      onPress: () => {
+        setAddModalVisible(true)
+      },
     },
     {
       iconName: 'history',
       buttonText: 'history',
-      onPress: () => {},
+      onPress: () => {
+        setHistoryModalVisible(true)
+      },
     },
   ]
 
@@ -51,7 +50,18 @@ export default function WalletScreen() {
         onFilter={() => {}}
         onTokenPress={(token: Token) => {}}
       />
-      <AddTokenModal visible={isAddModalVisible} onRequestClose={handleClose} />
+      <AddTokenModal
+        visible={isAddModalVisible}
+        onRequestClose={() => {
+          setAddModalVisible(false)
+        }}
+      />
+      <HistoryModal
+        visible={isHistoryModalVisible}
+        onRequestClose={() => {
+          setHistoryModalVisible(false)
+        }}
+      />
     </BackgroundSafeAreaView>
   )
 }

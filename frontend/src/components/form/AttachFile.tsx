@@ -7,15 +7,17 @@ import MonoText from '@/src/components/default-elements-overridings/MonoText'
 import React from 'react'
 
 /**
+ * AttachFile - это компонент, который позволяет пользователю прикрепить файл к сообщению.
  *
- * @param props
- * @param props.tokenFile
- * @param props.setTokenFile
+ * @param props - объект, содержащий свойства компонента.
+ * @param props.tokenFile - выбранный файл.
+ * @param props.setTokenFile - функция для установки выбранного файла.
+ * @returns {JSX.Element} - возвращает элемент TouchableOpacity с иконкой и текст��м.
  */
 export function AttachFile(props: {
   tokenFile: DocumentPickerResponse | null
   setTokenFile: (file: DocumentPickerResponse | null) => void
-}) {
+}): JSX.Element {
   return (
     <TouchableOpacity
       style={styles.fileButton}

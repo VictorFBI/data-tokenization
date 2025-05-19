@@ -11,19 +11,20 @@ import { FlatList, View } from 'react-native'
 import { FormComponent } from '@/src/components/modal/FormComponent'
 import { ActionButton } from '@/src/components/modal/ActionButton'
 import { useAddForm } from '@/src/hooks/useAddForm'
-import { styles } from '@/src/styles/AddTokenModal'
+import { styles } from '@/src/styles/WalletModal'
 
 /**
  * Компонент модального окна для добавления токена.
  *
+ * @param props - Свойства компонента.
  * @param props.visible - Флаг, определяющий видимость модального окна.
  * @param props.onRequestClose - Функция, вызываемая при закрытии модального окна.
- * @param props
+ * @returns {JSX.Element} - Возвращает элемент модального окна для добавления токена.
  */
 export function AddTokenModal(props: {
   visible: boolean
   onRequestClose: () => void
-}) {
+}): JSX.Element {
   const { handleAddToken } = useTokens()
   // TODO: исправить структуру, тут она сложная: при добавлении новых полей нужно будет сделать много приседаний∆
   const {

@@ -7,13 +7,15 @@ import { findBestGapAndColumnSize } from '@/src/utils/findBestGapAndColumnSize'
 import { CHOSEN_ICON_BG_COLOR } from '@/src/constants/colors'
 
 /**
+ * `TouchableIconList` - это компонент, представляющий список иконок, которые можно нажимать.
  *
- * @param props
- * @param props.data
- * @param props.numColumns
- * @param props.gap
- * @param props.selectedIcon
- * @param props.onIconPress
+ * @param {Object} props - Свойства компонента.
+ * @param {MaterialIconName[]} props.data - Массив данных с именами иконок.
+ * @param {number} props.numColumns - Количество колонок для отображения иконок.
+ * @param {number} props.gap - Расстояние между иконками.
+ * @param {MaterialIconName | null} props.selectedIcon - Выбранная иконка или null, если иконка не выбрана.
+ * @param {function(MaterialIconName): void} props.onIconPress - Функция-обработчик, вызываемая при нажатии на иконку.
+ * @returns {JSX.Element} - Возвращает компонент `FlatList` с иконками.
  */
 export function TouchableIconList(props: {
   data: MaterialIconName[]
@@ -21,9 +23,7 @@ export function TouchableIconList(props: {
   gap: number
   selectedIcon: MaterialIconName | null
   onIconPress: (icon: MaterialIconName) => void
-}) {
-  console.log('aboba')
-  console.log(props.selectedIcon)
+}): JSX.Element {
   return (
     <FlatList
       data={props.data}
@@ -51,17 +51,19 @@ export function TouchableIconList(props: {
 }
 
 /**
+ * Компонент списка иконок для формы.
  *
- * @param props
- * @param props.data
- * @param props.selectedIcon
- * @param props.onIconPress
+ * @param {Object} props - Свойства компонента.
+ * @param {MaterialIconName[]} props.data - Массив данных с именами иконок.
+ * @param {MaterialIconName | null} props.selectedIcon - Выбранная иконка или null, если иконка не выбрана.
+ * @param {function(MaterialIconName): void} props.onIconPress - Функция-обработчик, вызываемая при нажатии на иконку.
+ * @returns {JSX.Element} - Возвращает элемент списка иконок.
  */
 export function FormIconList(props: {
   data: MaterialIconName[]
   selectedIcon: MaterialIconName | null
   onIconPress: (icon: MaterialIconName) => void
-}) {
+}): JSX.Element {
   const [columnNumber, setColumnNumber] = useState(0)
   const [gap, setGap] = useState(0)
 

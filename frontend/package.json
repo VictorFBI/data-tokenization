@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
+    "date-fns": "^4.1.0",
     "expo": "^53.0.0",
     "expo-constants": "~17.1.5",
     "expo-font": "~13.3.1",
