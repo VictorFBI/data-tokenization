@@ -25,6 +25,7 @@ export const historyStyle = StyleSheet.create({
     fontSize: 24,
     fontWeight: '500',
     color: THIRD_TEXT_COLOR,
+    marginBottom: 2,
   },
   tokenRow: {
     flexDirection: 'row',
@@ -49,11 +50,12 @@ export const historyStyle = StyleSheet.create({
     gap: 2,
   },
   historyListByDate: {
-    gap: 4,
+    gap: 0,
   },
   divider: {
     height: 1,
     backgroundColor: DIVIDER_COLOR,
-    marginTop: 6,
+    marginTop: 12,
+    marginBottom: 8,
   },
 })
