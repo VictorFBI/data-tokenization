@@ -16,13 +16,11 @@ export const styles = StyleSheet.create({
   name: {
     fontSize: 27,
     color: '#fff',
-    fontWeight: 'regular',
   },
   nameInput: {
     fontSize: 27,
     fontFamily: MONO_FONT,
     color: '#fff',
-    fontWeight: 'regular',
     textAlign: 'center',
   },
 })

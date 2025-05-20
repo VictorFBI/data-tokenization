@@ -65,7 +65,6 @@ function ProfileAvatar(): JSX.Element {
 /**
  * Компонент NameEditor отвечает за редактирование имени пользователя.
  *
- * @param {React.Dispatch<React.SetStateAction<string>>} root0.setName - Функция для обновления имени пользователя.
  * @returns {JSX.Element} - Возвращает элемент для отображения и редактирования имени.
  */
 function NameEditor(): JSX.Element {
@@ -91,7 +90,8 @@ function NameEditor(): JSX.Element {
     <TextInput
       style={styles.nameInput}
       value={name}
-      onChangeText={text => handleNameChange(text.slice(0, 20))}
+      onChangeText={handleNameChange}
+      maxLength={20}
       onBlur={() => setIsEditingName(false)}
       autoFocus
     />
