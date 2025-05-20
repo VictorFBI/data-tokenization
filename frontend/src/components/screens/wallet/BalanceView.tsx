@@ -5,6 +5,7 @@ import styles from '@/src/styles/CurrentBalance'
 import { MAIN_COLOR, SECOND_MAIN_COLOR } from '@/src/constants/colors'
 import { BalanceViewProps } from '@/src/types/BalanceViewProps'
 import { StyleProp, ViewStyle } from 'react-native'
+import { useTranslation } from 'react-i18next'
 
 /**
  * GradientBalanceView - это функциональный компонент, который отображает баланс с градиентным фоном.
@@ -42,10 +43,11 @@ function GradientBalanceView({
  * @returns {JSX.Element} - JSX-элемент, представляющий компонент текущего баланса.
  */
 function BalanceView({ tokenNumber }: BalanceViewProps) {
+  const { t } = useTranslation()
   return (
     <GradientBalanceView
-      title="Current balance"
-      value={`${tokenNumber} tokens`}
+      title={t('walletScreen.currentBalance')}
+      value={`${tokenNumber} ` + t('common.tokens')}
       style={styles.currentBalance}
     />
   )
@@ -60,10 +62,11 @@ function BalanceView({ tokenNumber }: BalanceViewProps) {
  * @returns {JSX.Element} - JSX-элемент, представляющий компонент рыночного баланса.
  */
 function MarketBalanceView({ tokenNumber }: BalanceViewProps) {
+  const { t } = useTranslation()
   return (
     <GradientBalanceView
-      title="Currently on market you have"
-      value={`${tokenNumber} tokens`}
+      title={t('marketScreen.currentMarketBalance')}
+      value={`${tokenNumber} ` + t('common.tokens')}
       style={styles.currentMarketBalance}
     />
   )

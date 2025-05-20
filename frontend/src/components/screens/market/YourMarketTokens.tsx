@@ -7,6 +7,7 @@ import SimpleText from '@/src/components/default-elements-overridings/SimpleText
 import { useState } from 'react'
 import { Token } from '@/src/types/Token'
 import { styles } from '@/src/styles/YourMarketTokens'
+import { useTranslation } from 'react-i18next'
 
 type TabType = 'yourTokens' | 'market'
 
@@ -44,6 +45,7 @@ export const YourMarketTokens = ({
   yourTokensProps,
   marketTokensProps,
 }: TokensScreenProps) => {
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState<TabType>('yourTokens')
 
   const tabContentMap = {
@@ -71,12 +73,12 @@ export const YourMarketTokens = ({
         <TabButton
           isActive={activeTab === 'yourTokens'}
           onPress={() => setActiveTab('yourTokens')}
-          label="Your Tokens"
+          label={t('marketScreen.yourTokens')}
         />
         <TabButton
           isActive={activeTab === 'market'}
           onPress={() => setActiveTab('market')}
-          label="Market"
+          label={t('marketScreen.market')}
         />
       </View>
 

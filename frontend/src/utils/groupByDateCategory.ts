@@ -6,6 +6,7 @@ import {
   isYesterday,
   subMonths,
 } from 'date-fns'
+import { DateCategory } from '@/src/types/DateCategoryEnum'
 
 /**
  * Функция `groupByDateCategory` группирует элементы массива `data` по категориям дат.
@@ -15,7 +16,9 @@ import {
  * @param data - Массив объектов типа `HistoryItem`, содержащих информацию с датами.
  * @returns Объект, где ключи - это категории дат, а значения - массивы элементов, относящихся к этим категориям.
  */
-export function groupByDateCategory(data: HistoryItem[]) {
+export function groupByDateCategory(
+  data: HistoryItem[],
+): Record<DateCategory, HistoryItem[]> {
   const now = new Date()
 
   return data
@@ -24,17 +27,17 @@ export function groupByDateCategory(data: HistoryItem[]) {
       (groups, item) => {
         const itemDate = new Date(item.date)
 
-        let category = 'Later'
+        let category: DateCategory = DateCategory.Later
         if (isToday(itemDate)) {
-          category = 'Today'
+          category = DateCategory.Today
         } else if (isYesterday(itemDate)) {
-          category = 'Yesterday'
+          category = DateCategory.Yesterday
         } else if (isThisWeek(itemDate)) {
-          category = 'Last Week'
+          category = DateCategory.LastWeek
         } else if (isThisMonth(itemDate)) {
-          category = 'Last Month'
+          category = DateCategory.LastMonth
         } else if (itemDate < subMonths(now, 1)) {
-          category = 'Earlier'
+          category = DateCategory.Earlier
         }
 
         if (!groups[category]) {
@@ -44,6 +47,6 @@ export function groupByDateCategory(data: HistoryItem[]) {
 
         return groups
       },
-      {} as Record<string, HistoryItem[]>,
+      {} as Record<DateCategory, HistoryItem[]>,
     )
 }

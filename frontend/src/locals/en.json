@@ -1,0 +1,59 @@
+{
+  "marketScreen": {
+    "currentMarketBalance": "Currently on market you have",
+    "yourTokens": "Your tokens",
+    "market": "Market"
+  },
+  "walletScreen": {
+    "currentBalance": "Current balance",
+    "yourTokens": "Your tokens",
+    "add": {
+      "button": "add",
+      "header": "Add token",
+      "badRequestAlert": "Please provide name, file and icon",
+      "failAlert": "Failed to add token",
+      "form": {
+        "file": "Tokenized file",
+        "name": "Name",
+        "icon": "Icon",
+        "desc": "Description",
+        "descPlaceholder": "Tell something about your token"
+      },
+      "cancel": "Cancel",
+      "add": "Add"
+    },
+    "history": {
+      "button": "history",
+      "header": "History",
+      "cancel": "Cancel",
+      "dateCategory": {
+        "later": "Later",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "lastWeek": "Last week",
+        "lastMonth": "Last month",
+        "earlier": "Earlier"
+      },
+      "tokenOperation": {
+        "add": "add",
+        "purchase": "purchase",
+        "sell": "sell"
+      }
+    }
+  },
+  "profileScreen": {
+    "notifications": "Notifications",
+    "changeAccount": "Change account",
+    "language": "Language",
+    "sendFeedback": "Send feedback"
+  },
+  "common": {
+    "searchTokens": "Search tokens",
+    "1token": "tokens",
+    "234tokens": "tokens",
+    "tokens": "tokens",
+    "On": "On",
+    "Off": "Off"
+  },
+  "language": "English"
+}

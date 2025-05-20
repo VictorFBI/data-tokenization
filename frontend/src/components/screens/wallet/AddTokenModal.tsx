@@ -12,6 +12,7 @@ import { FormComponent } from '@/src/components/modal/FormComponent'
 import { ActionButton } from '@/src/components/modal/ActionButton'
 import { useAddForm } from '@/src/hooks/useAddForm'
 import { styles } from '@/src/styles/WalletModal'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Компонент модального окна для добавления токена.
@@ -25,6 +26,8 @@ export function AddTokenModal(props: {
   visible: boolean
   onRequestClose: () => void
 }): JSX.Element {
+  const { t } = useTranslation()
+
   const { handleAddToken } = useTokens()
   // TODO: исправить структуру, тут она сложная: при добавлении новых полей нужно будет сделать много приседаний∆
   const {
@@ -43,7 +46,7 @@ export function AddTokenModal(props: {
   const handleSubmit = async () => {
     const formData = makeForm()
     if (!formData) {
-      alert('Please provide name, file and icon')
+      alert(t('walletScreen.add.badRequestAlert'))
       return
     }
     const { status } = await handleAddToken(formData)
@@ -52,7 +55,7 @@ export function AddTokenModal(props: {
       nullifyForm()
       props.onRequestClose()
     } else {
-      alert('Failed to add token')
+      alert(t('walletScreen.add.failAlert'))
     }
   }
 
@@ -69,13 +72,13 @@ export function AddTokenModal(props: {
 
   const formFields = [
     {
-      title: 'Tokenized file',
+      title: t('walletScreen.add.form.file'),
       component: (
         <AttachFile tokenFile={tokenFile} setTokenFile={setTokenFile} />
       ),
     },
     {
-      title: 'Name',
+      title: t('walletScreen.add.form.name'),
       component: (
         <FormTextInput
           value={tokenName}
@@ -85,7 +88,7 @@ export function AddTokenModal(props: {
       ),
     },
     {
-      title: 'Icon',
+      title: t('walletScreen.add.form.icon'),
       component: (
         <FormIconList
           data={icons}
@@ -95,11 +98,11 @@ export function AddTokenModal(props: {
       ),
     },
     {
-      title: 'Description',
+      title: t('walletScreen.add.form.desc'),
       component: (
         <FormTextInput
           value={tokenDescription}
-          placeholder={'Tell something about tour token'}
+          placeholder={t('walletScreen.add.form.descPlaceholder')}
           onChangeText={setTokenDescription}
           multiline={true}
         />
@@ -109,7 +112,9 @@ export function AddTokenModal(props: {
 
   return (
     <BaseModal visible={props.visible} onRequestClose={props.onRequestClose}>
-      <SimpleText style={styles.modalTitle}>Add Token</SimpleText>
+      <SimpleText style={styles.modalTitle}>
+        {t('walletScreen.add.header')}
+      </SimpleText>
       <FlatList
         data={formFields}
         keyExtractor={(_, index) => index.toString()}
@@ -124,8 +129,11 @@ export function AddTokenModal(props: {
         style={{ flex: 1 }}
       />
       <View style={styles.buttonRow}>
-        <ActionButton text="Cancel" onPress={props.onRequestClose} />
-        <ActionButton text="Add" onPress={handleSubmit} />
+        <ActionButton
+          text={t('walletScreen.add.cancel')}
+          onPress={props.onRequestClose}
+        />
+        <ActionButton text={t('walletScreen.add.add')} onPress={handleSubmit} />
       </View>
     </BaseModal>
   )

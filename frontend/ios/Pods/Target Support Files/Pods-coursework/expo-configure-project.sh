@@ -48,4 +48,4 @@ with_node \
   --target "/Users/artemkarapetian/programming/WebstormProjects/coursework/frontend/ios/Pods/Target Support Files/Pods-coursework/ExpoModulesProvider.swift" \
   --entitlement "/Users/artemkarapetian/programming/WebstormProjects/coursework/frontend/ios/coursework/coursework.entitlements" \
   --platform "apple" \
-  --packages "expo" "expo-asset" "expo-constants" "expo-file-system" "expo-font" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-router" "expo-splash-screen" "expo-web-browser"
+  --packages "expo" "expo-asset" "expo-constants" "expo-file-system" "expo-font" "expo-keep-awake" "expo-linear-gradient" "expo-linking" "expo-localization" "expo-router" "expo-splash-screen" "expo-web-browser"
