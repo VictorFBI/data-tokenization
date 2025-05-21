@@ -4,9 +4,10 @@ bin-deps:
 	GOBIN=${BINDIR} go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@v2.4.1 && \
 	GOBIN=${BINDIR} go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.64.8
 
-generate:
-	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_user api/rest/user.yaml > internal/gen/restgen/user.go
-	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_market api/rest/market.yaml > internal/gen/restgen/market.go
+api-generate:
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_user api/rest/user.yaml > internal/gen/restgen/user/api.go
+	@PATH=${BINDIR}:$$PATH oapi-codegen -generate types,gin -package restgen_market api/rest/market.yaml > internal/gen/restgen/market/api.go
+	
 lint:
 	@PATH=${BINDIR}:$$PATH golangci-lint run
 

@@ -1,14 +1,19 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"data-tokenization/handlers"
+	"data-tokenization/internal/app/rest"
 	"data-tokenization/internal/gen/contracts"
+	"data-tokenization/internal/gen/restgen/user"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	// "github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 
@@ -38,6 +43,8 @@ func deployContracts() {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Printf("PUBKEY IS %s\n", privateKey.PublicKey)
 
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
@@ -76,8 +83,8 @@ func main() {
 	// Setting max file size (8 MB)
 	router.MaxMultipartMemory = 8 << 20
 
-	// // Register the handler
-	// restgen.RegisterHandlers(router, rest.NewTokenHandler(business.NewService()))
+	// Register the handler
+	restgen_user.RegisterHandlers(router, rest.NewTokenHandler())
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(

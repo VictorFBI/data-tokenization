@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  hardhat-node:
+    build: .
+    ports:
+      - "8545:8545"  # Пробрасываем порт Hardhat Node
+    volumes:
+      - .:/app       # Пробрасываем локальный каталог в контейнер
+    # Указываем команду, если не хотим использовать CMD из Dockerfile
+    # command: npx hardhat node
+
+
+# version: '3.8'
+
+# services:
+#   ipfs:
+#     image: ipfs/go-ipfs:latest
+#     container_name: ipfs-node
+#     ports:
+#       - "4001:4001"
+#       - "5001:5001"
+#       - "8080:8080"
+#     volumes:
+#       - ipfs-data:/data/ipfs
+
+# volumes:
+#   ipfs-data:
