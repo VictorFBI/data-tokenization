@@ -2,6 +2,8 @@ import { Tabs } from 'expo-router'
 import TabBar from '@/src/navigation/TabBar'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src'
 import useLoadFonts from '@/src/utils/useLoadFonts'
+import { useEffect, useState } from 'react'
+import { initLanguage } from '@/src/utils/languageManager'
 
 /**
  * Компонент Layout отвечает за настройку и отображение вкладок приложения.
@@ -9,9 +11,13 @@ import useLoadFonts from '@/src/utils/useLoadFonts'
  * @returns {JSX.Element} - Возвращает компонент Tabs с настройками экранов и пользовательской панелью вкладок.
  */
 export default function Layout() {
-  const fontsLoaded = useLoadFonts()
+  const [isReady, setIsReady] = useState(false)
+  useEffect(() => {
+    initLanguage().then(() => setIsReady(true))
+  }, [])
 
-  if (!fontsLoaded) {
+  const fontsLoaded = useLoadFonts()
+  if (!fontsLoaded || !isReady) {
     return null
   }
 

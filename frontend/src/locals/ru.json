@@ -1,0 +1,59 @@
+{
+  "marketScreen": {
+    "currentMarketBalance": "На рынке у вас сейчас",
+    "yourTokens": "Ваши токены",
+    "market": "Рынок"
+  },
+  "walletScreen": {
+    "currentBalance": "Текущий баланс",
+    "yourTokens": "Ваши токены",
+    "add": {
+      "button": "добавить",
+      "header": "Добавить токен",
+      "badRequestAlert": "Пожалуйста, укажите имя, файл и иконку",
+      "failAlert": "Не удалось добавить токен",
+      "form": {
+        "file": "Токенизированный файл",
+        "name": "Имя",
+        "icon": "Иконка",
+        "desc": "Описание",
+        "descPlaceholder": "Расскажите что-нибудь о вашем токене"
+      },
+      "cancel": "Отмена",
+      "add": "Добавить"
+    },
+    "history": {
+      "button": "история",
+      "header": "История",
+      "cancel": "Отмена",
+      "dateCategory": {
+        "later": "Позже",
+        "today": "Сегодня",
+        "yesterday": "Вчера",
+        "lastWeek": "На прошлой неделе",
+        "lastMonth": "В прошлом месяце",
+        "earlier": "Ранее"
+      },
+      "tokenOperation": {
+        "add": "добавление",
+        "purchase": "покупка",
+        "sell": "продажа"
+      }
+    }
+  },
+  "profileScreen": {
+    "notifications": "Уведомления",
+    "changeAccount": "Сменить аккаунт",
+    "language": "Язык",
+    "sendFeedback": "Отправить отзыв"
+  },
+  "common": {
+    "searchTokens": "Поиск токенов",
+    "1token": "токен",
+    "234tokens": "токена",
+    "tokens": "токенов",
+    "On": "Вкл",
+    "Off": "Выкл"
+  },
+  "language": "Русский"
+}

@@ -15,17 +15,22 @@ import {
 import { HistoryItem } from '@/src/types/HistoryItem'
 import { MOCK_HISTORY_DATA } from '@/src/constants/mockValues'
 import { groupByDateCategory } from '@/src/utils/groupByDateCategory'
+import { useTranslation } from 'react-i18next'
+import { DateCategory } from '@/src/types/DateCategoryEnum'
+import { dateCategoryToLocalePath } from '@/src/constants/map-converters/dateCategoryConverter'
+import { tokenOperationToLocalePath } from '@/src/constants/map-converters/tokenOperationConverter'
+import { TokenOperation } from '@/src/types/TokenOperationEnum'
 
 const operationStyle = (token: HistoryItem) => {
   return [
     historyStyle.tokenText,
-    token.operation === 'purchase' && {
+    token.operation === TokenOperation.Purchase && {
       color: OPERATION_PURCHASE_COLOR,
     },
-    token.operation === 'add' && {
+    token.operation === TokenOperation.Add && {
       color: OPERATION_ADD_COLOR,
     },
-    token.operation === 'sell' && {
+    token.operation === TokenOperation.Sell && {
       color: OPERATION_SELL_COLOR,
     },
   ]
@@ -59,10 +64,11 @@ function HistoryTokenRow(props: { token: HistoryItem }): JSX.Element {
  * @returns {JSX.Element} - JSX-элемент строки с датой и операцией.
  */
 function HistoryDateRow(props: { token: HistoryItem }) {
+  const { t } = useTranslation()
   return (
     <View style={historyStyle.tokenOperationRow}>
       <SimpleText style={operationStyle(props.token)}>
-        {props.token.operation}
+        {t(tokenOperationToLocalePath[props.token.operation])}
       </SimpleText>
       <SimpleText style={operationStyle(props.token)}>
         {props.token.date}
@@ -102,18 +108,23 @@ export function HistoryModal(props: {
   visible: boolean
   onRequestClose: () => void
 }) {
-  const historyData: Record<string, HistoryItem[]> =
+  const { t } = useTranslation()
+  const historyData: Record<DateCategory, HistoryItem[]> =
     groupByDateCategory(MOCK_HISTORY_DATA)
 
   return (
     <BaseModal visible={props.visible} onRequestClose={props.onRequestClose}>
-      <SimpleText style={styles.modalTitle}>History</SimpleText>
+      <SimpleText style={styles.modalTitle}>
+        {t('walletScreen.history.header')}
+      </SimpleText>
       <FlatList
         data={Object.entries(historyData)}
         keyExtractor={([date]) => date}
         renderItem={({ item: [date, tokens] }) => (
           <View style={historyStyle.historyList}>
-            <SimpleText style={historyStyle.dateText}>{date}</SimpleText>
+            <SimpleText style={historyStyle.dateText}>
+              {t(dateCategoryToLocalePath[date as DateCategory])}
+            </SimpleText>
             <View style={historyStyle.historyListByDate}>
               {tokens.map((token, index) => (
                 <HistoryRow key={index} historyItem={token} />
@@ -123,7 +134,10 @@ export function HistoryModal(props: {
         )}
       />
       <View style={styles.buttonRow}>
-        <ActionButton text="Cancel" onPress={props.onRequestClose} />
+        <ActionButton
+          text={t('walletScreen.history.cancel')}
+          onPress={props.onRequestClose}
+        />
       </View>
     </BaseModal>
   )

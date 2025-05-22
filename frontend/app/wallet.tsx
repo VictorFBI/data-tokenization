@@ -8,6 +8,7 @@ import { useTokens } from '@/src/hooks/useTokens'
 import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens'
 import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
 import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -15,6 +16,7 @@ import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
  * @returns {JSX.Element} JSX-элемент, представляющий экран кошелька.
  */
 export default function WalletScreen() {
+  const { t } = useTranslation()
   const { tokens, setFilterParams } = useTokens()
   const [isAddModalVisible, setAddModalVisible] = useState(false)
   const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
@@ -26,14 +28,14 @@ export default function WalletScreen() {
   const walletButtons: WalletButtonProps[] = [
     {
       iconName: 'add-circle-outline',
-      buttonText: 'add',
+      buttonText: t('walletScreen.add.button'),
       onPress: () => {
         setAddModalVisible(true)
       },
     },
     {
       iconName: 'history',
-      buttonText: 'history',
+      buttonText: t('walletScreen.history.button'),
       onPress: () => {
         setHistoryModalVisible(true)
       },

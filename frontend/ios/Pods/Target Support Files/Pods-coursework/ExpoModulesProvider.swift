@@ -14,6 +14,7 @@ import ExpoFont
 import ExpoKeepAwake
 import ExpoLinearGradient
 import ExpoLinking
+import ExpoLocalization
 import ExpoHead
 import ExpoSplashScreen
 import ExpoWebBrowser
@@ -32,6 +33,7 @@ public class ExpoModulesProvider: ModulesProvider {
       KeepAwakeModule.self,
       LinearGradientModule.self,
       ExpoLinkingModule.self,
+      LocalizationModule.self,
       ExpoHeadModule.self,
       SplashScreenModule.self,
       WebBrowserModule.self

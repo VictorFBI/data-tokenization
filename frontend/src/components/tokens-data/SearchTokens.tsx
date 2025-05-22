@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'
 import { ICON_COLOR, THIRD_TEXT_COLOR } from '@/src/constants/colors'
 import { SearchTokensParams } from '@/src/types/SearchTokensProps'
 import { styles } from '@/src/styles/SearchTokens'
+import { useTranslation } from 'react-i18next'
 
 /**
  * SearchTokens - это компонент, который отображает строку поиска и иконки для фильтрации и меню.
@@ -15,6 +16,7 @@ import { styles } from '@/src/styles/SearchTokens'
  * @returns {JSX.Element} - возвращает элемент View со строкой поиска и иконками.
  */
 export function SearchTokens(props: SearchTokensParams): JSX.Element {
+  const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleSearch = useCallback(
@@ -30,7 +32,7 @@ export function SearchTokens(props: SearchTokensParams): JSX.Element {
       <MaterialIcons name="search" size={20} color={ICON_COLOR} />
       <TextInput
         style={styles.searchInput}
-        placeholder="Search tokens"
+        placeholder={t('common.searchTokens')}
         placeholderTextColor={THIRD_TEXT_COLOR}
         value={searchQuery}
         onChangeText={handleSearch}

@@ -5,6 +5,8 @@ import Options, {
 } from '@/src/components/screens/profile/ProfileOption'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
 import { ProfileHeader } from '@/src/components/screens/profile/ProfileHeader'
+import { changeAppLanguage } from '@/src/utils/languageManager'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Экран ProfileScreen отображает настройки профиля пользователя.
@@ -13,27 +15,31 @@ import { ProfileHeader } from '@/src/components/screens/profile/ProfileHeader'
  * @returns {JSX.Element} JSX-элемент, представляющий экран профиля.
  */
 export default function ProfileScreen() {
+  const { t } = useTranslation()
   // Todo: change somehow
   const profileSettingsOptions: OptionProps[] = [
     {
       icon: 'notifications-none',
-      label: 'Notifications',
-      value: 'On',
+      label: t('profileScreen.notifications'),
+      value: t('common.On'),
     },
     {
       icon: 'key',
-      label: 'Change account',
+      label: t('profileScreen.changeAccount'),
     },
     {
       icon: 'language',
-      label: 'Language',
-      value: 'English',
+      label: t('profileScreen.language'),
+      value: t('language'),
+      onPress() {
+        changeAppLanguage()
+      },
     },
   ]
   const sendFeedbackOption: OptionProps[] = [
     {
       icon: 'feedback',
-      label: 'Send feedback',
+      label: t('profileScreen.sendFeedback'),
     },
   ]
 
