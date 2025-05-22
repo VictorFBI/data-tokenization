@@ -7,12 +7,18 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"data-tokenization/internal/app/rest"
+	"data-tokenization/internal/config"
 	restgen_user "data-tokenization/internal/gen/restgen/user"
 
 	"data-tokenization/internal/pkg/business"
 )
 
 func main() {
+	// Load configuration
+	if err := config.LoadConfig(); err != nil {
+		panic(err)
+	}
+
 	_, err := rpc.NewLocalApi()
 	if err != nil {
 		panic(err)

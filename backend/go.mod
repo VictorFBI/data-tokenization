@@ -208,6 +208,7 @@ require (
 	github.com/invopop/yaml v0.3.1 // indirect
 	github.com/ipfs/go-cid v0.5.0 // indirect
 	github.com/jedisct1/go-minisign v0.0.0-20230811132847-661be99b8267 // indirect
+	github.com/joho/godotenv v1.5.1
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/kr/pretty v0.3.1 // indirect

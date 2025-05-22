@@ -2,21 +2,17 @@ package business
 
 import (
 	"context"
-	"data-tokenization/internal/app/config"
+	"data-tokenization/internal/config"
 	"data-tokenization/internal/gen/contracts"
+	"os"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-const (
-	DeployerPrivateKey  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-	HardhatRPCServerURL = "http://localhost:8545"
-)
-
-func GetAuth() (*bind.TransactOpts, error) {
-	client, err := ethclient.Dial(HardhatRPCServerURL)
+func getAuth() (*bind.TransactOpts, error) {
+	client, err := ethclient.Dial(os.Getenv("HARDHAT_RPC_URL"))
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +22,7 @@ func GetAuth() (*bind.TransactOpts, error) {
 		return nil, err
 	}
 
-	privateKey, err := crypto.HexToECDSA(DeployerPrivateKey)
+	privateKey, err := crypto.HexToECDSA(os.Getenv("DEPLOYER_PRIVATE_KEY"))
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +36,12 @@ func GetAuth() (*bind.TransactOpts, error) {
 }
 
 func DeployContracts() error {
-	client, err := ethclient.Dial(HardhatRPCServerURL)
+	client, err := ethclient.Dial(os.Getenv("HARDHAT_RPC_URL"))
 	if err != nil {
 		return err
 	}
 
-	auth, err := GetAuth()
+	auth, err := getAuth()
 	if err != nil {
 		return err
 	}
@@ -61,7 +57,7 @@ func DeployContracts() error {
 }
 
 func newTokenatorClient() (*contracts.Tokenator, error) {
-	client, err := ethclient.Dial(HardhatRPCServerURL)
+	client, err := ethclient.Dial(os.Getenv("HARDHAT_RPC_URL"))
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +71,7 @@ func newTokenatorClient() (*contracts.Tokenator, error) {
 }
 
 func Tokenize(signature string, tokenName string, ipfsPath string) error {
-	auth, err := GetAuth()
+	auth, err := getAuth()
 	if err != nil {
 		return err
 	}
@@ -94,7 +90,7 @@ func Tokenize(signature string, tokenName string, ipfsPath string) error {
 }
 
 func GetTokenInfoByName(signature string, tokenName string) (string, error) {
-	auth, err := GetAuth()
+	auth, err := getAuth()
 	if err != nil {
 		return "", err
 	}
