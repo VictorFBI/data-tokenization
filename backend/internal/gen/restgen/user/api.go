@@ -4,7 +4,11 @@
 package restgen_user
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
+	"github.com/oapi-codegen/runtime"
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
@@ -35,12 +39,6 @@ type UserTokenDeleteRequest struct {
 
 	// UserId User ID inside the blockchain system (address)
 	UserId UserId `json:"user_id"`
-}
-
-// UserTokenGetRequest defines model for UserTokenGetRequest.
-type UserTokenGetRequest struct {
-	// Cid Unique file identifier inside IPFS
-	Cid Cid `json:"cid"`
 }
 
 // UserTokenListRequest defines model for UserTokenListRequest.
@@ -80,18 +78,21 @@ type UserTokenPostRequest struct {
 	// Name Token name
 	Name string `json:"name"`
 
-	// UserId User ID inside the blockchain system (address)
-	UserId UserId `json:"user_id"`
+	// Signature Signature of the user
+	Signature string `json:"signature"`
 }
 
 // UserTokenPostRequestIcon defines model for UserTokenPostRequest.Icon.
 type UserTokenPostRequestIcon string
 
+// GetUserTokenParams defines parameters for GetUserToken.
+type GetUserTokenParams struct {
+	TokenName string `form:"token_name" json:"token_name"`
+	Signature string `form:"signature" json:"signature"`
+}
+
 // DeleteUserTokenJSONRequestBody defines body for DeleteUserToken for application/json ContentType.
 type DeleteUserTokenJSONRequestBody = UserTokenDeleteRequest
-
-// GetUserTokenJSONRequestBody defines body for GetUserToken for application/json ContentType.
-type GetUserTokenJSONRequestBody = UserTokenGetRequest
 
 // PatchUserTokenJSONRequestBody defines body for PatchUserToken for application/json ContentType.
 type PatchUserTokenJSONRequestBody = UserTokenPatchRequest
@@ -109,7 +110,7 @@ type ServerInterface interface {
 	DeleteUserToken(c *gin.Context)
 
 	// (GET /user/token)
-	GetUserToken(c *gin.Context)
+	GetUserToken(c *gin.Context, params GetUserTokenParams)
 
 	// (PATCH /user/token)
 	PatchUserToken(c *gin.Context)
@@ -146,6 +147,41 @@ func (siw *ServerInterfaceWrapper) DeleteUserToken(c *gin.Context) {
 // GetUserToken operation middleware
 func (siw *ServerInterfaceWrapper) GetUserToken(c *gin.Context) {
 
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUserTokenParams
+
+	// ------------- Required query parameter "token_name" -------------
+
+	if paramValue := c.Query("token_name"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument token_name is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "token_name", c.Request.URL.Query(), &params.TokenName)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_name: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Required query parameter "signature" -------------
+
+	if paramValue := c.Query("signature"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument signature is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "signature", c.Request.URL.Query(), &params.Signature)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter signature: %w", err), http.StatusBadRequest)
+		return
+	}
+
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
 		if c.IsAborted() {
@@ -153,7 +189,7 @@ func (siw *ServerInterfaceWrapper) GetUserToken(c *gin.Context) {
 		}
 	}
 
-	siw.Handler.GetUserToken(c)
+	siw.Handler.GetUserToken(c, params)
 }
 
 // PatchUserToken operation middleware

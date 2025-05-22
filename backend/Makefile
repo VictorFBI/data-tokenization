@@ -12,7 +12,7 @@ lint:
 	@PATH=${BINDIR}:$$PATH golangci-lint run
 
 # Define smart contracts names once
-SMART_CONTRACTS_NAMES := Storage
+SMART_CONTRACTS_NAMES := Tokenator
 
 contracts-generate:
 	@echo "Generating files to interact with smart contracts..."

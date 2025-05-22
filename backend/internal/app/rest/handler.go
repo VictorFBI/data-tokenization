@@ -1,17 +1,10 @@
 package rest
 
 import (
-	"bufio"
-	"context"
-	"fmt"
-	"log"
-	"os"
-
 	"github.com/gin-gonic/gin"
-	"github.com/ipfs/boxo/files"
-	"github.com/ipfs/kubo/client/rpc"
 
 	restgen_user "data-tokenization/internal/gen/restgen/user"
+	"data-tokenization/internal/pkg/business"
 )
 
 type TokenHandler struct {
@@ -23,8 +16,31 @@ func (t *TokenHandler) DeleteUserToken(c *gin.Context) {
 }
 
 // GetUserToken implements restgen_api.ServerInterface.
-func (t *TokenHandler) GetUserToken(c *gin.Context) {
-	panic("unimplemented")
+func (t *TokenHandler) GetUserToken(c *gin.Context, params restgen_user.GetUserTokenParams) {
+	ipfsPath, err := business.GetTokenInfoByName(params.Signature, params.TokenName)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	if ipfsPath == "" {
+		c.JSON(404, gin.H{"error": "Token not found"})
+		return
+	}
+
+	// Trim to first 32 characters for encryption key
+	encryptionKey := params.Signature[:32]
+
+	// Read and decrypt file from IPFS
+	fileContent, err := business.ReadFileFromIPFS(ipfsPath, encryptionKey)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"content": string(fileContent),
+	})
 }
 
 // GetUserTokenList implements restgen_api.ServerInterface.
@@ -39,10 +55,10 @@ func (t *TokenHandler) PatchUserToken(c *gin.Context) {
 
 // PostUserToken implements restgen_api.ServerInterface.
 func (t *TokenHandler) PostUserToken(c *gin.Context) {
-	var request restgen_user.PostUserTokenMultipartRequestBody
+	var request restgen_user.UserTokenPostRequest
 
 	// Get file from form
-	request_file, err := c.FormFile("file")
+	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(400, gin.H{"error": "file is required"})
 		return
@@ -50,82 +66,30 @@ func (t *TokenHandler) PostUserToken(c *gin.Context) {
 
 	// Get other form fields
 	request.Name = c.PostForm("name")
-	request.UserId = restgen_user.UserId(c.PostForm("user_id"))
+	request.Signature = c.PostForm("signature")
 	request.Icon = restgen_user.UserTokenPostRequestIcon(c.PostForm("icon"))
 
 	// Validate required fields
-	if request.Name == "" || request.UserId == "" || request.Icon == "" {
-		c.JSON(400, gin.H{"error": "name, user_id and icon are required"})
+	if request.Name == "" || request.Signature == "" || request.Icon == "" {
+		c.JSON(400, gin.H{"error": "name, signature and icon are required"})
 		return
 	}
 
+	// Trim to first 32 characters
+	encryptionKey := request.Signature[:32]
 
-	// Открываем файл
-	log.Println(request_file.Filename)
-	file, err := request_file.Open()
+	ipfsPath, err := business.UploadFileToIPFSWithEncryption(fileHeader, encryptionKey)
 	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"error": "Failed to open the file"})
-		return
-	}
-	defer file.Close()
-
-	// Создаем новый буферизованный ридер
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		// Читать файл построчно
-		log.Println(scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		c.JSON(500, gin.H{"error": err})
+		c.JSON(400, gin.H{"error": err})
 		return
 	}
 
-	ipfsAPI, err := rpc.NewLocalApi()
-
-	if err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
-
-	// Creating temp file
-	tempFile, err := os.CreateTemp("", "ipfs-upload-*")
-	if err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
-	defer os.Remove(tempFile.Name())
-	defer tempFile.Close()
-
-	// Saving uploaded file to temp file
-	// nolint
-	if err := c.SaveUploadedFile(request_file, tempFile.Name()); err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
-
-	// Opening temp file for reading
-	uploadedFile, err := os.Open(tempFile.Name())
-	if err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
-	defer uploadedFile.Close()
-
-	// Creating file node
-	fileNode := files.NewReaderFile(uploadedFile)
-
-	// Uploading file to IPFS
-	path, err := ipfsAPI.Unixfs().Add(context.Background(), fileNode)
-	if err != nil {
-		c.JSON(500, gin.H{"error": err})
-		return
-	}
+	business.Tokenize(request.Signature, request.Name, ipfsPath)
 
 	c.JSON(200, gin.H{
-		"message":   "File uploaded successfully",
-		"ipfs_path": path.String(),
+		"message":       "File uploaded successfully",
+		"ipfs_path":     ipfsPath,
+		"encrypted_key": encryptionKey,
 	})
 }
 

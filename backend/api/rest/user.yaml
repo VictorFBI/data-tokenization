@@ -11,12 +11,19 @@ paths:
   /user/token:
     get:
       description: Get info about concrete token
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserTokenGetRequest'
+      parameters:
+        - name: token_name
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Name of the token to get information about
+        - name: signature
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Signature of the user
       responses:
         '200':
           description: OK
@@ -132,19 +139,22 @@ components:
     UserTokenGetRequest:
       type: object
       required:
-        - cid
+        - token_name
       properties:
-        cid:
-          $ref: '#/components/schemas/Cid'
+        token_name:
+          $ref: '#/components/schemas/TokenName'
 
     UserTokenPostRequest:
       type: object
       required:
+        - signature
         - file
         - name
         - icon
-        - user_id
       properties:
+        signature:
+          type: string
+          description: Signature of the user
         file:
           type: string
           format: binary
@@ -160,8 +170,6 @@ components:
             - "heart"
             - "oxygen"
             - "sleep"
-        user_id:
-          $ref: '#/components/schemas/UserId'
 
     UserTokenDeleteRequest:
       type: object
@@ -193,6 +201,10 @@ components:
       type: string
       example: "QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR"
       description: Unique file identifier inside IPFS
+
+    TokenName:
+      type: string
+      example: "tth_2025-05-22"
 
     UserId:
       type: string
