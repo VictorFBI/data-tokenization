@@ -88,8 +88,6 @@ func (t *TokenHandler) PostUserToken(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message":       "File uploaded successfully",
-		"ipfs_path":     ipfsPath,
-		"encrypted_key": encryptionKey,
 	})
 }
 
