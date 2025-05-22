@@ -42,4 +42,4 @@ app-example
 
 bin
 contracts/build
-backend/.env
+.env
