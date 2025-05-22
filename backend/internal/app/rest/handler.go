@@ -1,13 +1,27 @@
 package rest
 
 import (
+	"context"
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	restgen_user "data-tokenization/internal/gen/restgen/user"
-	"data-tokenization/internal/pkg/business"
+	"data-tokenization/internal/pkg/model"
 )
 
+type tokenService interface {
+	ReadFromIPFS(context.Context, model.GetUserToken) ([]byte, error)
+	UploadToken(context.Context, model.UploadTokenRequest) error
+}
+
 type TokenHandler struct {
+	ts tokenService
+}
+
+// NewTokenHandler создает новый обработчик токенов
+func NewTokenHandler(ts tokenService) *TokenHandler {
+	return &TokenHandler{ts: ts}
 }
 
 // DeleteUserToken implements restgen_api.ServerInterface.
@@ -17,28 +31,13 @@ func (t *TokenHandler) DeleteUserToken(c *gin.Context) {
 
 // GetUserToken implements restgen_api.ServerInterface.
 func (t *TokenHandler) GetUserToken(c *gin.Context, params restgen_user.GetUserTokenParams) {
-	ipfsPath, err := business.GetTokenInfoByName(params.Signature, params.TokenName)
+	fileContent, err := t.ts.ReadFromIPFS(c, model.GetUserToken(params))
 	if err != nil {
-		c.JSON(400, gin.H{"error": err})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
 
-	if ipfsPath == "" {
-		c.JSON(404, gin.H{"error": "Token not found"})
-		return
-	}
-
-	// Trim to first 32 characters for encryption key
-	encryptionKey := params.Signature[:32]
-
-	// Read and decrypt file from IPFS
-	fileContent, err := business.ReadFileFromIPFS(ipfsPath, encryptionKey)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err})
-		return
-	}
-
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"content": string(fileContent),
 	})
 }
@@ -55,13 +54,29 @@ func (t *TokenHandler) PatchUserToken(c *gin.Context) {
 
 // PostUserToken implements restgen_api.ServerInterface.
 func (t *TokenHandler) PostUserToken(c *gin.Context) {
+	req, err := makeUploadTokenRequest(c)
+	if err != nil {
+		return
+	}
+
+	if err = t.ts.UploadToken(c, req); err != nil {
+		c.JSON(400, gin.H{"error": err})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"message": "File uploaded successfully",
+	})
+}
+
+func makeUploadTokenRequest(c *gin.Context) (model.UploadTokenRequest, error) {
 	var request restgen_user.UserTokenPostRequest
 
 	// Get file from form
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(400, gin.H{"error": "file is required"})
-		return
+		return model.UploadTokenRequest{}, nil
 	}
 
 	// Get other form fields
@@ -72,26 +87,14 @@ func (t *TokenHandler) PostUserToken(c *gin.Context) {
 	// Validate required fields
 	if request.Name == "" || request.Signature == "" || request.Icon == "" {
 		c.JSON(400, gin.H{"error": "name, signature and icon are required"})
-		return
+		return model.UploadTokenRequest{}, nil
 	}
 
-	// Trim to first 32 characters
-	encryptionKey := request.Signature[:32]
-
-	ipfsPath, err := business.UploadFileToIPFSWithEncryption(fileHeader, encryptionKey)
-	if err != nil {
-		c.JSON(400, gin.H{"error": err})
-		return
+	req := model.UploadTokenRequest{
+		FileHeader: fileHeader,
+		Icon:       string(request.Icon),
+		Name:       request.Name,
+		Signature:  request.Signature,
 	}
-
-	business.Tokenize(request.Signature, request.Name, ipfsPath)
-
-	c.JSON(200, gin.H{
-		"message":       "File uploaded successfully",
-	})
-}
-
-// NewTokenHandler создает новый обработчик токенов
-func NewTokenHandler() *TokenHandler {
-	return &TokenHandler{}
+	return req, nil
 }

@@ -31,8 +31,10 @@ func main() {
 	// Setting max file size (8 MB)
 	router.MaxMultipartMemory = 8 << 20
 
+	service := business.NewService()
+
 	// Register the handler
-	restgen_user.RegisterHandlers(router, rest.NewTokenHandler())
+	restgen_user.RegisterHandlers(router, rest.NewTokenHandler(service))
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(

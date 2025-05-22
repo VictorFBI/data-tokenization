@@ -2,6 +2,7 @@ package business
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -9,10 +10,12 @@ import (
 	"github.com/ipfs/boxo/files"
 	"github.com/ipfs/boxo/path"
 	"github.com/ipfs/kubo/client/rpc"
+
+	"data-tokenization/internal/pkg/model"
 )
 
 // UploadEncryptedFileToIPFS загружает зашифрованный файл в IPFS
-func UploadFileToIPFSWithEncryption(fileHeader *multipart.FileHeader, encryptionKey string) (string, error) {
+func uploadFileToIPFSWithEncryption(fileHeader *multipart.FileHeader, encryptionKey string) (string, error) {
 	// Open file
 	file, err := fileHeader.Open()
 	if err != nil {
@@ -83,4 +86,37 @@ func ReadFileFromIPFS(ipfsPath string, encryptionKey string) ([]byte, error) {
 	}
 
 	return decryptedContent, nil
+}
+
+func (s *service) ReadFromIPFS(_ context.Context, req model.GetUserToken) ([]byte, error) {
+	ipfsPath, err := getTokenInfoByName(req.Signature, req.TokenName)
+	if err != nil {
+		return nil, err
+	}
+	if ipfsPath == "" {
+		return nil, errors.New("token not found")
+	}
+
+	// Trim to first 32 characters for encryption key
+	encryptionKey := req.Signature[:32]
+
+	// Read and decrypt file from IPFS
+	fileContent, err := ReadFileFromIPFS(ipfsPath, encryptionKey)
+	return fileContent, err
+}
+
+func (s *service) UploadToken(_ context.Context, req model.UploadTokenRequest) error {
+	// Trim to first 32 characters
+	encryptionKey := req.Signature[:32]
+
+	ipfsPath, err := uploadFileToIPFSWithEncryption(req.FileHeader, encryptionKey)
+	if err != nil {
+		return err
+	}
+
+	err = tokenize(req.Signature, req.Name, ipfsPath)
+	if err != nil {
+		return err
+	}
+	return nil
 }

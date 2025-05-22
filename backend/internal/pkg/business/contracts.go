@@ -2,9 +2,10 @@ package business
 
 import (
 	"context"
+	"os"
+
 	"data-tokenization/internal/config"
 	"data-tokenization/internal/gen/contracts"
-	"os"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -70,7 +71,7 @@ func newTokenatorClient() (*contracts.Tokenator, error) {
 	return tokenator, nil
 }
 
-func Tokenize(signature string, tokenName string, ipfsPath string) error {
+func tokenize(signature string, tokenName string, ipfsPath string) error {
 	auth, err := getAuth()
 	if err != nil {
 		return err
@@ -89,7 +90,7 @@ func Tokenize(signature string, tokenName string, ipfsPath string) error {
 	return nil
 }
 
-func GetTokenInfoByName(signature string, tokenName string) (string, error) {
+func getTokenInfoByName(signature string, tokenName string) (string, error) {
 	auth, err := getAuth()
 	if err != nil {
 		return "", err
