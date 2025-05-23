@@ -2,82 +2,39 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/ipfs/kubo/client/rpc"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"data-tokenization/handlers"
-	"data-tokenization/internal/gen/contracts"
+	"data-tokenization/internal/app/rest"
+	"data-tokenization/internal/config"
+	restgen_user "data-tokenization/internal/gen/restgen/user"
 
-	"github.com/ethereum/go-ethereum/accounts/abi/bind"
-	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/ethereum/go-ethereum/ethclient"
-
-	"context"
-	"log"
-	"math/big"
+	"data-tokenization/internal/pkg/business"
 )
-
-const (
-	DeployerPrivateKey  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-	HardhatRPCServerURL = "http://localhost:8545"
-	BackendServerURL    = "localhost:8081"
-)
-
-func deployContracts() {
-	client, err := ethclient.Dial(HardhatRPCServerURL)
-	if err != nil {
-		panic(err)
-	}
-
-	chainID, err := client.ChainID(context.Background())
-	if err != nil {
-		panic(err)
-	}
-
-	privateKey, err := crypto.HexToECDSA(DeployerPrivateKey)
-	if err != nil {
-		panic(err)
-	}
-
-	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
-	if err != nil {
-		panic(err)
-	}
-
-	address, _, _, err := contracts.DeployStorage(auth, client)
-	if err != nil {
-		panic(err)
-	}
-
-	log.Println("Contract deployed at address: ", address.Hex())
-
-	instance, err := contracts.NewStorage(address, client)
-	if err != nil {
-		panic(err)
-	}
-
-	// nolint
-	instance.Store(auth, big.NewInt(42))
-
-	number, _ := instance.Retrieve(&bind.CallOpts{})
-
-	log.Println("Number: ", number)
-}
 
 func main() {
-	if err := handlers.InitIPFS(); err != nil {
+	// Load configuration
+	if err := config.LoadConfig(); err != nil {
 		panic(err)
 	}
 
-	deployContracts()
+	_, err := rpc.NewLocalApi()
+	if err != nil {
+		panic(err)
+	}
+
+	business.DeployContracts()
 
 	router := gin.Default()
 
 	// Setting max file size (8 MB)
 	router.MaxMultipartMemory = 8 << 20
 
-	// // Register the handler
-	// restgen.RegisterHandlers(router, rest.NewTokenHandler(business.NewService()))
+	service := business.NewService()
+
+	// Register the handler
+	restgen_user.RegisterHandlers(router, rest.NewTokenHandler(service))
 
 	// swagger
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(
