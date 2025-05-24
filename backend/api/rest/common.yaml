@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Common schemas for Token Management API
+paths: { }
+
+components:
+  schemas:
+    UserId:
+      type: string
+      example: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720"
+      description: User ID inside the blockchain system (address)
+
+    Price:
+      type: string
+      pattern: '^\\d+(\\.\\d{1,18})?$'
+      example: "123.456789012345678901"
+      description: Число с точностью до 18 знаков после запятой
+
+    TokenName:
+      type: string
+      example: "example_token_name"
+      description: Name of the user's tokenized file
+    
+    Date:
+      type: string
+      format: date
+    
+    Filter:
+      type: object
+      properties:
+        token_name:
+          $ref: '#/components/schemas/TokenName'
+        token_type:
+          type: string
+        start_date:
+          $ref: '#/components/schemas/Date'
+        end_date:
+          $ref: '#/components/schemas/Date'
+        sort_direction:
+          $ref: '#/components/schemas/SortDirection'
+    
+    Cursor:
+      type: integer
+      description: Limit of tokens_repository to return
+    
+    Limit:
+      type: integer
+      description: Cursor to start from
+    
+    Token:
+      type: object
+      required:
+        - token_name
+        - token_type
+        - description
+        - price
+        - file_name
+      properties:
+        token_name:
+          $ref: '#/components/schemas/TokenName'
+        token_type:
+          type: string
+        description:
+          type: string
+        price:
+          $ref: '#/components/schemas/Price'
+        file_name:
+          type: string
+    
+    SortDirection:
+      type: string
+      enum:
+        - "Asc"
+        - "Desc"
+    
+    ListTokenResponse:
+      type: object
+      required:
+        - token_name
+        - token_type
+        - price
+      properties:
+        token_name:
+          $ref: '#/components/schemas/TokenName'
+        token_type:
+          type: string
+        price:
+          $ref: '#/components/schemas/Price'
+        currency_code:
+          type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string

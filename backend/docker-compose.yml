@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+   postgres:
+    image: postgres:14.8-alpine
+    ports:
+      - "6543:5432"
+    environment:
+      POSTGRES_USER: tokenator-user
+      POSTGRES_PASSWORD: pwd
+      POSTGRES_DB: tokenator
+      POSTGRES_HOST_AUTH_METHOD: trust
+    command: -c log_statement=all

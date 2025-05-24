@@ -1,4 +1,4 @@
-package handlers
+package ipfs
 
 import (
 	"context"
@@ -7,18 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ipfs/boxo/files"
-	"github.com/ipfs/kubo/client/rpc"
 )
-
-var (
-	ipfsAPI *rpc.HttpApi
-	ipfsErr error
-)
-
-func InitIPFS() error {
-	ipfsAPI, ipfsErr = rpc.NewLocalApi()
-	return ipfsErr
-}
 
 func LoadFile(c *gin.Context) {
 	if ipfsErr != nil {
