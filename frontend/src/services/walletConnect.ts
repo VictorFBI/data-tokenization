@@ -9,6 +9,12 @@ export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>
 
 let client: WalletConnectClient | null = null
 
+/**
+ * Инициализация WalletConnect client.
+ * Для конфигурируемости загружает projectId из переменной окружения.
+ * Убедитесь, что в .env прописано:
+ *   WALLETCONNECT_PROJECT_ID=your_project_id_here
+ */
 export const initWalletConnect =
   async (): Promise<WalletConnectClient | null> => {
     if (client) {
@@ -18,8 +24,9 @@ export const initWalletConnect =
 
     try {
       log.debug('Initializing WalletConnect client')
+      log.debug(process.env.EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID)
       client = await SignClient.init({
-        projectId: '1b5da1931dea46c628dfe7ad582448d9',
+        projectId: process.env.EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID,
         metadata: {
           name: 'My App',
           description: 'React Native Expo + WalletConnect',

@@ -39,28 +39,45 @@ export const WalletConnectProvider = ({
   const [client, setClient] = useState<WalletConnectClient | null>(null)
 
   useEffect(() => {
-    ;(async () => {
-      const c = await initWalletConnect()
-      setClient(c)
+    let isMounted = true
+    let c: WalletConnectClient | null = null
 
+    ;(async () => {
+      c = await initWalletConnect()
       if (!c) {
         log.error('WalletConnect client is not initialized')
         return
       }
 
-      c.on('session_event', args => {
-        log.debug('Session event:', args)
-      })
+      if (isMounted) {
+        setClient(c)
 
-      c.on('session_update', ({ params: { namespaces } }) => {
-        log.debug('Session updated:', namespaces)
-      })
+        const onSessionEvent = args => log.debug('Session event:', args)
+        const onSessionUpdate = ({ params: { namespaces } }) =>
+          log.debug('Session updated:', namespaces)
+        const onSessionDelete = () => {
+          setSession(null)
+          log.debug('Session deleted')
+        }
 
-      c.on('session_delete', () => {
-        setSession(null)
-        log.debug('Session deleted')
-      })
+        c.on('session_event', onSessionEvent)
+        c.on('session_update', onSessionUpdate)
+        c.on('session_delete', onSessionDelete)
+
+        // Cleanup on unmount
+        return () => {
+          isMounted = false
+          c?.off('session_event', onSessionEvent)
+          c?.off('session_update', onSessionUpdate)
+          c?.off('session_delete', onSessionDelete)
+        }
+      }
     })()
+
+    // Generic cleanup if effect body didn't return
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   const connect = async (): Promise<{
