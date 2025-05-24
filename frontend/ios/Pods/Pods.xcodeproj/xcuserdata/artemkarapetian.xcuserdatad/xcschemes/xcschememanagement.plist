@@ -144,6 +144,16 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RNSVG-RNSVGFilters.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>RNSVG.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>RNScreens.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -495,6 +505,11 @@
 			<false/>
 		</dict>
 		<key>react-native-document-picker.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>react-native-get-random-values.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>

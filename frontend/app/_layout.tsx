@@ -4,6 +4,8 @@ import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/
 import useLoadFonts from '@/src/utils/useLoadFonts'
 import { useEffect, useState } from 'react'
 import { initLanguage } from '@/src/utils/languageManager'
+import { WalletConnectProvider } from '@/src/context/WalletConnectProvider'
+import 'react-native-get-random-values'
 
 /**
  * Компонент Layout отвечает за настройку и отображение вкладок приложения.
@@ -22,16 +24,19 @@ export default function Layout() {
   }
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarShowLabel: false,
-        headerShown: false,
-      }}
-      tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
-    >
-      <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
-      <Tabs.Screen name="wallet" options={{ title: 'Wallet' }} />
-      <Tabs.Screen name="index" options={{ title: 'Market' }} />
-    </Tabs>
+    <WalletConnectProvider>
+      <Tabs
+        screenOptions={{
+          tabBarShowLabel: false,
+          headerShown: false,
+        }}
+        tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
+      >
+        <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
+        <Tabs.Screen name="wallet" options={{ title: 'Wallet' }} />
+        <Tabs.Screen name="index" options={{ title: 'Market' }} />
+        <Tabs.Screen name="auth" options={{ title: 'Authorization' }} />
+      </Tabs>
+    </WalletConnectProvider>
   )
 }
