@@ -1,4 +1,4 @@
-package business
+package common
 
 import (
 	"crypto/aes"

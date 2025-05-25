@@ -137,16 +137,15 @@ components:
     MarketTokenBuyRequest:
       type: object
       required:
-        - cid
-        - seller_id
-        - buyer_id
+        - token_name
+        - buyer_signature
       properties:
-        cid:
-          $ref: '#/components/schemas/Cid'
-        seller_id:
-          $ref: '#/components/schemas/UserId'
-        buyer_id:
-          $ref: '#/components/schemas/UserId'
+        token_name:
+          type: string
+          description: Name of the token
+        buyer_signature:
+          type: string
+          description: Signature of the buyer
 
     MarketTokenListResponse:
       type: object

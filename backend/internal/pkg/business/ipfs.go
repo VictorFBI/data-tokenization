@@ -12,6 +12,7 @@ import (
 	"github.com/ipfs/kubo/client/rpc"
 
 	"data-tokenization/internal/pkg/model"
+	"data-tokenization/internal/pkg/common"
 )
 
 // UploadEncryptedFileToIPFS загружает зашифрованный файл в IPFS
@@ -30,7 +31,7 @@ func uploadFileToIPFSWithEncryption(fileHeader *multipart.FileHeader, encryption
 	}
 
 	// Encrypt content
-	encryptedContent, err := EncryptAES(fileContent, []byte(encryptionKey))
+	encryptedContent, err := common.EncryptAES(fileContent, []byte(encryptionKey))
 	if err != nil {
 		return "", fmt.Errorf("failed to encrypt file: %w", err)
 	}
@@ -53,8 +54,8 @@ func uploadFileToIPFSWithEncryption(fileHeader *multipart.FileHeader, encryption
 	return path.String(), nil
 }
 
-// ReadFileFromIPFS читает и расшифровывает файл из IPFS
-func ReadFileFromIPFS(ipfsPath string, encryptionKey string) ([]byte, error) {
+// reads and decrypts a file from IPFS
+func readFileFromIPFS(ipfsPath string, encryptionKey string) ([]byte, error) {
 	// Connect to IPFS
 	ipfsAPI, err := rpc.NewLocalApi()
 	if err != nil {
@@ -80,7 +81,7 @@ func ReadFileFromIPFS(ipfsPath string, encryptionKey string) ([]byte, error) {
 	}
 
 	// Decrypt content
-	decryptedContent, err := DecryptAES(string(fileContent), []byte(encryptionKey))
+	decryptedContent, err := common.DecryptAES(string(fileContent), []byte(encryptionKey))
 	if err != nil {
 		return nil, fmt.Errorf("failed to decrypt file: %w", err)
 	}
@@ -101,7 +102,7 @@ func (s *service) ReadFromIPFS(_ context.Context, req model.GetUserToken) ([]byt
 	encryptionKey := req.Signature[:32]
 
 	// Read and decrypt file from IPFS
-	fileContent, err := ReadFileFromIPFS(ipfsPath, encryptionKey)
+	fileContent, err := readFileFromIPFS(ipfsPath, encryptionKey)
 	return fileContent, err
 }
 

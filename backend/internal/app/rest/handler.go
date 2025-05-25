@@ -2,6 +2,7 @@ package rest
 
 import (
 	"context"
+	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -33,7 +34,7 @@ func (t *TokenHandler) DeleteUserToken(c *gin.Context) {
 func (t *TokenHandler) GetUserToken(c *gin.Context, params restgen_user.GetUserTokenParams) {
 	fileContent, err := t.ts.ReadFromIPFS(c, model.GetUserToken(params))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 
@@ -60,11 +61,11 @@ func (t *TokenHandler) PostUserToken(c *gin.Context) {
 	}
 
 	if err = t.ts.UploadToken(c, req); err != nil {
-		c.JSON(400, gin.H{"error": err})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 		return
 	}
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"message": "File uploaded successfully",
 	})
 }
@@ -76,7 +77,7 @@ func makeUploadTokenRequest(c *gin.Context) (model.UploadTokenRequest, error) {
 	fileHeader, err := c.FormFile("file")
 	if err != nil {
 		c.JSON(400, gin.H{"error": "file is required"})
-		return model.UploadTokenRequest{}, nil
+		return model.UploadTokenRequest{}, errors.New("file is required")
 	}
 
 	// Get other form fields
@@ -86,8 +87,8 @@ func makeUploadTokenRequest(c *gin.Context) (model.UploadTokenRequest, error) {
 
 	// Validate required fields
 	if request.Name == "" || request.Signature == "" || request.Icon == "" {
-		c.JSON(400, gin.H{"error": "name, signature and icon are required"})
-		return model.UploadTokenRequest{}, nil
+		c.JSON(http.StatusBadRequest, gin.H{"error": "name, signature and icon are required"})
+		return model.UploadTokenRequest{}, errors.New("name, signature and icon are required")
 	}
 
 	req := model.UploadTokenRequest{

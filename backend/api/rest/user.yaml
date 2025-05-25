@@ -135,14 +135,6 @@ components:
             name:
               type: string
               description: Name of the token
-                
-    UserTokenGetRequest:
-      type: object
-      required:
-        - token_name
-      properties:
-        token_name:
-          $ref: '#/components/schemas/TokenName'
 
     UserTokenPostRequest:
       type: object
