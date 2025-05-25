@@ -19,8 +19,8 @@ type File = openapi_types.File
 
 // UserTokenDeleteRequest defines model for UserTokenDeleteRequest.
 type UserTokenDeleteRequest struct {
-	// TokenName Name of the user's tokenized file
-	TokenName externalRef0.TokenName `json:"token_name"`
+	// Name Name of the user's tokenized file
+	Name externalRef0.TokenName `json:"name"`
 
 	// UserId User ID inside the blockchain system (address)
 	UserId externalRef0.UserId `json:"user_id"`
@@ -46,23 +46,29 @@ type UserTokenListResponse struct {
 // UserTokenPatchRequest defines model for UserTokenPatchRequest.
 type UserTokenPatchRequest struct {
 	Description *string `json:"description,omitempty"`
+	IsOnMarket  *bool   `json:"is_on_market,omitempty"`
 
-	// NewTokenName New name of the user's tokenized file
-	NewTokenName *string `json:"new_token_name,omitempty"`
+	// Name Name of the user's tokenized file
+	Name externalRef0.TokenName `json:"name"`
 
-	// TokenName Name of the user's tokenized file
-	TokenName externalRef0.TokenName `json:"token_name"`
-	TokenType *string                `json:"token_type,omitempty"`
+	// NewName New name of the user's tokenized file
+	NewName *string `json:"new_name,omitempty"`
+	Type    *string `json:"type,omitempty"`
 }
 
 // UserTokenPostRequest defines model for UserTokenPostRequest.
 type UserTokenPostRequest struct {
+	CurrencyCode string `json:"currency_code"`
+
 	// File File to be tokenized
 	File File `json:"file"`
 
-	// TokenName Name of the user's tokenized file
-	TokenName externalRef0.TokenName `json:"token_name"`
-	TokenType *string                `json:"token_type,omitempty"`
+	// Name Name of the user's tokenized file
+	Name externalRef0.TokenName `json:"name"`
+
+	// Price Число с точностью до 18 знаков после запятой
+	Price externalRef0.Price `json:"price"`
+	Type  string             `json:"type"`
 
 	// UserId User ID inside the blockchain system (address)
 	UserId externalRef0.UserId `json:"user_id"`
@@ -70,14 +76,14 @@ type UserTokenPostRequest struct {
 
 // GetUserTokenParams defines parameters for GetUserToken.
 type GetUserTokenParams struct {
-	UserId    externalRef0.UserId    `form:"user_id" json:"user_id"`
-	TokenName externalRef0.TokenName `form:"token_name" json:"token_name"`
+	UserId externalRef0.UserId    `form:"user_id" json:"user_id"`
+	Name   externalRef0.TokenName `form:"name" json:"name"`
 }
 
 // GetUserTokenDownloadLinkParams defines parameters for GetUserTokenDownloadLink.
 type GetUserTokenDownloadLinkParams struct {
-	UserId    externalRef0.UserId    `form:"user_id" json:"user_id"`
-	TokenName externalRef0.TokenName `form:"token_name" json:"token_name"`
+	UserId externalRef0.UserId    `form:"user_id" json:"user_id"`
+	Name   externalRef0.TokenName `form:"name" json:"name"`
 }
 
 // GetUserTokenListParams defines parameters for GetUserTokenList.
@@ -85,11 +91,11 @@ type GetUserTokenListParams struct {
 	Cursor                   externalRef0.Cursor         `form:"cursor" json:"cursor"`
 	Limit                    externalRef0.Limit          `form:"limit" json:"limit"`
 	UserId                   externalRef0.UserId         `form:"user_id" json:"user_id"`
-	TokenName                *externalRef0.TokenName     `form:"token_name,omitempty" json:"token_name,omitempty"`
-	TokenType                *string                     `form:"token_type,omitempty" json:"token_type,omitempty"`
+	Name                     *externalRef0.TokenName     `form:"name,omitempty" json:"name,omitempty"`
+	Type                     *string                     `form:"type,omitempty" json:"type,omitempty"`
 	StartDate                *externalRef0.Date          `form:"start_date,omitempty" json:"start_date,omitempty"`
 	EndDate                  *externalRef0.Date          `form:"end_date,omitempty" json:"end_date,omitempty"`
-	SortDirectionOnCreatedAt *externalRef0.SortDirection `form:"sort_direction_on_created_at,omitempty" json:"sort_direction_on_created_at,omitempty"`
+	SortDirectionOnUpdatedAt *externalRef0.SortDirection `form:"sort_direction_on_updated_at,omitempty" json:"sort_direction_on_updated_at,omitempty"`
 }
 
 // DeleteUserTokenJSONRequestBody defines body for DeleteUserToken for application/json ContentType.
@@ -168,18 +174,18 @@ func (siw *ServerInterfaceWrapper) GetUserToken(c *gin.Context) {
 		return
 	}
 
-	// ------------- Required query parameter "token_name" -------------
+	// ------------- Required query parameter "name" -------------
 
-	if paramValue := c.Query("token_name"); paramValue != "" {
+	if paramValue := c.Query("name"); paramValue != "" {
 
 	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument token_name is required, but not found"), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Query argument name is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
-	err = runtime.BindQueryParameter("form", true, true, "token_name", c.Request.URL.Query(), &params.TokenName)
+	err = runtime.BindQueryParameter("form", true, true, "name", c.Request.URL.Query(), &params.Name)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_name: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -242,18 +248,18 @@ func (siw *ServerInterfaceWrapper) GetUserTokenDownloadLink(c *gin.Context) {
 		return
 	}
 
-	// ------------- Required query parameter "token_name" -------------
+	// ------------- Required query parameter "name" -------------
 
-	if paramValue := c.Query("token_name"); paramValue != "" {
+	if paramValue := c.Query("name"); paramValue != "" {
 
 	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument token_name is required, but not found"), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Query argument name is required, but not found"), http.StatusBadRequest)
 		return
 	}
 
-	err = runtime.BindQueryParameter("form", true, true, "token_name", c.Request.URL.Query(), &params.TokenName)
+	err = runtime.BindQueryParameter("form", true, true, "name", c.Request.URL.Query(), &params.Name)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_name: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -320,19 +326,19 @@ func (siw *ServerInterfaceWrapper) GetUserTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Optional query parameter "token_name" -------------
+	// ------------- Optional query parameter "name" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "token_name", c.Request.URL.Query(), &params.TokenName)
+	err = runtime.BindQueryParameter("form", true, false, "name", c.Request.URL.Query(), &params.Name)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_name: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
-	// ------------- Optional query parameter "token_type" -------------
+	// ------------- Optional query parameter "type" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "token_type", c.Request.URL.Query(), &params.TokenType)
+	err = runtime.BindQueryParameter("form", true, false, "type", c.Request.URL.Query(), &params.Type)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_type: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter type: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -352,11 +358,11 @@ func (siw *ServerInterfaceWrapper) GetUserTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Optional query parameter "sort_direction_on_created_at" -------------
+	// ------------- Optional query parameter "sort_direction_on_updated_at" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "sort_direction_on_created_at", c.Request.URL.Query(), &params.SortDirectionOnCreatedAt)
+	err = runtime.BindQueryParameter("form", true, false, "sort_direction_on_updated_at", c.Request.URL.Query(), &params.SortDirectionOnUpdatedAt)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter sort_direction_on_created_at: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter sort_direction_on_updated_at: %w", err), http.StatusBadRequest)
 		return
 	}
 

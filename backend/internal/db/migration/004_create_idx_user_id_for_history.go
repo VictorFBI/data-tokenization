@@ -7,7 +7,7 @@ import (
 
 func CreateIdxUserIDForUserHistory() *gormigrate.Migration {
 	const sql = `
-create index idx_user_id on user_history (user_id);
+create index idx_user_id on history (user_id);
 `
 
 	const down = `
@@ -15,7 +15,7 @@ drop index idx_user_id;
 `
 
 	return &gormigrate.Migration{
-		ID: "004_create_idx_user_id_for_user_history",
+		ID: "004_create_idx_user_id_for_history",
 		Migrate: func(tx *gorm.DB) error {
 			return tx.Exec(sql).Error
 		},

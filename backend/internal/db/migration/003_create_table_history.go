@@ -7,7 +7,7 @@ import (
 
 func CreateTableUserHistory() *gormigrate.Migration {
 	const sql = `
-create table user_history
+create table history
 (
     id         serial primary key,
     user_id    text                     not null,
@@ -17,11 +17,11 @@ create table user_history
 );`
 
 	const down = `
-drop table user_history;
+drop table history;
 `
 
 	return &gormigrate.Migration{
-		ID: "003_create_table_user_history",
+		ID: "003_create_table_history",
 		Migrate: func(tx *gorm.DB) error {
 			return tx.Exec(sql).Error
 		},

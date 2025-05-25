@@ -22,8 +22,8 @@ func ToUserTokenListResponse(tokens []domain.TokenInfoForList) *rest_user.UserTo
 		}
 
 		tokenResponses = append(tokenResponses, rest_common.ListTokenResponse{
-			TokenName:    t.Name,
-			TokenType:    t.Type,
+			Name:         t.Name,
+			Type:         t.Type,
 			Price:        priceStr,
 			CurrencyCode: &currency,
 		})

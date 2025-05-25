@@ -19,7 +19,7 @@ paths:
           schema:
             $ref: 'common.yaml#/components/schemas/UserId'
         - in: query
-          name: token_name
+          name: name
           required: true
           schema:
             $ref: 'common.yaml#/components/schemas/TokenName'
@@ -48,7 +48,7 @@ paths:
           schema:
             $ref: 'common.yaml#/components/schemas/UserId'
         - in: query
-          name: token_name
+          name: name
           required: true
           schema:
             $ref: 'common.yaml#/components/schemas/TokenName'
@@ -152,11 +152,11 @@ paths:
 
         # Filters
         - in: query
-          name: token_name
+          name: name
           schema:
             $ref: 'common.yaml#/components/schemas/TokenName'
         - in: query
-          name: token_type
+          name: type
           schema:
             type: string
         - in: query
@@ -168,7 +168,7 @@ paths:
           schema:
             $ref: 'common.yaml#/components/schemas/Date'
         - in: query
-          name: sort_direction_on_created_at
+          name: sort_direction_on_updated_at
           schema:
             $ref: 'common.yaml#/components/schemas/SortDirection'
 
@@ -211,25 +211,32 @@ components:
       required:
         - user_id
         - file
-        - token_name
+        - name
         - icon
+        - type
+        - price
+        - currency_code
       properties:
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
         file:
           $ref: '#/components/schemas/File'
-        token_name:
+        name:
           $ref: 'common.yaml#/components/schemas/TokenName'
-        token_type:
+        type:
+          type: string
+        price:
+          $ref: 'common.yaml#/components/schemas/Price'
+        currency_code:
           type: string
 
     UserTokenDeleteRequest:
       type: object
       required:
         - user_id
-        - token_name
+        - name
       properties:
-        token_name:
+        name:
           $ref: 'common.yaml#/components/schemas/TokenName'
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
@@ -237,18 +244,20 @@ components:
     UserTokenPatchRequest:
       type: object
       required:
-        - token_name
+        - name
       properties:
-        token_name:
+        name:
           $ref: 'common.yaml#/components/schemas/TokenName'
-        new_token_name:
+        new_name:
           type: string
           example: "example_token_name"
           description: New name of the user's tokenized file
-        token_type:
+        type:
           type: string
         description:
           type: string
+        is_on_market:
+          type: boolean
     
     File:
       type: string

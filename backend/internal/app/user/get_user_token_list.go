@@ -10,9 +10,8 @@ import (
 )
 
 func (a *API) GetUserTokenList(c *gin.Context, params rest_user.GetUserTokenListParams) {
-	getTokensByFilterModel := mapper.ToGetTokensByFilterModel(params)
-
-	tokens, err := a.s.GetTokensByFilter(getTokensByFilterModel)
+	filterModel := mapper.ToGetTokensByFilterModel(params)
+	tokens, err := a.s.GetTokensByFilter(filterModel)
 	if err != nil {
 		errorhandler.Handle(c, err)
 		return

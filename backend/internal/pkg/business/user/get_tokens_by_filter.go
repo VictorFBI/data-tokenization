@@ -7,5 +7,6 @@ import (
 
 // GetTokensByFilter - возвращает список токенов, удовлетворяющие фильтру
 func (s *Service) GetTokensByFilter(filterModel *gormmodel.GetTokensByFilterModel) ([]domain.TokenInfoForList, error) {
-	return s.tokenRepo.GetListByFilter(filterModel)
+	tokenRepo := s.uow.TokenRepo()
+	return tokenRepo.GetListByFilter(filterModel)
 }

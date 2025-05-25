@@ -6,8 +6,9 @@ import (
 )
 
 type service interface {
-	GetToken(*gorm.GetTokenModel) (*domain.Token, error)
+	GetToken(*gorm.TokenModel) (*domain.Token, error)
 	GetTokensByFilter(*gorm.GetTokensByFilterModel) ([]domain.TokenInfoForList, error)
+	DeleteToken(*gorm.TokenModel) (bool, error)
 }
 
 type API struct {
