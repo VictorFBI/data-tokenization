@@ -37,31 +37,6 @@ paths:
               schema:
                 $ref: 'common.yaml#/components/schemas/ErrorResponse'
 
-    patch:
-      tags:
-        - Market
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MarketTokenPatchRequest'
-      responses:
-        '200':
-          description: OK
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: 'common.yaml#/components/schemas/ErrorResponse'
-        '404':
-          description: File with this token name not found
-          content:
-            application/json:
-              schema:
-                $ref: 'common.yaml#/components/schemas/ErrorResponse'
-
   /market/token/list:
     get:
       tags:
@@ -85,11 +60,11 @@ paths:
 
         # Filters
         - in: query
-          name: token_name
+          name: name
           schema:
             $ref: 'common.yaml#/components/schemas/TokenName'
         - in: query
-          name: token_type
+          name: type
           schema:
             type: string
         - in: query
@@ -101,9 +76,13 @@ paths:
           schema:
             $ref: 'common.yaml#/components/schemas/Date'
         - in: query
-          name: sort_direction_on_created_at
+          name: sort_direction_on_updated_at
           schema:
             $ref: 'common.yaml#/components/schemas/SortDirection'
+        - in: query
+          name: is_on_market
+          schema: 
+            type: boolean
       responses:
         '200':
           description: OK
@@ -182,8 +161,9 @@ components:
       type: object
       required:
         - user_id
-        - token_name
-        - enable_for_market
+        - name
+        - is_on_market
+        - price
       properties:
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
@@ -192,3 +172,8 @@ components:
         enable_for_market:
           type: boolean
           description: True - put on the market, false - otherwise
+        price:
+          $ref: 'common.yaml#/components/schemas/Price'
+        currency_code:
+          type: string
+  

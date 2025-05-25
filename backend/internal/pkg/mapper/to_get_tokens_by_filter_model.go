@@ -23,9 +23,9 @@ func ToGetTokensByFilterModel(params rest_user.GetUserTokenListParams) *gorm.Get
 		Cursor: params.Cursor,
 		Limit:  params.Limit,
 		Filter: gorm.Filter{
-			Name:                     params.TokenName,
-			Type:                     params.TokenType,
-			SortDirectionOnCreatedAt: (*gorm.SortDirection)(params.SortDirectionOnCreatedAt),
+			Name:                     params.Name,
+			Type:                     params.Type,
+			SortDirectionOnCreatedAt: (*gorm.SortDirection)(params.SortDirectionOnUpdatedAt),
 			StartDate:                sd,
 			EndDate:                  ed,
 		},

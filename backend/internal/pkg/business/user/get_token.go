@@ -6,6 +6,6 @@ import (
 )
 
 // GetToken - возвращает информацию о токене
-func (s *Service) GetToken(model *gormmodel.GetTokenModel) (*domain.Token, error) {
-	return s.tokenRepo.Get(model)
+func (s *Service) GetToken(model *gormmodel.TokenModel) (*domain.Token, error) {
+	return s.uow.TokenRepo().Get(model)
 }

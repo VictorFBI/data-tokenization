@@ -1,23 +1,27 @@
 package user
 
 import (
-	"data-tokenization/internal/pkg/model/domain"
-	gormmodel "data-tokenization/internal/pkg/model/gorm"
+	userhistory "data-tokenization/internal/repository/history"
+	"data-tokenization/internal/repository/token"
+	"database/sql"
 )
 
-type tokenRepo interface {
-	Get(*gormmodel.GetTokenModel) (*domain.Token, error)
-	GetListByFilter(*gormmodel.GetTokensByFilterModel) ([]domain.TokenInfoForList, error)
+type unitOfWork interface {
+	StartOperationSet(sql.IsolationLevel) error
+	Rollback() error
+	Complete() error
+	TokenRepo() token.Repo
+	UserHistoryRepo() userhistory.Repo
 }
 
 // Service - реализует бизнес слой приложения
 type Service struct {
-	tokenRepo tokenRepo
+	uow unitOfWork
 }
 
 // NewService – создает новый экземпляр бизнес слоя
-func NewService(repo tokenRepo) *Service {
+func NewService(uow unitOfWork) *Service {
 	return &Service{
-		tokenRepo: repo,
+		uow: uow,
 	}
 }

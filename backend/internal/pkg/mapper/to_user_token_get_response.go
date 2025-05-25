@@ -11,6 +11,7 @@ func ToUserTokenGetResponse(token domain.Token) *rest_user.UserTokenGetResponse 
 	var (
 		p string
 		d string
+		c string
 	)
 	if token.Price != nil {
 		p = fmt.Sprintf("%g", *token.Price)
@@ -18,14 +19,17 @@ func ToUserTokenGetResponse(token domain.Token) *rest_user.UserTokenGetResponse 
 	if token.Description != nil {
 		d = *token.Description
 	}
+	if token.CurrencyCode != nil {
+		c = *token.CurrencyCode
+	}
 
 	response := rest_user.UserTokenGetResponse{
 		Token: &rest_common.Token{
-			Description: d,
-			FileName:    "", // TODO: добавить получение имени файла или убрать его
-			Price:       p,
-			TokenName:   token.Name,
-			TokenType:   token.Type,
+			Description:  d,
+			Price:        p,
+			Name:         token.Name,
+			Type:         token.Type,
+			CurrencyCode: c,
 		},
 	}
 

@@ -51,21 +51,21 @@ components:
     Token:
       type: object
       required:
-        - token_name
-        - token_type
+        - name
+        - type
         - description
         - price
-        - file_name
+        - currency_code
       properties:
-        token_name:
+        name:
           $ref: '#/components/schemas/TokenName'
-        token_type:
+        type:
           type: string
         description:
           type: string
         price:
           $ref: '#/components/schemas/Price'
-        file_name:
+        currency_code:
           type: string
     
     SortDirection:
@@ -77,13 +77,13 @@ components:
     ListTokenResponse:
       type: object
       required:
-        - token_name
-        - token_type
+        - name
+        - type
         - price
       properties:
-        token_name:
+        name:
           $ref: '#/components/schemas/TokenName'
-        token_type:
+        type:
           type: string
         price:
           $ref: '#/components/schemas/Price'

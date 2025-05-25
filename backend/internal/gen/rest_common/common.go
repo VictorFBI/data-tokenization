@@ -42,12 +42,12 @@ type Limit = int
 type ListTokenResponse struct {
 	CurrencyCode *string `json:"currency_code,omitempty"`
 
-	// Price Число с точностью до 18 знаков после запятой
-	Price Price `json:"price"`
+	// Name Name of the user's tokenized file
+	Name TokenName `json:"name"`
 
-	// TokenName Name of the user's tokenized file
-	TokenName TokenName `json:"token_name"`
-	TokenType string    `json:"token_type"`
+	// Price Число с точностью до 18 знаков после запятой
+	Price Price  `json:"price"`
+	Type  string `json:"type"`
 }
 
 // Price Число с точностью до 18 знаков после запятой
@@ -58,15 +58,15 @@ type SortDirection string
 
 // Token defines model for Token.
 type Token struct {
-	Description string `json:"description"`
-	FileName    string `json:"file_name"`
+	CurrencyCode string `json:"currency_code"`
+	Description  string `json:"description"`
+
+	// Name Name of the user's tokenized file
+	Name TokenName `json:"name"`
 
 	// Price Число с точностью до 18 знаков после запятой
-	Price Price `json:"price"`
-
-	// TokenName Name of the user's tokenized file
-	TokenName TokenName `json:"token_name"`
-	TokenType string    `json:"token_type"`
+	Price Price  `json:"price"`
+	Type  string `json:"type"`
 }
 
 // TokenName Name of the user's tokenized file

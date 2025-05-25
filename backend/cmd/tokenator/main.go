@@ -7,8 +7,7 @@ import (
 	"data-tokenization/internal/gen/rest_user"
 	userservice "data-tokenization/internal/pkg/business/user"
 	"data-tokenization/internal/pkg/smartcontract"
-	tokenrepository "data-tokenization/internal/repository/token"
-
+	"data-tokenization/internal/repository"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -27,8 +26,8 @@ func main() {
 	smartcontract.DeployContracts()
 
 	connection := db.Connect()
-	tr := tokenrepository.New(connection)
-	us := userservice.NewService(tr)
+	uow := repository.NewUnitOfWork(connection)
+	us := userservice.NewService(uow)
 
 	uAPI := userapp.NewAPI(us)
 

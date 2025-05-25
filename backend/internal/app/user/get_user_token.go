@@ -4,19 +4,17 @@ import (
 	"data-tokenization/internal/gen/rest_user"
 	"data-tokenization/internal/pkg/mapper"
 	"data-tokenization/internal/pkg/model/gorm"
-	"data-tokenization/internal/pkg/service/errorhandler"
+	errorhandler "data-tokenization/internal/pkg/service/error_handler"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (a *API) GetUserToken(c *gin.Context, params rest_user.GetUserTokenParams) {
-	getTokenModel := gorm.GetTokenModel{
+	token, err := a.s.GetToken(&gorm.TokenModel{
 		UserID: params.UserId,
-		Name:   params.TokenName,
-	}
-
-	token, err := a.s.GetToken(&getTokenModel)
+		Name:   params.Name,
+	})
 	if err != nil {
 		errorhandler.Handle(c, err)
 		return

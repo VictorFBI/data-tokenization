@@ -10,6 +10,7 @@ var Migrations = []*gormigrate.Migration{
 	CreateIdxNameForTokens(),
 	CreateTableUserHistory(),
 	CreateIdxUserIDForUserHistory(),
+	AddTestsData(),
 }
 
 func MigrateAll(db *gorm.DB) error {

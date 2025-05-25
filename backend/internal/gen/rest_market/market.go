@@ -41,18 +41,6 @@ type MarketTokenListResponse struct {
 	Tokens     *[]externalRef0.ListTokenResponse `json:"tokens,omitempty"`
 }
 
-// MarketTokenPatchRequest defines model for MarketTokenPatchRequest.
-type MarketTokenPatchRequest struct {
-	// EnableForMarket True - put on the market, false - otherwise
-	EnableForMarket bool `json:"enable_for_market"`
-
-	// TokenName Name of the user's tokenized file
-	TokenName externalRef0.TokenName `json:"token_name"`
-
-	// UserId User ID inside the blockchain system (address)
-	UserId externalRef0.UserId `json:"user_id"`
-}
-
 // GetMarketTokenParams defines parameters for GetMarketToken.
 type GetMarketTokenParams struct {
 	UserId    externalRef0.UserId    `form:"user_id" json:"user_id"`
@@ -64,15 +52,13 @@ type GetMarketTokenListParams struct {
 	Cursor                   externalRef0.Cursor         `form:"cursor" json:"cursor"`
 	Limit                    externalRef0.Limit          `form:"limit" json:"limit"`
 	UserId                   externalRef0.UserId         `form:"user_id" json:"user_id"`
-	TokenName                *externalRef0.TokenName     `form:"token_name,omitempty" json:"token_name,omitempty"`
-	TokenType                *string                     `form:"token_type,omitempty" json:"token_type,omitempty"`
+	Name                     *externalRef0.TokenName     `form:"name,omitempty" json:"name,omitempty"`
+	Type                     *string                     `form:"type,omitempty" json:"type,omitempty"`
 	StartDate                *externalRef0.Date          `form:"start_date,omitempty" json:"start_date,omitempty"`
 	EndDate                  *externalRef0.Date          `form:"end_date,omitempty" json:"end_date,omitempty"`
-	SortDirectionOnCreatedAt *externalRef0.SortDirection `form:"sort_direction_on_created_at,omitempty" json:"sort_direction_on_created_at,omitempty"`
+	SortDirectionOnUpdatedAt *externalRef0.SortDirection `form:"sort_direction_on_updated_at,omitempty" json:"sort_direction_on_updated_at,omitempty"`
+	IsOnMarket               *bool                       `form:"is_on_market,omitempty" json:"is_on_market,omitempty"`
 }
-
-// PatchMarketTokenJSONRequestBody defines body for PatchMarketToken for application/json ContentType.
-type PatchMarketTokenJSONRequestBody = MarketTokenPatchRequest
 
 // PostMarketTokenBuyJSONRequestBody defines body for PostMarketTokenBuy for application/json ContentType.
 type PostMarketTokenBuyJSONRequestBody = MarketTokenBuyRequest
@@ -82,9 +68,6 @@ type ServerInterface interface {
 
 	// (GET /market/token)
 	GetMarketToken(c *gin.Context, params GetMarketTokenParams)
-
-	// (PATCH /market/token)
-	PatchMarketToken(c *gin.Context)
 
 	// (POST /market/token/buy)
 	PostMarketTokenBuy(c *gin.Context)
@@ -148,19 +131,6 @@ func (siw *ServerInterfaceWrapper) GetMarketToken(c *gin.Context) {
 	}
 
 	siw.Handler.GetMarketToken(c, params)
-}
-
-// PatchMarketToken operation middleware
-func (siw *ServerInterfaceWrapper) PatchMarketToken(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.PatchMarketToken(c)
 }
 
 // PostMarketTokenBuy operation middleware
@@ -229,19 +199,19 @@ func (siw *ServerInterfaceWrapper) GetMarketTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Optional query parameter "token_name" -------------
+	// ------------- Optional query parameter "name" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "token_name", c.Request.URL.Query(), &params.TokenName)
+	err = runtime.BindQueryParameter("form", true, false, "name", c.Request.URL.Query(), &params.Name)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_name: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter name: %w", err), http.StatusBadRequest)
 		return
 	}
 
-	// ------------- Optional query parameter "token_type" -------------
+	// ------------- Optional query parameter "type" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "token_type", c.Request.URL.Query(), &params.TokenType)
+	err = runtime.BindQueryParameter("form", true, false, "type", c.Request.URL.Query(), &params.Type)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter token_type: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter type: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -261,11 +231,19 @@ func (siw *ServerInterfaceWrapper) GetMarketTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Optional query parameter "sort_direction_on_created_at" -------------
+	// ------------- Optional query parameter "sort_direction_on_updated_at" -------------
 
-	err = runtime.BindQueryParameter("form", true, false, "sort_direction_on_created_at", c.Request.URL.Query(), &params.SortDirectionOnCreatedAt)
+	err = runtime.BindQueryParameter("form", true, false, "sort_direction_on_updated_at", c.Request.URL.Query(), &params.SortDirectionOnUpdatedAt)
 	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter sort_direction_on_created_at: %w", err), http.StatusBadRequest)
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter sort_direction_on_updated_at: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Optional query parameter "is_on_market" -------------
+
+	err = runtime.BindQueryParameter("form", true, false, "is_on_market", c.Request.URL.Query(), &params.IsOnMarket)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter is_on_market: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -307,7 +285,6 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/market/token", wrapper.GetMarketToken)
-	router.PATCH(options.BaseURL+"/market/token", wrapper.PatchMarketToken)
 	router.POST(options.BaseURL+"/market/token/buy", wrapper.PostMarketTokenBuy)
 	router.GET(options.BaseURL+"/market/token/list", wrapper.GetMarketTokenList)
 }
