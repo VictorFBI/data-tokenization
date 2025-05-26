@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserTokenDownloadLinkResponse'
+                $ref: '#/components/schemas/UserGetTokenDownloadLinkResponse'
         '404':
           description: File with this token name not found
           content:
@@ -58,7 +58,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserTokenGetResponse'
+                $ref: '#/components/schemas/UserGetTokenResponse'
         '404':
           description: File with this token name not found
           content:
@@ -74,7 +74,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/UserTokenPostRequest'
+              $ref: '#/components/schemas/UserPostTokenRequest'
       responses:
         '200':
           description: OK
@@ -93,7 +93,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserTokenDeleteRequest'
+              $ref: '#/components/schemas/UserDeleteTokenRequest'
       responses:
         '200':
           description: OK
@@ -112,7 +112,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserTokenPatchRequest'
+              $ref: '#/components/schemas/UserPatchTokenRequest'
       responses:
         '200':
           description: OK
@@ -135,6 +135,11 @@ paths:
         - User
       parameters:
         - in: query
+          name: user_id
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
+        - in: query
           name: cursor
           required: true
           schema:
@@ -144,11 +149,6 @@ paths:
           required: true
           schema:
             $ref: 'common.yaml#/components/schemas/Limit'
-        - in: query
-          name: user_id
-          required: true
-          schema:
-            $ref: 'common.yaml#/components/schemas/UserId'
 
         # Filters
         - in: query
@@ -178,11 +178,39 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserTokenListResponse'
+                $ref: '#/components/schemas/UserListTokenResponse'
+                
+  /user/history:
+    get:
+      tags:
+        - User
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
+        - in: query
+          name: cursor
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/Cursor'
+        - in: query
+          name: limit
+          required: true
+          schema:
+            $ref: 'common.yaml#/components/schemas/Limit'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserHistoryTokenResponse'
 
 components:
   schemas:
-    UserTokenDownloadLinkResponse:
+    UserGetTokenDownloadLinkResponse:
       type: object
       required:
         - link
@@ -190,23 +218,64 @@ components:
         link:
           type: string
     
-    UserTokenListResponse:
+    UserListTokenResponse:
       type: object
       properties:
         tokens:
           type: array
           items:
-            $ref: 'common.yaml#/components/schemas/ListTokenResponse'
+            $ref: '#/components/schemas/TokenListItems'
         next_cursor:
           $ref: 'common.yaml#/components/schemas/Cursor'
     
-    UserTokenGetResponse:
+    TokenListItems:
+      type: object
+      required:
+        - name
+        - type
+        - price
+        - currency_code
+      properties:
+        name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
+        type:
+          type: string
+        price:
+          $ref: 'common.yaml#/components/schemas/Price'
+        currency_code:
+          type: string
+          
+    UserHistoryTokenResponse:
+      type: object
+      properties:
+        tokens:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserHistoryItem'
+        next_cursor:
+          $ref: 'common.yaml#/components/schemas/Cursor'
+    
+    UserHistoryItem:
+      type: object
+      required:
+        - token_name
+        - action
+        - date
+      properties:
+        token_name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
+        action:
+          type: string
+        date:
+          $ref: 'common.yaml#/components/schemas/Date'
+    
+    UserGetTokenResponse:
       type: object
       properties:
         token:
           $ref: 'common.yaml#/components/schemas/Token'
     
-    UserTokenPostRequest:
+    UserPostTokenRequest:
       type: object
       required:
         - user_id
@@ -230,34 +299,39 @@ components:
         currency_code:
           type: string
 
-    UserTokenDeleteRequest:
+    UserDeleteTokenRequest:
       type: object
       required:
         - user_id
         - name
       properties:
-        name:
-          $ref: 'common.yaml#/components/schemas/TokenName'
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
+        name:
+          $ref: 'common.yaml#/components/schemas/TokenName'
 
-    UserTokenPatchRequest:
+    UserPatchTokenRequest:
       type: object
       required:
+        - user_id
         - name
       properties:
+        user_id:
+          $ref: 'common.yaml#/components/schemas/UserId'
         name:
           $ref: 'common.yaml#/components/schemas/TokenName'
         new_name:
           type: string
-          example: "example_token_name"
-          description: New name of the user's tokenized file
         type:
           type: string
         description:
           type: string
         is_on_market:
           type: boolean
+        price:
+          $ref: 'common.yaml#/components/schemas/Price'
+        currency_code:
+          type: string
     
     File:
       type: string

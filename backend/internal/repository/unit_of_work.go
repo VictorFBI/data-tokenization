@@ -32,7 +32,10 @@ func (u *UnitOfWork) Complete() error {
 		return errors.New("no open transaction")
 	}
 
-	return u.tx.Commit().Error
+	err := u.tx.Commit().Error
+	u.tx = nil
+
+	return err
 }
 
 func (u *UnitOfWork) Rollback() error {
@@ -40,7 +43,10 @@ func (u *UnitOfWork) Rollback() error {
 		return errors.New("no open transaction")
 	}
 
-	return u.tx.Rollback().Error
+	err := u.tx.Rollback().Error
+	u.tx = nil
+
+	return err
 }
 
 func (u *UnitOfWork) TokenRepo() token.Repo {
@@ -51,7 +57,7 @@ func (u *UnitOfWork) TokenRepo() token.Repo {
 	return token.New(u.tx)
 }
 
-func (u *UnitOfWork) UserHistoryRepo() userhistory.Repo {
+func (u *UnitOfWork) HistoryRepo() userhistory.Repo {
 	if u.tx == nil {
 		return userhistory.New(u.db)
 	}

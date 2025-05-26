@@ -1,4 +1,4 @@
-package token
+package common
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"data-tokenization/internal/pkg/model/status"
 )
 
-func mapCommonError(err error) error {
+func MapCommonError(err error) error {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return status.New(status.NotFound, err.Error())
 	}

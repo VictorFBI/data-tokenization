@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func ToUserTokenGetResponse(token domain.Token) *rest_user.UserTokenGetResponse {
+func ToGetTokenResponse(token domain.Token) *rest_user.UserGetTokenResponse {
 	var (
 		p string
 		d string
@@ -23,13 +23,14 @@ func ToUserTokenGetResponse(token domain.Token) *rest_user.UserTokenGetResponse 
 		c = *token.CurrencyCode
 	}
 
-	response := rest_user.UserTokenGetResponse{
+	response := rest_user.UserGetTokenResponse{
 		Token: &rest_common.Token{
-			Description:  d,
-			Price:        p,
 			Name:         token.Name,
 			Type:         token.Type,
+			Price:        p,
 			CurrencyCode: c,
+			Description:  d,
+			IsOnMarket:   token.IsOnMarket,
 		},
 	}
 

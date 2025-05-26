@@ -8,7 +8,7 @@ import (
 )
 
 func (a *API) GetUserTokenDownloadLink(c *gin.Context, _ rest_user.GetUserTokenDownloadLinkParams) {
-	c.JSON(http.StatusOK, rest_user.UserTokenDownloadLinkResponse{
+	c.JSON(http.StatusOK, rest_user.UserGetTokenDownloadLinkResponse{
 		Link: "https://docs.google.com/spreadsheets/d/1PdtrbiHZFnrsDBgf2GNOu4aXtwpm3ZY1/edit?gid=434539901#gid=434539901",
 	})
 }

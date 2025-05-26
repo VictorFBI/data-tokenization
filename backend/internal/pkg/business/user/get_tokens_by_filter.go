@@ -1,12 +1,11 @@
 package user
 
 import (
-	"data-tokenization/internal/pkg/model/domain"
 	gormmodel "data-tokenization/internal/pkg/model/gorm"
+	model "data-tokenization/internal/pkg/model/service"
 )
 
 // GetTokensByFilter - возвращает список токенов, удовлетворяющие фильтру
-func (s *Service) GetTokensByFilter(filterModel *gormmodel.GetTokensByFilterModel) ([]domain.TokenInfoForList, error) {
-	tokenRepo := s.uow.TokenRepo()
-	return tokenRepo.GetListByFilter(filterModel)
+func (s *Service) GetTokensByFilter(filterModel *gormmodel.GetTokensByFilterModel) ([]model.TokenInfoForList, error) {
+	return s.uow.TokenRepo().ListByFilter(filterModel)
 }

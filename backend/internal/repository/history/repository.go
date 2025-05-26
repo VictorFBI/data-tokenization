@@ -1,13 +1,15 @@
 package history
 
 import (
+	"data-tokenization/internal/pkg/model/domain"
 	gormmodel "data-tokenization/internal/pkg/model/gorm"
 
 	"gorm.io/gorm"
 )
 
 type Repo interface {
-	Add(historyModel *gormmodel.AddHistoryModel) error
+	Add(*gormmodel.AddHistoryModel) error
+	List(*gormmodel.ListUserHistoryModel) ([]domain.History, error)
 }
 
 type Repository struct {

@@ -8,18 +8,15 @@ components:
   schemas:
     UserId:
       type: string
-      example: "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720"
       description: User ID inside the blockchain system (address)
 
     Price:
       type: string
       pattern: '^\\d+(\\.\\d{1,18})?$'
-      example: "123.456789012345678901"
       description: Число с точностью до 18 знаков после запятой
 
     TokenName:
       type: string
-      example: "example_token_name"
       description: Name of the user's tokenized file
     
     Date:
@@ -53,9 +50,10 @@ components:
       required:
         - name
         - type
-        - description
         - price
         - currency_code
+        - description
+        - is_on_market
       properties:
         name:
           $ref: '#/components/schemas/TokenName'
@@ -67,28 +65,14 @@ components:
           $ref: '#/components/schemas/Price'
         currency_code:
           type: string
+        is_on_market:
+          type: boolean
     
     SortDirection:
       type: string
       enum:
         - "Asc"
         - "Desc"
-    
-    ListTokenResponse:
-      type: object
-      required:
-        - name
-        - type
-        - price
-      properties:
-        name:
-          $ref: '#/components/schemas/TokenName'
-        type:
-          type: string
-        price:
-          $ref: '#/components/schemas/Price'
-        currency_code:
-          type: string
 
     ErrorResponse:
       type: object

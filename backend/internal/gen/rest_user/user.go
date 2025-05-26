@@ -17,8 +17,20 @@ import (
 // File File to be tokenized
 type File = openapi_types.File
 
-// UserTokenDeleteRequest defines model for UserTokenDeleteRequest.
-type UserTokenDeleteRequest struct {
+// TokenListItems defines model for TokenListItems.
+type TokenListItems struct {
+	CurrencyCode string `json:"currency_code"`
+
+	// Name Name of the user's tokenized file
+	Name externalRef0.TokenName `json:"name"`
+
+	// Price Число с точностью до 18 знаков после запятой
+	Price externalRef0.Price `json:"price"`
+	Type  string             `json:"type"`
+}
+
+// UserDeleteTokenRequest defines model for UserDeleteTokenRequest.
+type UserDeleteTokenRequest struct {
 	// Name Name of the user's tokenized file
 	Name externalRef0.TokenName `json:"name"`
 
@@ -26,38 +38,59 @@ type UserTokenDeleteRequest struct {
 	UserId externalRef0.UserId `json:"user_id"`
 }
 
-// UserTokenDownloadLinkResponse defines model for UserTokenDownloadLinkResponse.
-type UserTokenDownloadLinkResponse struct {
+// UserGetTokenDownloadLinkResponse defines model for UserGetTokenDownloadLinkResponse.
+type UserGetTokenDownloadLinkResponse struct {
 	Link string `json:"link"`
 }
 
-// UserTokenGetResponse defines model for UserTokenGetResponse.
-type UserTokenGetResponse struct {
+// UserGetTokenResponse defines model for UserGetTokenResponse.
+type UserGetTokenResponse struct {
 	Token *externalRef0.Token `json:"token,omitempty"`
 }
 
-// UserTokenListResponse defines model for UserTokenListResponse.
-type UserTokenListResponse struct {
-	// NextCursor Limit of tokens_repository to return
-	NextCursor *externalRef0.Cursor              `json:"next_cursor,omitempty"`
-	Tokens     *[]externalRef0.ListTokenResponse `json:"tokens,omitempty"`
+// UserHistoryItem defines model for UserHistoryItem.
+type UserHistoryItem struct {
+	Action string            `json:"action"`
+	Date   externalRef0.Date `json:"date"`
+
+	// TokenName Name of the user's tokenized file
+	TokenName externalRef0.TokenName `json:"token_name"`
 }
 
-// UserTokenPatchRequest defines model for UserTokenPatchRequest.
-type UserTokenPatchRequest struct {
-	Description *string `json:"description,omitempty"`
-	IsOnMarket  *bool   `json:"is_on_market,omitempty"`
+// UserHistoryTokenResponse defines model for UserHistoryTokenResponse.
+type UserHistoryTokenResponse struct {
+	// NextCursor Limit of tokens_repository to return
+	NextCursor *externalRef0.Cursor `json:"next_cursor,omitempty"`
+	Tokens     *[]UserHistoryItem   `json:"tokens,omitempty"`
+}
+
+// UserListTokenResponse defines model for UserListTokenResponse.
+type UserListTokenResponse struct {
+	// NextCursor Limit of tokens_repository to return
+	NextCursor *externalRef0.Cursor `json:"next_cursor,omitempty"`
+	Tokens     *[]TokenListItems    `json:"tokens,omitempty"`
+}
+
+// UserPatchTokenRequest defines model for UserPatchTokenRequest.
+type UserPatchTokenRequest struct {
+	CurrencyCode *string `json:"currency_code,omitempty"`
+	Description  *string `json:"description,omitempty"`
+	IsOnMarket   *bool   `json:"is_on_market,omitempty"`
 
 	// Name Name of the user's tokenized file
-	Name externalRef0.TokenName `json:"name"`
+	Name    externalRef0.TokenName `json:"name"`
+	NewName *string                `json:"new_name,omitempty"`
 
-	// NewName New name of the user's tokenized file
-	NewName *string `json:"new_name,omitempty"`
-	Type    *string `json:"type,omitempty"`
+	// Price Число с точностью до 18 знаков после запятой
+	Price *externalRef0.Price `json:"price,omitempty"`
+	Type  *string             `json:"type,omitempty"`
+
+	// UserId User ID inside the blockchain system (address)
+	UserId externalRef0.UserId `json:"user_id"`
 }
 
-// UserTokenPostRequest defines model for UserTokenPostRequest.
-type UserTokenPostRequest struct {
+// UserPostTokenRequest defines model for UserPostTokenRequest.
+type UserPostTokenRequest struct {
 	CurrencyCode string `json:"currency_code"`
 
 	// File File to be tokenized
@@ -74,6 +107,13 @@ type UserTokenPostRequest struct {
 	UserId externalRef0.UserId `json:"user_id"`
 }
 
+// GetUserHistoryParams defines parameters for GetUserHistory.
+type GetUserHistoryParams struct {
+	UserId externalRef0.UserId `form:"user_id" json:"user_id"`
+	Cursor externalRef0.Cursor `form:"cursor" json:"cursor"`
+	Limit  externalRef0.Limit  `form:"limit" json:"limit"`
+}
+
 // GetUserTokenParams defines parameters for GetUserToken.
 type GetUserTokenParams struct {
 	UserId externalRef0.UserId    `form:"user_id" json:"user_id"`
@@ -88,9 +128,9 @@ type GetUserTokenDownloadLinkParams struct {
 
 // GetUserTokenListParams defines parameters for GetUserTokenList.
 type GetUserTokenListParams struct {
+	UserId                   externalRef0.UserId         `form:"user_id" json:"user_id"`
 	Cursor                   externalRef0.Cursor         `form:"cursor" json:"cursor"`
 	Limit                    externalRef0.Limit          `form:"limit" json:"limit"`
-	UserId                   externalRef0.UserId         `form:"user_id" json:"user_id"`
 	Name                     *externalRef0.TokenName     `form:"name,omitempty" json:"name,omitempty"`
 	Type                     *string                     `form:"type,omitempty" json:"type,omitempty"`
 	StartDate                *externalRef0.Date          `form:"start_date,omitempty" json:"start_date,omitempty"`
@@ -99,16 +139,19 @@ type GetUserTokenListParams struct {
 }
 
 // DeleteUserTokenJSONRequestBody defines body for DeleteUserToken for application/json ContentType.
-type DeleteUserTokenJSONRequestBody = UserTokenDeleteRequest
+type DeleteUserTokenJSONRequestBody = UserDeleteTokenRequest
 
 // PatchUserTokenJSONRequestBody defines body for PatchUserToken for application/json ContentType.
-type PatchUserTokenJSONRequestBody = UserTokenPatchRequest
+type PatchUserTokenJSONRequestBody = UserPatchTokenRequest
 
 // PostUserTokenMultipartRequestBody defines body for PostUserToken for multipart/form-data ContentType.
-type PostUserTokenMultipartRequestBody = UserTokenPostRequest
+type PostUserTokenMultipartRequestBody = UserPostTokenRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
+	// (GET /user/history)
+	GetUserHistory(c *gin.Context, params GetUserHistoryParams)
 
 	// (DELETE /user/token)
 	DeleteUserToken(c *gin.Context)
@@ -137,6 +180,69 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(c *gin.Context)
+
+// GetUserHistory operation middleware
+func (siw *ServerInterfaceWrapper) GetUserHistory(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUserHistoryParams
+
+	// ------------- Required query parameter "user_id" -------------
+
+	if paramValue := c.Query("user_id"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument user_id is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "user_id", c.Request.URL.Query(), &params.UserId)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Required query parameter "cursor" -------------
+
+	if paramValue := c.Query("cursor"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument cursor is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "cursor", c.Request.URL.Query(), &params.Cursor)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter cursor: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	// ------------- Required query parameter "limit" -------------
+
+	if paramValue := c.Query("limit"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument limit is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter limit: %w", err), http.StatusBadRequest)
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+		if c.IsAborted() {
+			return
+		}
+	}
+
+	siw.Handler.GetUserHistory(c, params)
+}
 
 // DeleteUserToken operation middleware
 func (siw *ServerInterfaceWrapper) DeleteUserToken(c *gin.Context) {
@@ -281,6 +387,21 @@ func (siw *ServerInterfaceWrapper) GetUserTokenList(c *gin.Context) {
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetUserTokenListParams
 
+	// ------------- Required query parameter "user_id" -------------
+
+	if paramValue := c.Query("user_id"); paramValue != "" {
+
+	} else {
+		siw.ErrorHandler(c, fmt.Errorf("Query argument user_id is required, but not found"), http.StatusBadRequest)
+		return
+	}
+
+	err = runtime.BindQueryParameter("form", true, true, "user_id", c.Request.URL.Query(), &params.UserId)
+	if err != nil {
+		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
+		return
+	}
+
 	// ------------- Required query parameter "cursor" -------------
 
 	if paramValue := c.Query("cursor"); paramValue != "" {
@@ -308,21 +429,6 @@ func (siw *ServerInterfaceWrapper) GetUserTokenList(c *gin.Context) {
 	err = runtime.BindQueryParameter("form", true, true, "limit", c.Request.URL.Query(), &params.Limit)
 	if err != nil {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter limit: %w", err), http.StatusBadRequest)
-		return
-	}
-
-	// ------------- Required query parameter "user_id" -------------
-
-	if paramValue := c.Query("user_id"); paramValue != "" {
-
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument user_id is required, but not found"), http.StatusBadRequest)
-		return
-	}
-
-	err = runtime.BindQueryParameter("form", true, true, "user_id", c.Request.URL.Query(), &params.UserId)
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
 		return
 	}
 
@@ -403,6 +509,7 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 		ErrorHandler:       errorHandler,
 	}
 
+	router.GET(options.BaseURL+"/user/history", wrapper.GetUserHistory)
 	router.DELETE(options.BaseURL+"/user/token", wrapper.DeleteUserToken)
 	router.GET(options.BaseURL+"/user/token", wrapper.GetUserToken)
 	router.PATCH(options.BaseURL+"/user/token", wrapper.PatchUserToken)

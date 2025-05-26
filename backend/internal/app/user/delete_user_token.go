@@ -2,8 +2,8 @@ package user
 
 import (
 	"data-tokenization/internal/gen/rest_user"
-	"data-tokenization/internal/pkg/model/gorm"
-	errorhandler "data-tokenization/internal/pkg/service/error_handler"
+	"data-tokenization/internal/pkg/model/domain"
+	"data-tokenization/internal/pkg/service/errorhandler"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ func (a *API) DeleteUserToken(c *gin.Context) {
 		return
 	}
 
-	success, err := a.s.DeleteToken(&gorm.TokenModel{
+	success, err := a.s.DeleteToken(domain.TokenIdentity{
 		UserID: r.UserId,
 		Name:   r.Name,
 	})

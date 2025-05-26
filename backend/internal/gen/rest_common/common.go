@@ -38,18 +38,6 @@ type Filter struct {
 // Limit Cursor to start from
 type Limit = int
 
-// ListTokenResponse defines model for ListTokenResponse.
-type ListTokenResponse struct {
-	CurrencyCode *string `json:"currency_code,omitempty"`
-
-	// Name Name of the user's tokenized file
-	Name TokenName `json:"name"`
-
-	// Price Число с точностью до 18 знаков после запятой
-	Price Price  `json:"price"`
-	Type  string `json:"type"`
-}
-
 // Price Число с точностью до 18 знаков после запятой
 type Price = string
 
@@ -60,6 +48,7 @@ type SortDirection string
 type Token struct {
 	CurrencyCode string `json:"currency_code"`
 	Description  string `json:"description"`
+	IsOnMarket   bool   `json:"is_on_market"`
 
 	// Name Name of the user's tokenized file
 	Name TokenName `json:"name"`

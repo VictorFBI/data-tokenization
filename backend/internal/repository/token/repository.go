@@ -3,14 +3,16 @@ package token
 import (
 	"data-tokenization/internal/pkg/model/domain"
 	gormmodel "data-tokenization/internal/pkg/model/gorm"
+	model "data-tokenization/internal/pkg/model/service"
 
 	"gorm.io/gorm"
 )
 
 type Repo interface {
-	Get(*gormmodel.TokenModel) (*domain.Token, error)
-	GetListByFilter(*gormmodel.GetTokensByFilterModel) ([]domain.TokenInfoForList, error)
-	Delete(*gormmodel.TokenModel) (bool, error)
+	Get(domain.TokenIdentity) (*domain.Token, error)
+	ListByFilter(*gormmodel.GetTokensByFilterModel) ([]model.TokenInfoForList, error)
+	Delete(domain.TokenIdentity) (bool, error)
+	Update(*gormmodel.UpdateTokenModel) (bool, error)
 }
 
 type Repository struct {

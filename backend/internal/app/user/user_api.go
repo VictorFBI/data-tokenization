@@ -2,13 +2,16 @@ package user
 
 import (
 	"data-tokenization/internal/pkg/model/domain"
-	"data-tokenization/internal/pkg/model/gorm"
+	gormmodel "data-tokenization/internal/pkg/model/gorm"
+	model "data-tokenization/internal/pkg/model/service"
 )
 
 type service interface {
-	GetToken(*gorm.TokenModel) (*domain.Token, error)
-	GetTokensByFilter(*gorm.GetTokensByFilterModel) ([]domain.TokenInfoForList, error)
-	DeleteToken(*gorm.TokenModel) (bool, error)
+	GetToken(domain.TokenIdentity) (*domain.Token, error)
+	GetTokensByFilter(*gormmodel.GetTokensByFilterModel) ([]model.TokenInfoForList, error)
+	DeleteToken(domain.TokenIdentity) (bool, error)
+	UpdateToken(*gormmodel.UpdateTokenModel) error
+	GetHistory(*gormmodel.ListUserHistoryModel) ([]domain.History, error)
 }
 
 type API struct {
