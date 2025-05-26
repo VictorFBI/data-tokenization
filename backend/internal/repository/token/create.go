@@ -2,6 +2,7 @@ package token
 
 import (
 	"data-tokenization/internal/pkg/model/gorm"
+	"data-tokenization/internal/repository/common"
 	"errors"
 )
 
@@ -15,7 +16,7 @@ func (r *Repository) Create(createTokenModel *gorm.CreateTokenModel) error {
 		Create(createTokenModel)
 
 	if res.Error != nil {
-		return mapCommonError(res.Error)
+		return common.MapCommonError(res.Error)
 	}
 
 	return nil

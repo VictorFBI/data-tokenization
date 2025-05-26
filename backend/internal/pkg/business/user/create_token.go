@@ -29,10 +29,10 @@ func (s *Service) createTokenWithHistory(tokenModel *gorm.CreateTokenModel) erro
 		return err
 	}
 
-	err = s.uow.UserHistoryRepo().Add(&gorm.AddHistoryModel{
+	err = s.uow.HistoryRepo().Add(&gorm.AddHistoryModel{
 		UserID:    tokenModel.UserID,
 		TokenName: tokenModel.Name,
-		Action:    gorm.HistoryActionCreated,
+		Action:    gorm.HistoryActionCreate,
 		CreatedAt: time.Now(),
 	})
 
