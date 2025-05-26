@@ -1,3 +1,4 @@
+// В вашем провайдере:
 import 'react-native-get-random-values'
 import React, {
   createContext,
@@ -6,13 +7,13 @@ import React, {
   useState,
   ReactNode,
 } from 'react'
-import log from 'loglevel'
 import {
   initWalletConnect,
   getWalletConnectClient,
   WalletConnectClient,
 } from '@/src/services/walletConnect'
 import { SessionTypes } from '@walletconnect/types'
+import log from 'loglevel'
 
 log.setLevel(__DEV__ ? 'debug' : 'info')
 
@@ -40,14 +41,14 @@ export const WalletConnectProvider = ({
 
   useEffect(() => {
     let isMounted = true
-    let c: WalletConnectClient | null = null
 
     ;(async () => {
-      c = await initWalletConnect()
+      const c = await initWalletConnect()
       if (!c) {
         log.error('WalletConnect client is not initialized')
         return
       }
+      if (!isMounted) return
 
       if (isMounted) {
         setClient(c)
@@ -93,12 +94,12 @@ export const WalletConnectProvider = ({
             'personal_sign',
             'eth_signTypedData',
           ],
-          chains: ['eip155:1'],
+          chains: ['eip155:5'],
           events: ['accountsChanged', 'chainChanged'],
         },
       },
     })
-    log.info('WalletConnect URI generated')
+    log.info('WalletConnect URI generated:', uri)
     return { uri, approval }
   }
 

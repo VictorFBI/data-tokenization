@@ -35,7 +35,7 @@ export default function Layout() {
         <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
         <Tabs.Screen name="wallet" options={{ title: 'Wallet' }} />
         <Tabs.Screen name="index" options={{ title: 'Market' }} />
-        {/*<Tabs.Screen name="auth" options={{ title: 'Authorization' }} />*/}
+        <Tabs.Screen name="auth" options={{ title: 'Authorization' }} />
       </Tabs>
     </WalletConnectProvider>
   )
