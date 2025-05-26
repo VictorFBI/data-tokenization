@@ -10,10 +10,16 @@ export type WalletConnectClient = Awaited<ReturnType<typeof SignClient.init>>
 let client: WalletConnectClient | null = null
 
 /**
- * Инициализация WalletConnect client.
- * Для конфигурируемости загружает projectId из переменной окружения.
- * Убедитесь, что в .env прописано:
- *   WALLETCONNECT_PROJECT_ID=your_project_id_here
+ * Инициализирует WalletConnect клиент.
+ *
+ * Этот метод создает и настраивает экземпляр WalletConnect клиента,
+ * используя идентификатор проекта, указанный в переменной окружения `EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID`.
+ *
+ * Убедитесь, что в файле `.env` указана следующая переменная:
+ *   `EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here`
+ *
+ * @returns {Promise<WalletConnectClient | null>} Возвращает экземпляр WalletConnect клиента
+ * или `null`, если произошла ошибка при инициализации.
  */
 export const initWalletConnect =
   async (): Promise<WalletConnectClient | null> => {

@@ -4,7 +4,7 @@ import { BaseModal } from '@/src/components/modal/BaseModal'
 import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
 import { FlatList, View } from 'react-native'
 import { ActionButton } from '@/src/components/modal/ActionButton'
-import { historyStyle, styles } from '@/src/styles/WalletModal'
+import { historyStyle } from '@/src/styles/WalletModal'
 import { MaterialIconWrapper } from '@/src/components/default-elements-overridings/MaterialIconWrapper'
 import MonoText from '@/src/components/default-elements-overridings/MonoText'
 import {
@@ -14,12 +14,14 @@ import {
 } from '@/src/constants/colors'
 import { HistoryItem } from '@/src/types/HistoryItem'
 import { MOCK_HISTORY_DATA } from '@/src/constants/mockValues'
-import { groupByDateCategory } from '@/src/utils/groupByDateCategory'
+import { groupByDateCategory } from '@/src/utils/history-modal/groupByDateCategory'
 import { useTranslation } from 'react-i18next'
 import { DateCategory } from '@/src/types/DateCategoryEnum'
 import { dateCategoryToLocalePath } from '@/src/constants/map-converters/dateCategoryConverter'
 import { tokenOperationToLocalePath } from '@/src/constants/map-converters/tokenOperationConverter'
 import { TokenOperation } from '@/src/types/TokenOperationEnum'
+import { BaseModalProps } from '@/src/types/BaseModalProps'
+import { styles } from '@/src/styles/BaseModal'
 
 const operationStyle = (token: HistoryItem) => {
   return [
@@ -104,10 +106,7 @@ function HistoryRow(props: { historyItem: HistoryItem }) {
  *
  * @returns {JSX.Element} - JSX-элемент модального окна.
  */
-export function HistoryModal(props: {
-  visible: boolean
-  onRequestClose: () => void
-}) {
+export function HistoryModal(props: BaseModalProps): JSX.Element {
   const { t } = useTranslation()
   const historyData: Record<DateCategory, HistoryItem[]> =
     groupByDateCategory(MOCK_HISTORY_DATA)

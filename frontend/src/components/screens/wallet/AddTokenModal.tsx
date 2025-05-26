@@ -1,18 +1,21 @@
 import { useTokens } from '@/src/hooks/useTokens'
 import React from 'react'
-import { MaterialIconName } from '@/src/types/MaterialIconName'
 import log from 'loglevel'
-import { AttachFile } from '@/src/components/form/AttachFile'
-import { FormTextInput } from '@/src/components/form/FormTextInput'
-import { FormIconList } from '@/src/components/form/FormIconList'
 import { BaseModal } from '@/src/components/modal/BaseModal'
 import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
-import { FlatList, View } from 'react-native'
-import { FormComponent } from '@/src/components/modal/FormComponent'
+import { View } from 'react-native'
 import { ActionButton } from '@/src/components/modal/ActionButton'
 import { useAddForm } from '@/src/hooks/useAddForm'
-import { styles } from '@/src/styles/WalletModal'
 import { useTranslation } from 'react-i18next'
+import { styles } from '@/src/styles/BaseModal'
+import { FormComponentInputProps } from '@/src/types/FormComponentProps'
+import {
+  tokenDescriptionForm,
+  tokenFileForm,
+  tokenIconForm,
+  tokenNameForm,
+} from '@/src/utils/forms/getFormComponents'
+import { FormList } from '@/src/components/form/FormList'
 
 /**
  * Компонент модального окна для добавления токена.
@@ -59,55 +62,11 @@ export function AddTokenModal(props: {
     }
   }
 
-  const icons: MaterialIconName[] = [
-    'bed',
-    'pie-chart',
-    'favorite',
-    'air',
-    'directions-walk',
-    'electric-bolt',
-    'straighten',
-    'circle',
-  ]
-
-  const formFields = [
-    {
-      title: t('walletScreen.add.form.file'),
-      component: (
-        <AttachFile tokenFile={tokenFile} setTokenFile={setTokenFile} />
-      ),
-    },
-    {
-      title: t('walletScreen.add.form.name'),
-      component: (
-        <FormTextInput
-          value={tokenName}
-          placeholder={'example_name'}
-          onChangeText={setTokenName}
-        />
-      ),
-    },
-    {
-      title: t('walletScreen.add.form.icon'),
-      component: (
-        <FormIconList
-          data={icons}
-          selectedIcon={tokenIcon}
-          onIconPress={(icon: MaterialIconName) => setTokenIcon(icon)}
-        />
-      ),
-    },
-    {
-      title: t('walletScreen.add.form.desc'),
-      component: (
-        <FormTextInput
-          value={tokenDescription}
-          placeholder={t('walletScreen.add.form.descPlaceholder')}
-          onChangeText={setTokenDescription}
-          multiline={true}
-        />
-      ),
-    },
+  const formFields: FormComponentInputProps[] = [
+    tokenFileForm(t, tokenFile, setTokenFile),
+    tokenNameForm(t, tokenName, setTokenName),
+    tokenIconForm(t, tokenIcon, setTokenIcon),
+    tokenDescriptionForm(t, tokenDescription, setTokenDescription),
   ]
 
   return (
@@ -115,19 +74,7 @@ export function AddTokenModal(props: {
       <SimpleText style={styles.modalTitle}>
         {t('walletScreen.add.header')}
       </SimpleText>
-      <FlatList
-        data={formFields}
-        keyExtractor={(_, index) => index.toString()}
-        renderItem={({ item }) => (
-          <FormComponent title={item.title}>{item.component}</FormComponent>
-        )}
-        contentContainerStyle={{
-          gap: 12,
-          paddingTop: 16,
-          paddingBottom: 16,
-        }}
-        style={{ flex: 1 }}
-      />
+      <FormList data={formFields} />
       <View style={styles.buttonRow}>
         <ActionButton
           text={t('walletScreen.add.cancel')}

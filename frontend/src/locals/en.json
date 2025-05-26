@@ -12,13 +12,6 @@
       "header": "Add token",
       "badRequestAlert": "Please provide name, file and icon",
       "failAlert": "Failed to add token",
-      "form": {
-        "file": "Tokenized file",
-        "name": "Name",
-        "icon": "Icon",
-        "desc": "Description",
-        "descPlaceholder": "Tell something about your token"
-      },
       "cancel": "Cancel",
       "add": "Add"
     },
@@ -40,6 +33,21 @@
         "sell": "sell"
       }
     }
+  },
+  "form": {
+    "file": "Tokenized file",
+    "filePlaceholder": "Choose file",
+    "name": "Name",
+    "icon": "Icon",
+    "desc": "Description",
+    "descPlaceholder": "Tell something about your token",
+    "market": "Market",
+    "marketToggle": "Put on market",
+    "pricePlaceholder": "Price in ETH"
+  },
+  "tokenDetails": {
+    "close": "Close",
+    "save": "Save"
   },
   "profileScreen": {
     "notifications": "Notifications",

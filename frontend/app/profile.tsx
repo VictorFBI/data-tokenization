@@ -5,7 +5,7 @@ import Options, {
 } from '@/src/components/screens/profile/ProfileOption'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
 import { ProfileHeader } from '@/src/components/screens/profile/ProfileHeader'
-import { changeAppLanguage } from '@/src/utils/languageManager'
+import { changeAppLanguage } from '@/src/utils/general/languageManager'
 import { useTranslation } from 'react-i18next'
 
 /**

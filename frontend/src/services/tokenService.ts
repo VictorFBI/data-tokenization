@@ -51,3 +51,26 @@ export const addToken = async (
   // }
   return { status: 200 }
 }
+
+export const updateToken = async (
+  formData: FormData,
+): Promise<{ status: number; token?: Token }> => {
+  void formData
+  // try {
+  //   const response = await fetch('https://your-backend.com/upload', {
+  //     method: 'POST',
+  //     body: formData,
+  //   })
+  //
+  //   if (!response.ok) {
+  //     return { status: response.status }
+  //   }
+  //
+  //   const token = await response.json()
+  //   return { status: 200, token }
+  // } catch (error) {
+  //   console.error('Error adding token:', error)
+  //   return { status: 500 }
+  // }
+  return { status: 200 }
+}
