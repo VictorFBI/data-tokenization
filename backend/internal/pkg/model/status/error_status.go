@@ -5,6 +5,8 @@ type ErrorCode int
 const (
 	Unknown ErrorCode = iota
 	NotFound
+	Forbidden
+	BadRequest
 )
 
 type Err struct {

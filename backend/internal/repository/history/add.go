@@ -2,6 +2,8 @@ package history
 
 import (
 	"data-tokenization/internal/pkg/model/gorm"
+	"data-tokenization/internal/repository/common"
+	"data-tokenization/internal/repository/schema/tablename"
 	"errors"
 )
 
@@ -11,9 +13,8 @@ func (r *Repository) Add(historyModel *gorm.AddHistoryModel) error {
 	}
 
 	err := r.db.
-		Table("history").
-		Create(historyModel).
-		Error
+		Table(tablename.History).
+		Create(historyModel).Error
 
-	return err
+	return common.MapCommonError(err)
 }

@@ -1,35 +1,24 @@
 package mapper
 
 import (
-	"data-tokenization/internal/gen/rest_common"
-	"data-tokenization/internal/gen/rest_user"
-	"data-tokenization/internal/pkg/model/domain"
-	"fmt"
+	restuser "data-tokenization/internal/gen/rest_user"
+	"data-tokenization/internal/pkg/mapper/common"
+	model "data-tokenization/internal/pkg/model/service"
 )
 
-func ToUserTokenListResponse(tokens []domain.TokenInfoForList) *rest_user.UserTokenListResponse {
-	tokenResponses := make([]rest_common.ListTokenResponse, 0, len(tokens))
+func ToUserTokenListResponse(tokenInfoForList []model.TokenInfoForList) *restuser.UserListTokenResponse {
+	tokenResponses := make([]restuser.TokenListItems, 0, len(tokenInfoForList))
 
-	for _, t := range tokens {
-		priceStr := ""
-		if t.Price != nil {
-			priceStr = fmt.Sprintf("%g", *t.Price)
-		}
-
-		currency := ""
-		if t.CurrencyCode != nil {
-			currency = *t.CurrencyCode
-		}
-
-		tokenResponses = append(tokenResponses, rest_common.ListTokenResponse{
+	for _, t := range tokenInfoForList {
+		tokenResponses = append(tokenResponses, restuser.TokenListItems{
+			CurrencyCode: t.CurrencyCode,
 			Name:         t.Name,
+			Price:        common.ConvertPriceToStr(t.Price),
 			Type:         t.Type,
-			Price:        priceStr,
-			CurrencyCode: &currency,
 		})
 	}
 
-	return &rest_user.UserTokenListResponse{
+	return &restuser.UserListTokenResponse{
 		Tokens: &tokenResponses,
 	}
 }

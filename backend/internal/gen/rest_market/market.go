@@ -13,32 +13,30 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
-// MarketTokenBuyRequest defines model for MarketTokenBuyRequest.
-type MarketTokenBuyRequest struct {
-	// BuyerId User ID inside the blockchain system (address)
-	BuyerId externalRef0.UserId `json:"buyer_id"`
-
-	// SellerId User ID inside the blockchain system (address)
-	SellerId externalRef0.UserId `json:"seller_id"`
-
-	// TokenName Name of the user's tokenized file
-	TokenName externalRef0.TokenName `json:"token_name"`
-}
-
-// MarketTokenBuyResponse defines model for MarketTokenBuyResponse.
-type MarketTokenBuyResponse struct {
-	Message string `json:"message"`
-}
-
-// MarketTokenGetResponse defines model for MarketTokenGetResponse.
-type MarketTokenGetResponse struct {
+// MarketGetTokenResponse defines model for MarketGetTokenResponse.
+type MarketGetTokenResponse struct {
 	Token externalRef0.Token `json:"token"`
 }
 
-// MarketTokenListResponse defines model for MarketTokenListResponse.
-type MarketTokenListResponse struct {
-	NextCursor *int                              `json:"next_cursor,omitempty"`
-	Tokens     *[]externalRef0.ListTokenResponse `json:"tokens,omitempty"`
+// MarketListTokenResponse defines model for MarketListTokenResponse.
+type MarketListTokenResponse struct {
+	NextCursor *int              `json:"next_cursor,omitempty"`
+	Tokens     *[]TokenListItems `json:"tokens,omitempty"`
+}
+
+// TokenListItems defines model for TokenListItems.
+type TokenListItems struct {
+	CurrencyCode string `json:"currency_code"`
+
+	// Name Name of the user's tokenized file
+	Name externalRef0.TokenName `json:"name"`
+
+	// Price Число с точностью до 18 знаков после запятой
+	Price externalRef0.Price `json:"price"`
+	Type  string             `json:"type"`
+
+	// UserId User ID inside the blockchain system (address)
+	UserId externalRef0.UserId `json:"user_id"`
 }
 
 // GetMarketTokenParams defines parameters for GetMarketToken.
@@ -51,26 +49,19 @@ type GetMarketTokenParams struct {
 type GetMarketTokenListParams struct {
 	Cursor                   externalRef0.Cursor         `form:"cursor" json:"cursor"`
 	Limit                    externalRef0.Limit          `form:"limit" json:"limit"`
-	UserId                   externalRef0.UserId         `form:"user_id" json:"user_id"`
+	UserId                   *externalRef0.UserId        `form:"user_id,omitempty" json:"user_id,omitempty"`
 	Name                     *externalRef0.TokenName     `form:"name,omitempty" json:"name,omitempty"`
 	Type                     *string                     `form:"type,omitempty" json:"type,omitempty"`
 	StartDate                *externalRef0.Date          `form:"start_date,omitempty" json:"start_date,omitempty"`
 	EndDate                  *externalRef0.Date          `form:"end_date,omitempty" json:"end_date,omitempty"`
 	SortDirectionOnUpdatedAt *externalRef0.SortDirection `form:"sort_direction_on_updated_at,omitempty" json:"sort_direction_on_updated_at,omitempty"`
-	IsOnMarket               *bool                       `form:"is_on_market,omitempty" json:"is_on_market,omitempty"`
 }
-
-// PostMarketTokenBuyJSONRequestBody defines body for PostMarketTokenBuy for application/json ContentType.
-type PostMarketTokenBuyJSONRequestBody = MarketTokenBuyRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /market/token)
 	GetMarketToken(c *gin.Context, params GetMarketTokenParams)
-
-	// (POST /market/token/buy)
-	PostMarketTokenBuy(c *gin.Context)
 
 	// (GET /market/token/list)
 	GetMarketTokenList(c *gin.Context, params GetMarketTokenListParams)
@@ -133,19 +124,6 @@ func (siw *ServerInterfaceWrapper) GetMarketToken(c *gin.Context) {
 	siw.Handler.GetMarketToken(c, params)
 }
 
-// PostMarketTokenBuy operation middleware
-func (siw *ServerInterfaceWrapper) PostMarketTokenBuy(c *gin.Context) {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-		if c.IsAborted() {
-			return
-		}
-	}
-
-	siw.Handler.PostMarketTokenBuy(c)
-}
-
 // GetMarketTokenList operation middleware
 func (siw *ServerInterfaceWrapper) GetMarketTokenList(c *gin.Context) {
 
@@ -184,16 +162,9 @@ func (siw *ServerInterfaceWrapper) GetMarketTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Required query parameter "user_id" -------------
+	// ------------- Optional query parameter "user_id" -------------
 
-	if paramValue := c.Query("user_id"); paramValue != "" {
-
-	} else {
-		siw.ErrorHandler(c, fmt.Errorf("Query argument user_id is required, but not found"), http.StatusBadRequest)
-		return
-	}
-
-	err = runtime.BindQueryParameter("form", true, true, "user_id", c.Request.URL.Query(), &params.UserId)
+	err = runtime.BindQueryParameter("form", true, false, "user_id", c.Request.URL.Query(), &params.UserId)
 	if err != nil {
 		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter user_id: %w", err), http.StatusBadRequest)
 		return
@@ -239,14 +210,6 @@ func (siw *ServerInterfaceWrapper) GetMarketTokenList(c *gin.Context) {
 		return
 	}
 
-	// ------------- Optional query parameter "is_on_market" -------------
-
-	err = runtime.BindQueryParameter("form", true, false, "is_on_market", c.Request.URL.Query(), &params.IsOnMarket)
-	if err != nil {
-		siw.ErrorHandler(c, fmt.Errorf("Invalid format for parameter is_on_market: %w", err), http.StatusBadRequest)
-		return
-	}
-
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
 		if c.IsAborted() {
@@ -285,6 +248,5 @@ func RegisterHandlersWithOptions(router gin.IRouter, si ServerInterface, options
 	}
 
 	router.GET(options.BaseURL+"/market/token", wrapper.GetMarketToken)
-	router.POST(options.BaseURL+"/market/token/buy", wrapper.PostMarketTokenBuy)
 	router.GET(options.BaseURL+"/market/token/list", wrapper.GetMarketTokenList)
 }

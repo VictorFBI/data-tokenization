@@ -29,7 +29,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarketTokenGetResponse'
+                $ref: '#/components/schemas/MarketGetTokenResponse'
         '404':
           description: File with this token_name not found
           content:
@@ -52,13 +52,12 @@ paths:
           required: true
           schema:
             $ref: 'common.yaml#/components/schemas/Limit'
-        - in: query
-          name: user_id
-          required: true
-          schema:
-            $ref: 'common.yaml#/components/schemas/UserId'
 
         # Filters
+        - in: query
+          name: user_id
+          schema:
+            $ref: 'common.yaml#/components/schemas/UserId'
         - in: query
           name: name
           schema:
@@ -79,101 +78,51 @@ paths:
           name: sort_direction_on_updated_at
           schema:
             $ref: 'common.yaml#/components/schemas/SortDirection'
-        - in: query
-          name: is_on_market
-          schema: 
-            type: boolean
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MarketTokenListResponse'
-
-  /market/token/buy:
-    post:
-      tags:
-        - Market
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/MarketTokenBuyRequest'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MarketTokenBuyResponse'
-        '404':
-          description: File with this token name not found
-          content:
-            application/json:
-              schema:
-                $ref: 'common.yaml#/components/schemas/ErrorResponse'
+                $ref: '#/components/schemas/MarketListTokenResponse'
 
 components:
   schemas:
-    MarketTokenGetResponse:
+    MarketGetTokenResponse:
       type: object
       required:
         - token
       properties:
         token:
           $ref: 'common.yaml#/components/schemas/Token'
-
-    MarketTokenBuyRequest:
-      type: object
-      required:
-        - token_name
-        - seller_id
-        - buyer_id
-      properties:
-        token_name:
-          $ref: 'common.yaml#/components/schemas/TokenName'
-        seller_id:
-          $ref: 'common.yaml#/components/schemas/UserId'
-        buyer_id:
-          $ref: 'common.yaml#/components/schemas/UserId'
     
-    MarketTokenBuyResponse:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-    
-    MarketTokenListResponse:
+    MarketListTokenResponse:
       type: object
       properties:
         tokens:
           type: array
           items:
-            $ref: 'common.yaml#/components/schemas/ListTokenResponse'
+            $ref: '#/components/schemas/TokenListItems'
         next_cursor:
           type: integer
-    
-    MarketTokenPatchRequest:
+          
+    TokenListItems:
       type: object
       required:
         - user_id
         - name
-        - is_on_market
+        - type
         - price
+        - currency_code
       properties:
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
-        token_name:
+        name:
           $ref: 'common.yaml#/components/schemas/TokenName'
-        enable_for_market:
-          type: boolean
-          description: True - put on the market, false - otherwise
+        type:
+          type: string
         price:
           $ref: 'common.yaml#/components/schemas/Price'
         currency_code:
           type: string
-  
+    

@@ -1,7 +1,7 @@
 package user
 
 import (
-	userhistory "data-tokenization/internal/repository/history"
+	"data-tokenization/internal/repository/history"
 	"data-tokenization/internal/repository/token"
 	"database/sql"
 )
@@ -11,7 +11,7 @@ type unitOfWork interface {
 	Rollback() error
 	Complete() error
 	TokenRepo() token.Repo
-	UserHistoryRepo() userhistory.Repo
+	HistoryRepo() history.Repo
 }
 
 // Service - реализует бизнес слой приложения

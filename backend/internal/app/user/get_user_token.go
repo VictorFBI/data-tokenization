@@ -3,15 +3,15 @@ package user
 import (
 	"data-tokenization/internal/gen/rest_user"
 	"data-tokenization/internal/pkg/mapper"
-	"data-tokenization/internal/pkg/model/gorm"
-	errorhandler "data-tokenization/internal/pkg/service/error_handler"
+	"data-tokenization/internal/pkg/model/domain"
+	"data-tokenization/internal/pkg/service/errorhandler"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func (a *API) GetUserToken(c *gin.Context, params rest_user.GetUserTokenParams) {
-	token, err := a.s.GetToken(&gorm.TokenModel{
+	token, err := a.s.GetToken(domain.TokenIdentity{
 		UserID: params.UserId,
 		Name:   params.Name,
 	})
@@ -20,7 +20,6 @@ func (a *API) GetUserToken(c *gin.Context, params rest_user.GetUserTokenParams) 
 		return
 	}
 
-	r := mapper.ToUserTokenGetResponse(*token)
-
-	c.JSON(http.StatusOK, r)
+	resp := mapper.ToGetTokenResponse(*token)
+	c.JSON(http.StatusOK, resp)
 }

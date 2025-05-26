@@ -7,5 +7,7 @@ import (
 )
 
 var StatusErrorCodeToHTTPCode = map[status.ErrorCode]status.HTTPCode{
-	status.NotFound: http.StatusNotFound,
+	status.NotFound:   http.StatusNotFound,
+	status.Forbidden:  http.StatusForbidden,
+	status.BadRequest: http.StatusBadRequest,
 }

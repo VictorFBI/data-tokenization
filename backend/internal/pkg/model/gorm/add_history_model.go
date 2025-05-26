@@ -1,6 +1,8 @@
 package gorm
 
-import "time"
+import (
+	"time"
+)
 
 // AddHistoryModel – модель для добавления действия пользователя
 type AddHistoryModel struct {

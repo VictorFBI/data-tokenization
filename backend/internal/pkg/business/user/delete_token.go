@@ -1,13 +1,14 @@
 package user
 
 import (
+	"data-tokenization/internal/pkg/model/domain"
 	"data-tokenization/internal/pkg/model/gorm"
 	"database/sql"
 	"time"
 )
 
 // DeleteToken - удаляет токен из репозитория, если находит такой
-func (s *Service) DeleteToken(tokenModel *gorm.TokenModel) (bool, error) {
+func (s *Service) DeleteToken(tokenIdentity domain.TokenIdentity) (bool, error) {
 	err := s.uow.StartOperationSet(sql.LevelReadCommitted)
 	if err != nil {
 		return false, err
@@ -16,15 +17,15 @@ func (s *Service) DeleteToken(tokenModel *gorm.TokenModel) (bool, error) {
 		_ = s.uow.Rollback()
 	}()
 
-	success, err := s.uow.TokenRepo().Delete(tokenModel)
+	success, err := s.uow.TokenRepo().Delete(tokenIdentity)
 	if err != nil || !success {
 		return false, err
 	}
 
-	err = s.uow.UserHistoryRepo().Add(&gorm.AddHistoryModel{
-		UserID:    tokenModel.UserID,
-		TokenName: tokenModel.Name,
-		Action:    gorm.HistoryActionDeleted,
+	err = s.uow.HistoryRepo().Add(&gorm.AddHistoryModel{
+		UserID:    tokenIdentity.UserID,
+		TokenName: tokenIdentity.Name,
+		Action:    gorm.HistoryActionDelete,
 		CreatedAt: time.Now(),
 	})
 	if err != nil {

@@ -2,21 +2,17 @@ package token
 
 import (
 	"data-tokenization/internal/pkg/model/domain"
-	"data-tokenization/internal/pkg/model/gorm"
-	"errors"
+	"data-tokenization/internal/repository/common"
+	"data-tokenization/internal/repository/schema/tokenscolumn"
+	"fmt"
 )
 
-func (r *Repository) Delete(tokenModel *gorm.TokenModel) (bool, error) {
-	if tokenModel == nil {
-		return false, errors.New("tokenModel for GetListByFilter is nil")
-	}
+func (r *Repository) Delete(tokenIdentity domain.TokenIdentity) (bool, error) {
+	query := fmt.Sprintf("%s = ? and %s = ?", tokenscolumn.UserID, tokenscolumn.Name)
 
 	res := r.db.
-		Where("user_id = ? and name = ?", tokenModel.UserID, tokenModel.Name).
+		Where(query, tokenIdentity.UserID, tokenIdentity.Name).
 		Delete(&domain.Token{})
-	if res.Error != nil {
-		return false, mapCommonError(res.Error)
-	}
 
-	return res.RowsAffected == 1, nil
+	return res.RowsAffected == 1, common.MapCommonError(res.Error)
 }

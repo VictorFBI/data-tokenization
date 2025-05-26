@@ -4,7 +4,6 @@ import "time"
 
 // Token – модель токена
 type Token struct {
-	ID           uint64
 	UserID       string
 	Name         string
 	Type         string
