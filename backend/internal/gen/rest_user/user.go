@@ -89,19 +89,23 @@ type UserPatchTokenRequest struct {
 	UserId externalRef0.UserId `json:"user_id"`
 }
 
+<<<<<<< HEAD
 // UserPostTokenRequest defines model for UserPostTokenRequest.
 type UserPostTokenRequest struct {
 	CurrencyCode string `json:"currency_code"`
+=======
+// UserTokenPostRequest defines model for UserTokenPostRequest.
+type UserTokenPostRequest struct {
+	// EthPublicKey Public key of the user's Ethereum account
+	EthPublicKey string `json:"eth_public_key"`
+>>>>>>> 787e1bc (add new tokenization logic)
 
 	// File File to be tokenized
 	File File `json:"file"`
 
 	// Name Name of the user's tokenized file
 	Name externalRef0.TokenName `json:"name"`
-
-	// Price Число с точностью до 18 знаков после запятой
-	Price externalRef0.Price `json:"price"`
-	Type  string             `json:"type"`
+	Type string                 `json:"type"`
 
 	// UserId User ID inside the blockchain system (address)
 	UserId externalRef0.UserId `json:"user_id"`

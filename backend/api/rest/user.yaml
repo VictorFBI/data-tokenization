@@ -78,12 +78,6 @@ paths:
       responses:
         '200':
           description: OK
-        '409':
-          description: Token with the same content or name already exists
-          content:
-            application/json:
-              schema:
-                $ref: 'common.yaml#/components/schemas/ErrorResponse'
 
     delete:
       tags:
@@ -281,10 +275,8 @@ components:
         - user_id
         - file
         - name
-        - icon
         - type
-        - price
-        - currency_code
+        - eth_public_key
       properties:
         user_id:
           $ref: 'common.yaml#/components/schemas/UserId'
@@ -294,10 +286,9 @@ components:
           $ref: 'common.yaml#/components/schemas/TokenName'
         type:
           type: string
-        price:
-          $ref: 'common.yaml#/components/schemas/Price'
-        currency_code:
+        eth_public_key:
           type: string
+          description: Public key of the user's Ethereum account
 
     UserDeleteTokenRequest:
       type: object
