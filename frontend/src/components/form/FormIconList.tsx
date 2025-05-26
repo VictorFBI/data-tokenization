@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { MaterialIconWrapper } from '@/src/components/default-elements-overridings/MaterialIconWrapper'
 import React, { useState } from 'react'
 import { ICON_SIZE } from '@/src/constants/sizes'
-import { findBestGapAndColumnSize } from '@/src/utils/findBestGapAndColumnSize'
+import { findBestGapAndColumnSize } from '@/src/utils/forms/findBestGapAndColumnSize'
 import { CHOSEN_ICON_BG_COLOR } from '@/src/constants/colors'
 
 /**

@@ -1,5 +1,5 @@
-import { StyleSheet, TextInput } from 'react-native'
-import { hexToRgba } from '@/src/utils/hexToRgba'
+import { KeyboardType, StyleSheet, TextInput } from 'react-native'
+import { hexToRgba } from '@/src/utils/general/hexToRgba'
 import { MAIN_COLOR, TEXT_COLOR } from '@/src/constants/colors'
 import React from 'react'
 import { MONO_FONT } from '@/src/constants/fonts'
@@ -12,13 +12,15 @@ import { MONO_FONT } from '@/src/constants/fonts'
  * @param {string} props.placeholder - Текст-заполнитель, отображаемый, когда поле пустое.
  * @param {(function|string)} props.onChangeText - Функция для обработки изменения текста, вызываемая при вводе.
  * @param {boolean} [props.multiline=false] - Необязательный параметр. Определяет, поддерживает ли поле ввод текста в несколько строк.
+ * @param props.keyboardType
  * @returns {JSX.Element} - Возвращает компонент `TextInput`, стилизованный для приложения.
  */
 export function FormTextInput(props: {
   value: string
   placeholder: string
-  onChangeText: (value: ((prevState: string) => string) | string) => void
+  onChangeText: ((text: string) => void) | undefined
   multiline?: boolean
+  keyboardType?: KeyboardType
 }): JSX.Element {
   return (
     <TextInput
@@ -28,6 +30,7 @@ export function FormTextInput(props: {
       value={props.value}
       onChangeText={props.onChangeText}
       multiline={props.multiline}
+      keyboardType={props.keyboardType}
     />
   )
 }

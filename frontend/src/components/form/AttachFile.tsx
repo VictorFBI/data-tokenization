@@ -1,10 +1,11 @@
 import { DocumentPickerResponse } from 'react-native-document-picker'
 import { StyleSheet, TouchableOpacity } from 'react-native'
-import { pickFile } from '@/src/utils/pickFile'
+import { pickFile } from '@/src/utils/general/pickFile'
 import { MaterialIcons } from '@expo/vector-icons'
 import { MAIN_COLOR, TEXT_COLOR } from '@/src/constants/colors'
 import MonoText from '@/src/components/default-elements-overridings/MonoText'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 
 /**
  * AttachFile - это компонент, который позволяет пользователю прикрепить файл к сообщению.
@@ -18,6 +19,7 @@ export function AttachFile(props: {
   tokenFile: DocumentPickerResponse | null
   setTokenFile: (file: DocumentPickerResponse | null) => void
 }): JSX.Element {
+  const { t } = useTranslation()
   return (
     <TouchableOpacity
       style={styles.fileButton}
@@ -35,7 +37,7 @@ export function AttachFile(props: {
         </MonoText>
       ) : (
         <MonoText style={{ color: TEXT_COLOR, fontSize: 16, opacity: 0.5 }}>
-          Choose file
+          {t('form.attachFilePlaceholder')}
         </MonoText>
       )}
     </TouchableOpacity>

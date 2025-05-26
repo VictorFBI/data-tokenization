@@ -1,9 +1,9 @@
 import { Tabs } from 'expo-router'
 import TabBar from '@/src/navigation/TabBar'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src'
-import useLoadFonts from '@/src/utils/useLoadFonts'
+import useLoadFonts from '@/src/utils/general/useLoadFonts'
 import { useEffect, useState } from 'react'
-import { initLanguage } from '@/src/utils/languageManager'
+import { initLanguage } from '@/src/utils/general/languageManager'
 import { WalletConnectProvider } from '@/src/context/WalletConnectProvider'
 import 'react-native-get-random-values'
 
@@ -35,7 +35,7 @@ export default function Layout() {
         <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
         <Tabs.Screen name="wallet" options={{ title: 'Wallet' }} />
         <Tabs.Screen name="index" options={{ title: 'Market' }} />
-        <Tabs.Screen name="auth" options={{ title: 'Authorization' }} />
+        {/*<Tabs.Screen name="auth" options={{ title: 'Authorization' }} />*/}
       </Tabs>
     </WalletConnectProvider>
   )

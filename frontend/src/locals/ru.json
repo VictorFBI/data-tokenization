@@ -12,13 +12,6 @@
       "header": "Добавить токен",
       "badRequestAlert": "Пожалуйста, укажите имя, файл и иконку",
       "failAlert": "Не удалось добавить токен",
-      "form": {
-        "file": "Токенизированный файл",
-        "name": "Имя",
-        "icon": "Иконка",
-        "desc": "Описание",
-        "descPlaceholder": "Расскажите что-нибудь о вашем токене"
-      },
       "cancel": "Отмена",
       "add": "Добавить"
     },
@@ -41,11 +34,29 @@
       }
     }
   },
+  "form": {
+    "file": "Токенизируемый файл",
+    "filePlaceholder": "Выберите файл",
+    "name": "Имя",
+    "icon": "Иконка",
+    "desc": "Описание",
+    "descPlaceholder": "Расскажите что-нибудь о вашем токене",
+    "market": "Рынок",
+    "marketToggle": "Выставить на продажу",
+    "pricePlaceholder": "Цена в эфирах"
+  },
+  "tokenDetails": {
+    "close": "Закрыть",
+    "save": "Сохранить"
+  },
   "profileScreen": {
     "notifications": "Уведомления",
     "changeAccount": "Сменить аккаунт",
     "language": "Язык",
     "sendFeedback": "Отправить отзыв"
+  },
+  "tokenScreen": {
+    "close": "Закрыть"
   },
   "common": {
     "searchTokens": "Поиск токенов",

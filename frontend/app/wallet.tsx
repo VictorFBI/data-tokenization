@@ -9,6 +9,7 @@ import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens
 import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
 import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
 import { useTranslation } from 'react-i18next'
+import { TokenDetailsModal } from '@/src/components/tokens-data/TokenDetailsModal'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -20,6 +21,8 @@ export default function WalletScreen() {
   const { tokens, setFilterParams } = useTokens()
   const [isAddModalVisible, setAddModalVisible] = useState(false)
   const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
+  const [selectedToken, setSelectedToken] = useState<Token | null>(null)
+  const [isDetailsModalVisible, setDetailsModalVisible] = useState(false)
 
   const handleSearch = (query: string) => {
     setFilterParams(prev => ({ ...prev, search: query }))
@@ -50,7 +53,10 @@ export default function WalletScreen() {
         tokens={tokens}
         onSearch={handleSearch}
         onFilter={() => {}}
-        onTokenPress={(token: Token) => {}}
+        onTokenPress={(token: Token) => {
+          setSelectedToken(token)
+          setDetailsModalVisible(true)
+        }}
       />
       <AddTokenModal
         visible={isAddModalVisible}
@@ -63,6 +69,11 @@ export default function WalletScreen() {
         onRequestClose={() => {
           setHistoryModalVisible(false)
         }}
+      />
+      <TokenDetailsModal
+        visible={isDetailsModalVisible}
+        token={selectedToken}
+        onRequestClose={() => setDetailsModalVisible(false)}
       />
     </BackgroundSafeAreaView>
   )

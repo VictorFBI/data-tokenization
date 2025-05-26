@@ -1,4 +1,4 @@
-import { BaseModalProps } from '@/src/types/BaseModalProps'
+import { BaseModalChildrenProps } from '@/src/types/BaseModalProps'
 import { Modal, SafeAreaView, StyleSheet, View } from 'react-native'
 import { BG_COLOR, TAB_COLOR } from '@/src/constants/colors'
 import React from 'react'
@@ -7,7 +7,7 @@ export const BaseModal = ({
   visible,
   onRequestClose,
   children,
-}: BaseModalProps) => {
+}: BaseModalChildrenProps) => {
   return (
     <Modal
       animationType={'slide'}

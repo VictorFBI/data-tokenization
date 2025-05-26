@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Token } from '@/src/types/Token'
 import { FilterProps } from '@/src/types/FilterProps'
-import { fetchTokens, addToken } from '@/src/services/tokenService'
+import { fetchTokens, addToken, updateToken } from '@/src/services/tokenService'
 import log from 'loglevel'
 
 export const useTokens = (initialParams: FilterProps = {}) => {
@@ -32,6 +32,19 @@ export const useTokens = (initialParams: FilterProps = {}) => {
     [loadTokens],
   )
 
+  const handleUpdateToken = useCallback(
+    async (formData: FormData) => {
+      try {
+        const result = await updateToken(formData)
+        await loadTokens()
+        return result
+      } catch (error) {
+        log.error('Error updating token: ' + error)
+      }
+    },
+    [loadTokens],
+  )
+
   useEffect(() => {
     loadTokens()
   }, [loadTokens])
@@ -43,5 +56,6 @@ export const useTokens = (initialParams: FilterProps = {}) => {
     setFilterParams,
     handleAddToken,
     refreshTokens: loadTokens,
+    handleUpdateToken,
   }
 }
