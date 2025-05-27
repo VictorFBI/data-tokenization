@@ -49,6 +49,10 @@
     "close": "Закрыть",
     "save": "Сохранить"
   },
+  "filter": {
+    "header": "Фильтр",
+    "save": "Сохранить"
+  },
   "profileScreen": {
     "notifications": "Уведомления",
     "changeAccount": "Сменить аккаунт",

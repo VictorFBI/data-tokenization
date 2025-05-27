@@ -1,7 +1,6 @@
-import DocumentPicker, {
-  DocumentPickerResponse,
-} from 'react-native-document-picker'
+import * as DocumentPicker from 'expo-document-picker'
 import log from 'loglevel'
+import { DocumentPickerResponse } from 'react-native-document-picker'
 
 /**
  * Функция `pickFile` позволяет пользователю выбрать файл с помощью
@@ -12,16 +11,27 @@ import log from 'loglevel'
  */
 export async function pickFile(): Promise<DocumentPickerResponse | null> {
   try {
-    const result = await DocumentPicker.pick({
-      type: [DocumentPicker.types.allFiles],
-    })
-    return result[0]
-  } catch (err) {
-    if (DocumentPicker.isCancel(err)) {
+    const result = await DocumentPicker.getDocumentAsync({ type: '*/*' })
+
+    // Если отмена — сразу возвращаем null
+    if (result.canceled) {
       log.warn('File selection canceled')
-    } else {
-      log.warn('Error selecting file:', err)
+      return null
     }
+
+    // Берём первый ассет (обычно пользователь выбирает один файл)
+    const asset = result.assets[0]
+
+    // Мапим под интерфейс DocumentPickerResponse
+    return {
+      uri: asset.uri,
+      name: asset.name,
+      size: asset.size ?? 0,
+      type: asset.mimeType ?? 'application/octet-stream',
+      fileCopyUri: null,
+    }
+  } catch (err) {
+    log.warn('Error selecting file:', err)
     return null
   }
 }

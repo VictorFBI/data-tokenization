@@ -17,7 +17,7 @@ export const useUpdateForm = () => {
   }
 
   const makeForm = () => {
-    if (!tokenName || !tokenIcon) {
+    if (!tokenName || !tokenIcon || (priceEth === '' && isListed)) {
       return
     }
     const formData = new FormData()

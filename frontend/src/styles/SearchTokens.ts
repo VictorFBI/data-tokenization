@@ -20,7 +20,4 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 8,
   },
-  iconSpacing: {
-    marginRight: 12,
-  },
 })

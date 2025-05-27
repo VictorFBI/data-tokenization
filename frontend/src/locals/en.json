@@ -43,12 +43,22 @@
     "descPlaceholder": "Tell something about your token",
     "market": "Market",
     "marketToggle": "Put on market",
-    "pricePlaceholder": "Price in ETH"
+    "pricePlaceholder": "Price in ETH",
+    "dateRange": "Date range",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "noDate": "No chosen date",
+    "selectDate": "Select date",
+    "clear": "Clear"
   },
   "tokenDetails": {
     "close": "Close",
     "save": "Save"
   },
+    "filter": {
+      "header": "Filter",
+      "save": "Save"
+    },
   "profileScreen": {
     "notifications": "Notifications",
     "changeAccount": "Change account",

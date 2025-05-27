@@ -37,16 +37,12 @@ export function SearchTokens(props: SearchTokensParams): JSX.Element {
         value={searchQuery}
         onChangeText={handleSearch}
       />
-      <View style={styles.iconsGroup}>
-        <MaterialIcons
-          name="filter-list-alt"
-          size={20}
-          color={ICON_COLOR}
-          style={styles.iconSpacing}
-          onPress={props.onFilter}
-        />
-        <MaterialIcons name="menu" size={20} color={ICON_COLOR} />
-      </View>
+      <MaterialIcons
+        name="filter-list-alt"
+        size={20}
+        color={ICON_COLOR}
+        onPress={props.onFilter}
+      />
     </View>
   )
 }

@@ -10,6 +10,7 @@ import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
 import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
 import { useTranslation } from 'react-i18next'
 import { TokenDetailsModal } from '@/src/components/tokens-data/TokenDetailsModal'
+import { FilterModal } from '@/src/components/tokens-data/FilterModal'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -18,11 +19,12 @@ import { TokenDetailsModal } from '@/src/components/tokens-data/TokenDetailsModa
  */
 export default function WalletScreen() {
   const { t } = useTranslation()
-  const { tokens, setFilterParams } = useTokens()
+  const { tokens, filterParams, setFilterParams } = useTokens()
   const [isAddModalVisible, setAddModalVisible] = useState(false)
   const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
   const [selectedToken, setSelectedToken] = useState<Token | null>(null)
   const [isDetailsModalVisible, setDetailsModalVisible] = useState(false)
+  const [isFilterVisible, setFilterVisible] = useState(false)
 
   const handleSearch = (query: string) => {
     setFilterParams(prev => ({ ...prev, search: query }))
@@ -52,7 +54,9 @@ export default function WalletScreen() {
       <YourTokensWithSearch
         tokens={tokens}
         onSearch={handleSearch}
-        onFilter={() => {}}
+        onFilter={() => {
+          setFilterVisible(!isFilterVisible)
+        }}
         onTokenPress={(token: Token) => {
           setSelectedToken(token)
           setDetailsModalVisible(true)
@@ -74,6 +78,12 @@ export default function WalletScreen() {
         visible={isDetailsModalVisible}
         token={selectedToken}
         onRequestClose={() => setDetailsModalVisible(false)}
+      />
+      <FilterModal
+        visible={isFilterVisible}
+        onRequestClose={() => setFilterVisible(false)}
+        filterProps={filterParams}
+        setFilterProps={setFilterParams}
       />
     </BackgroundSafeAreaView>
   )

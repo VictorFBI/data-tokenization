@@ -1,9 +1,10 @@
-import { Image, TextInput, TouchableOpacity, View } from 'react-native'
-import MonoText from '@/src/components/default-elements-overridings/MonoText'
-import React, { useState } from 'react'
-import { launchImageLibrary } from 'react-native-image-picker'
+import { Alert, Image, TextInput, TouchableOpacity, View } from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import { MediaType } from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useEffect, useState } from 'react'
 import { styles } from '@/src/styles/ProfileHeader'
+import MonoText from '@/src/components/default-elements-overridings/MonoText'
 
 /**
  * Компонент ProfileHeader отвечает за отображение заголовка профиля пользователя.
@@ -25,36 +26,55 @@ export function ProfileHeader(): JSX.Element {
  * @returns {JSX.Element} - Возвращает элемент для отображения и изменения фото профиля.
  */
 function ProfileAvatar(): JSX.Element {
-  const [avatarUri, setAvatarUri] = React.useState<string | null>(null)
+  const [avatarUri, setAvatarUri] = useState<string | null>(null)
 
-  const handleSelectImage = async () => {
-    const result = await launchImageLibrary({
-      mediaType: 'photo',
-      quality: 1,
-    })
-
-    if (result.assets && result.assets.length > 0) {
-      const uri = result.assets[0].uri || null
-      setAvatarUri(uri)
-      await AsyncStorage.setItem('profileAvatar', uri || '')
+  // Запрашиваем право на доступ к фотоальбому
+  const askPermission = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert(
+        'Разрешение не получено',
+        'Чтобы выбрать фото профиля, разрешите доступ к фотоальбому',
+      )
+      return false
     }
+    return true
   }
 
-  React.useEffect(() => {
-    const loadAvatar = async () => {
-      const savedUri = await AsyncStorage.getItem('profileAvatar')
-      if (savedUri) {
-        setAvatarUri(savedUri)
-      }
+  const handleSelectImage = async () => {
+    if (!(await askPermission())) return
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: 'images' as MediaType,
+      quality: 1,
+      allowsEditing: true, // обрезка
+      aspect: [1, 1], // квадратная область
+    })
+
+    if (result.canceled) {
+      // Пользователь отменил выбор
+      console.warn('File selection canceled')
+      return
     }
-    loadAvatar()
+
+    const asset = result.assets[0]
+    // Успешно выбрали
+    setAvatarUri(asset.uri)
+    await AsyncStorage.setItem('profileAvatar', asset.uri)
+  }
+
+  useEffect(() => {
+    ;(async () => {
+      const savedUri = await AsyncStorage.getItem('profileAvatar')
+      if (savedUri) setAvatarUri(savedUri)
+    })()
   }, [])
 
   return (
     <TouchableOpacity onPress={handleSelectImage}>
       <Image
         source={{
-          uri: avatarUri || 'https://picsum.photos/id/237/200/300',
+          uri: avatarUri ?? 'https://picsum.photos/id/237/200/300',
         }}
         style={styles.avatar}
       />
