@@ -56,6 +56,7 @@ export function AddTokenModal(props: {
     }
     log.info('before awaiting token promise add')
     const promise = await handleAddToken(formData)
+    log.info(promise)
     log.info('awaiting token promise add')
     if (promise && promise.status && promise.status === 200) {
       log.info('Token added successfully')

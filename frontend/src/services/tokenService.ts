@@ -1,9 +1,10 @@
 import { Token } from '@/src/types/Token'
 import { FilterProps } from '@/src/types/FilterProps'
 import { MOCK_TOKENS } from '@/src/constants/mockValues'
+import log from 'loglevel'
 // import log from 'loglevel'
 
-// const API_URL = 'http://localhost:8080'
+const API_URL = 'http://localhost:8080'
 
 export const fetchTokens = async (params: FilterProps): Promise<Token[]> => {
   // try {
@@ -33,7 +34,7 @@ export const addToken = async (
   formData: FormData,
 ): Promise<{ status: number; token?: Token }> => {
   try {
-    const response = await fetch('/api/user.yaml', {
+    const response = await fetch(`${API_URL}/user/token`, {
       method: 'POST',
       body: formData,
     })
@@ -42,10 +43,12 @@ export const addToken = async (
       return { status: response.status }
     }
 
+    log.info('Token added sucessfully')
     const token = await response.json()
+    log.info('Received token:', token)
     return { status: 200, token }
   } catch (error) {
-    console.error('Error adding token:', error)
+    log.error('Error adding token:', error)
     return { status: 500 }
   }
 }

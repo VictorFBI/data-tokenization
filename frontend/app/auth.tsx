@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
-import { Button, Linking, View } from 'react-native'
-import { useWalletConnect } from '@/src/context/WalletConnectProvider'
-import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
-import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
+import React from 'react'
+import { View, Button, Alert } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
-import log from 'loglevel'
-import { WalletConnectModal } from '@walletconnect/modal-react-native'
+import { useWalletConnect } from '@/src/context/WalletConnectProvider'
+import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
+import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
 
 /**
  * Компонент экрана подключения кошелька.
@@ -19,60 +17,65 @@ import { WalletConnectModal } from '@walletconnect/modal-react-native'
  * @returns {JSX.Element} JSX-элемент, представляющий экран подключения кошелька.
  */
 export default function ConnectScreen() {
-  const { session, setSession, connect } = useWalletConnect()
-  const [uri, setUri] = useState<string | null>(null)
-  const [waitingApproval, setWaitingApproval] = useState(false)
+  const { connect, session, disconnect } = useWalletConnect()
+  const [uri, setUri] = React.useState<string | null>(null)
+  const [error, setError] = React.useState<string | null>(null)
+
+  // Notify user on successful connection
+  React.useEffect(() => {
+    if (session) {
+      Alert.alert('Wallet Connected', session.namespaces.eip155.accounts[0])
+      setUri(null)
+    }
+  }, [session])
 
   const handleConnect = async () => {
     try {
-      const { uri, approval } = await connect()
-      if (uri) {
-        setUri(uri)
-        setWaitingApproval(true)
+      setError(null)
+      const newUri = await connect()
+      console.log('WalletConnect URI:', newUri)
+      setUri(newUri)
+    } catch (err: any) {
+      console.error('Connection failed:', err)
+      setError(err.message)
+      Alert.alert('Ошибка', 'Не удалось подключить кошелек')
+    }
+  }
 
-        // Ожидаем, что пользователь отсканирует QR и подтвердит
-        const session = await approval()
-        setSession(session)
-        setWaitingApproval(false)
-      }
-    } catch (error) {
-      log.error('Ошибка подключения:', error)
-      setWaitingApproval(false)
-    }
+  const handleDisconnect = async () => {
+    await disconnect()
+    Alert.alert('Disconnected')
   }
-  const openWallet = () => {
-    if (uri) {
-      openMetaMask(uri)
-    }
-  }
-  const openMetaMask = (wcUri: string) => {
-    const encoded = encodeURIComponent(wcUri)
-    const mmLink = `https://metamask.app.link/wc?uri=${encoded}`
-    Linking.openURL(mmLink)
-  }
-  // и в UI:
+
   return (
-    <BackgroundSafeAreaView style={{ padding: 20 }}>
+    <BackgroundSafeAreaView style={{ flex: 1, padding: 20 }}>
       {session ? (
-        <SimpleText>
-          Connected to: {session?.namespaces?.eip155?.accounts[0]}
-        </SimpleText>
-      ) : (
         <View>
+          <SimpleText style={{ marginBottom: 20 }}>
+            Connected: {session.namespaces.eip155.accounts[0]}
+          </SimpleText>
+          <Button title="Disconnect" onPress={handleDisconnect} />
+        </View>
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
           <Button title="Connect Wallet" onPress={handleConnect} />
+          {error && (
+            <SimpleText style={{ color: 'red', marginTop: 10 }}>
+              {error}
+            </SimpleText>
+          )}
           {uri && (
-            <>
-              <View style={{ marginTop: 20 }}>
-                <SimpleText>Scan this with your wallet app:</SimpleText>
-                <QRCode value={uri} size={200} />
-                {waitingApproval && (
-                  <SimpleText style={{ marginTop: 10 }}>
-                    Waiting for wallet approval...
-                  </SimpleText>
-                )}
-              </View>
-              <Button title="Open in MetaMask" onPress={openWallet} />
-            </>
+            <View style={{ marginTop: 20, alignItems: 'center' }}>
+              <SimpleText style={{ marginBottom: 10 }}>
+                Scan QR to connect:
+              </SimpleText>
+              <SimpleText style={{ fontSize: 12, paddingHorizontal: 10 }}>
+                {uri}
+              </SimpleText>
+              <QRCode value={uri} size={200} />
+            </View>
           )}
         </View>
       )}

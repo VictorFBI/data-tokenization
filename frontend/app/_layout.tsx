@@ -1,11 +1,10 @@
+import React, { useEffect, useState } from 'react'
 import { Tabs } from 'expo-router'
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
 import TabBar from '@/src/navigation/TabBar'
-import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src'
 import useLoadFonts from '@/src/utils/general/useLoadFonts'
-import { useEffect, useState } from 'react'
 import { initLanguage } from '@/src/utils/general/languageManager'
 import { WalletConnectProvider } from '@/src/context/WalletConnectProvider'
-import 'react-native-get-random-values'
 
 /**
  * Компонент Layout отвечает за настройку и отображение вкладок приложения.
@@ -14,22 +13,18 @@ import 'react-native-get-random-values'
  */
 export default function Layout() {
   const [isReady, setIsReady] = useState(false)
+  const fontsLoaded = useLoadFonts()
+
   useEffect(() => {
     initLanguage().then(() => setIsReady(true))
   }, [])
 
-  const fontsLoaded = useLoadFonts()
-  if (!fontsLoaded || !isReady) {
-    return null
-  }
+  if (!fontsLoaded || !isReady) return null
 
   return (
     <WalletConnectProvider>
       <Tabs
-        screenOptions={{
-          tabBarShowLabel: false,
-          headerShown: false,
-        }}
+        screenOptions={{ tabBarShowLabel: false, headerShown: false }}
         tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
       >
         <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
