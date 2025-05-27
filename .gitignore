@@ -1,5 +1,6 @@
 .vscode
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+!.vscode/extensions.json
 
 # dependencies
 node_modules/
@@ -7,6 +8,7 @@ node_modules/
 # Expo
 .expo/
 dist/
+dist-ssr
 web-build/
 expo-env.d.ts
 
@@ -25,6 +27,8 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+pnpm-debug.*
+lerna-debug.*
 
 # macOS
 .DS_Store
@@ -32,6 +36,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+*.local
 
 # typescript
 *.tsbuildinfo
@@ -43,3 +48,14 @@ app-example
 bin
 contracts/build
 .env
+
+# Logs
+logs
+*.log
+
+# Editor directories and files
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
