@@ -47,7 +47,12 @@ function BalanceView({ tokenNumber }: BalanceViewProps) {
   return (
     <GradientBalanceView
       title={t('walletScreen.currentBalance')}
-      value={`${tokenNumber} ` + t('common.tokens')}
+      value={
+        `${tokenNumber} ` +
+        t(
+          `common.${tokenNumber === 0 ? '0token' : tokenNumber === 1 ? '1token' : tokenNumber > 1 && tokenNumber < 5 ? '234tokens' : 'tokens'}`,
+        )
+      }
       style={styles.currentBalance}
     />
   )
@@ -63,10 +68,16 @@ function BalanceView({ tokenNumber }: BalanceViewProps) {
  */
 function MarketBalanceView({ tokenNumber }: BalanceViewProps) {
   const { t } = useTranslation()
+  tokenNumber = 1
   return (
     <GradientBalanceView
       title={t('marketScreen.currentMarketBalance')}
-      value={`${tokenNumber} ` + t('common.tokens')}
+      value={
+        `${tokenNumber} ` +
+        t(
+          `common.${tokenNumber === 0 ? '0token' : tokenNumber === 1 ? '1token' : tokenNumber > 1 && tokenNumber < 5 ? '234tokens' : 'tokens'}`,
+        )
+      }
       style={styles.currentMarketBalance}
     />
   )

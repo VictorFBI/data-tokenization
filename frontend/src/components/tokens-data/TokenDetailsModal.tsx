@@ -83,8 +83,8 @@ export function TokenDetailsModal({
       // alert(t('walletScreen.add.badRequestAlert'))
       return
     }
-    const promise = await handleUpdateToken(formData)
-    if (promise && promise.status && promise.status === 200) {
+    const result = await handleUpdateToken(formData)
+    if (result) {
       log.info('Token updated successfully')
       nullifyForm()
       onRequestClose()

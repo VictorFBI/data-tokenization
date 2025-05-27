@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BalanceView } from '@/src/components/screens/wallet/BalanceView'
 import { WalletButtons } from '@/src/components/screens/wallet/WalletButton'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
@@ -19,7 +19,7 @@ import { FilterModal } from '@/src/components/tokens-data/FilterModal'
  */
 export default function WalletScreen() {
   const { t } = useTranslation()
-  const { tokens, filterParams, setFilterParams } = useTokens()
+  const { tokens, filterParams, setFilterParams, refreshTokens } = useTokens()
   const [isAddModalVisible, setAddModalVisible] = useState(false)
   const [isHistoryModalVisible, setHistoryModalVisible] = useState(false)
   const [selectedToken, setSelectedToken] = useState<Token | null>(null)
@@ -47,6 +47,10 @@ export default function WalletScreen() {
     },
   ]
 
+  useEffect(() => {
+    refreshTokens()
+  }, [refreshTokens])
+
   return (
     <BackgroundSafeAreaView>
       <BalanceView tokenNumber={tokens.length} />
@@ -66,6 +70,7 @@ export default function WalletScreen() {
         visible={isAddModalVisible}
         onRequestClose={() => {
           setAddModalVisible(false)
+          refreshTokens()
         }}
       />
       <HistoryModal
@@ -77,7 +82,10 @@ export default function WalletScreen() {
       <TokenDetailsModal
         visible={isDetailsModalVisible}
         token={selectedToken}
-        onRequestClose={() => setDetailsModalVisible(false)}
+        onRequestClose={() => {
+          setDetailsModalVisible(false)
+          refreshTokens()
+        }}
       />
       <FilterModal
         visible={isFilterVisible}

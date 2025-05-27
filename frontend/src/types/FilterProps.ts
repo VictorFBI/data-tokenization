@@ -6,5 +6,5 @@ export type FilterProps = {
   userID?: string
   startDate: Date | null
   endDate: Date | null
-  icon?: MaterialIconName
+  icon: MaterialIconName | null
 }

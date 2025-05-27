@@ -54,11 +54,8 @@ export function AddTokenModal(props: {
       alert(t('walletScreen.add.badRequestAlert'))
       return
     }
-    log.info('before awaiting token promise add')
-    const promise = await handleAddToken(formData)
-    log.info(promise)
-    log.info('awaiting token promise add')
-    if (promise && promise.status && promise.status === 200) {
+    const token = await handleAddToken(formData)
+    if (token) {
       log.info('Token added successfully')
       nullifyForm()
       props.onRequestClose()

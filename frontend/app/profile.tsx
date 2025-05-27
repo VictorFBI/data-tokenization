@@ -18,11 +18,11 @@ export default function ProfileScreen() {
   const { t } = useTranslation()
   // Todo: change somehow
   const profileSettingsOptions: OptionProps[] = [
-    {
-      icon: 'notifications-none',
-      label: t('profileScreen.notifications'),
-      value: t('common.On'),
-    },
+    // {
+    //   icon: 'notifications-none',
+    //   label: t('profileScreen.notifications'),
+    //   value: t('common.On'),
+    // },
     {
       icon: 'key',
       label: t('profileScreen.changeAccount'),
@@ -36,12 +36,12 @@ export default function ProfileScreen() {
       },
     },
   ]
-  const sendFeedbackOption: OptionProps[] = [
-    {
-      icon: 'feedback',
-      label: t('profileScreen.sendFeedback'),
-    },
-  ]
+  // const sendFeedbackOption: OptionProps[] = [
+  //   {
+  //     icon: 'feedback',
+  //     label: t('profileScreen.sendFeedback'),
+  //   },
+  // ]
 
   return (
     <BackgroundSafeAreaView>
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
         <ProfileHeader />
         <View style={{ gap: 16 }}>
           <Options options={profileSettingsOptions} />
-          <Options options={sendFeedbackOption} />
+          {/*<Options options={sendFeedbackOption} />*/}
         </View>
       </ScrollView>
     </BackgroundSafeAreaView>

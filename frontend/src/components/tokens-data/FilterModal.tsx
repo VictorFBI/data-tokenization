@@ -13,7 +13,9 @@ import { Setter } from '@/src/types/Setter'
 import {
   dateRangeForm,
   sortOrderForm,
+  tokenIconForm,
 } from '@/src/utils/forms/getFormComponents'
+import { MaterialIconName } from '@/src/types/MaterialIconName'
 
 interface FilterModalProps extends BaseModalProps {
   filterProps: FilterProps
@@ -42,9 +44,9 @@ export function FilterModal({
   const setEndDate: Setter<Date | null> = date => {
     setFilterProps(prev => ({ ...prev, endDate: date as Date }))
   }
-  const setSort: Setter<'asc' | 'desc' | null> = sort => {
-    setFilterProps(prev => ({ ...prev, sort: sort as 'asc' | 'desc' | null }))
-  }
+  // const setSort: Setter<'asc' | 'desc' | null> = sort => {
+  //   setFilterProps(prev => ({ ...prev, sort: sort as 'asc' | 'desc' | null }))
+  // }
 
   const formFields: FormComponentInputProps[] = [
     dateRangeForm(
@@ -54,7 +56,13 @@ export function FilterModal({
       filterProps.endDate,
       setEndDate,
     ),
-    sortOrderForm(t, filterProps.sort, setSort),
+    // sortOrderForm(t, filterProps.sort, setSort),
+    tokenIconForm(t, filterProps.icon, icon => {
+      setFilterProps(prev => ({
+        ...prev,
+        icon: icon as MaterialIconName | null,
+      }))
+    }),
   ]
 
   return (
@@ -62,6 +70,20 @@ export function FilterModal({
       <SimpleText style={styles.modalTitle}>{t('filter.header')}</SimpleText>
       <FormList data={formFields} />
       <View style={styles.buttonRow}>
+        <ActionButton
+          text={t('filter.clear')}
+          onPress={() => {
+            setFilterProps({
+              search: filterProps.search,
+              sort: null,
+              userID: undefined,
+              startDate: null,
+              endDate: null,
+              icon: null,
+            })
+            onRequestClose()
+          }}
+        />
         <ActionButton
           text={t('filter.save')}
           onPress={() => {

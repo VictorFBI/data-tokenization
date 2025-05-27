@@ -23,8 +23,8 @@
         "later": "Позже",
         "today": "Сегодня",
         "yesterday": "Вчера",
-        "lastWeek": "На прошлой неделе",
-        "lastMonth": "В прошлом месяце",
+        "lastWeek": "На этой неделе",
+        "lastMonth": "В этом месяце",
         "earlier": "Ранее"
       },
       "tokenOperation": {
@@ -51,7 +51,8 @@
   },
   "filter": {
     "header": "Фильтр",
-    "save": "Сохранить"
+    "save": "Сохранить",
+    "clear": "Очистить"
   },
   "profileScreen": {
     "notifications": "Уведомления",
@@ -64,6 +65,7 @@
   },
   "common": {
     "searchTokens": "Поиск токенов",
+    "0token": "токенов",
     "1token": "токен",
     "234tokens": "токена",
     "tokens": "токенов",

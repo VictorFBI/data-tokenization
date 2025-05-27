@@ -57,7 +57,8 @@
   },
     "filter": {
       "header": "Filter",
-      "save": "Save"
+      "save": "Save",
+      "clear": "Clear"
     },
   "profileScreen": {
     "notifications": "Notifications",
@@ -67,7 +68,8 @@
   },
   "common": {
     "searchTokens": "Search tokens",
-    "1token": "tokens",
+    "0token": "token",
+    "1token": "token",
     "234tokens": "tokens",
     "tokens": "tokens",
     "On": "On",
