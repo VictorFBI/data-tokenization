@@ -53,44 +53,38 @@ func EncryptContent(content string) (string, string, error) {
 
 // EncryptionResult holds the encryption output in the desired format.
 type EncryptionResult struct {
-	Version        string `json:"version"`
-	Nonce          string `json:"nonce"`
-	EphemPublicKey string `json:"ephemPublicKey"`
-	Ciphertext     string `json:"ciphertext"`
+	Version        string
+	Nonce          string
+	EphemPublicKey string
+	Ciphertext     string
 }
 
-// Encrypt encrypts given message using a recipient's public key.
+// EncryptForMetaMask encrypts given message using a recipient's public key.
 func EncryptForMetaMask(message string, recipientPublicKeyBase64 string) (string, error) {
-	// Decode the recipient's public key from base64 to bytes
 	recipientPubKeyBytes, err := base64.StdEncoding.DecodeString(recipientPublicKeyBase64)
 	if err != nil {
 		return "", fmt.Errorf("error decoding recipient public key: %w", err)
 	}
 
-	// Check that length of decoded key is 32 bytes
 	if len(recipientPubKeyBytes) != 32 {
 		return "", fmt.Errorf("invalid public key length")
 	}
 
-	// Generate ephemeral key pair
 	ephemeralPub, ephemeralPriv, err := box.GenerateKey(rand.Reader)
 	if err != nil {
 		return "", fmt.Errorf("error generating ephemeral key: %w", err)
 	}
 
-	// Make nonce
 	var nonceBytes [24]byte
-	if _, err := rand.Read(nonceBytes[:]); err != nil {
+	if _, err = rand.Read(nonceBytes[:]); err != nil {
 		return "", fmt.Errorf("error generating nonce: %w", err)
 	}
 
-	// Encrypt the message
 	recipientPublicKeyArray := new([32]byte)
 	copy(recipientPublicKeyArray[:], recipientPubKeyBytes)
 
 	ciphertextBytes := box.Seal(nil, []byte(message), &nonceBytes, recipientPublicKeyArray, ephemeralPriv)
 
-	// Create the result structure
 	result := EncryptionResult{
 		Version:        "x25519-xsalsa20-poly1305",
 		Nonce:          base64.StdEncoding.EncodeToString(nonceBytes[:]),
@@ -98,7 +92,6 @@ func EncryptForMetaMask(message string, recipientPublicKeyBase64 string) (string
 		Ciphertext:     base64.StdEncoding.EncodeToString(ciphertextBytes),
 	}
 
-	// Marshal the result to JSON
 	resultJSON, err := json.Marshal(result)
 	if err != nil {
 		return "", fmt.Errorf("json marshaling error: %w", err)

@@ -4,7 +4,6 @@ import (
 	"context"
 	"data-tokenization/internal/pkg/common"
 	"data-tokenization/internal/pkg/model/gorm"
-	"data-tokenization/internal/pkg/smartcontract/ethereum"
 	"database/sql"
 	"encoding/base64"
 	"fmt"
@@ -64,14 +63,12 @@ func (s *Service) CreateToken(tokenModel *gorm.CreateTokenModel, fileReader io.R
 		return err
 	}
 
-	ethereumClient := ethereum.NewEthereumClient()
-
-	err = ethereumClient.SavePath(tokenModel.Name, ipfsPath)
+	err = s.ec.SavePath(tokenModel.Name, ipfsPath)
 	if err != nil {
 		return err
 	}
 
-	err = ethereumClient.SaveEncryptionKey(tokenModel.Name, encryptedHex)
+	err = s.ec.SaveEncryptionKey(tokenModel.Name, encryptedHex)
 	if err != nil {
 		return err
 	}

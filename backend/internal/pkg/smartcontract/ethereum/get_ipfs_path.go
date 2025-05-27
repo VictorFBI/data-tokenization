@@ -4,18 +4,12 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 )
 
-func (e *EthereumClient) GetIpfsPath(tokenName string) (string, error) {
-	tokenator, err := e.newTokenatorClient()
-	if err != nil {
-		return "", err
-	}
-
-	// Use Auth from EthereumClient to identify the caller
+func (e *Client) GetIpfsPath(tokenName string) (string, error) {
 	callOpts := &bind.CallOpts{
 		From: e.Auth.From,
 	}
 
-	ipfsPath, err := tokenator.GetPath(callOpts, tokenName)
+	ipfsPath, err := e.TokenatorClient.GetPath(callOpts, tokenName)
 	if err != nil {
 		return "", err
 	}

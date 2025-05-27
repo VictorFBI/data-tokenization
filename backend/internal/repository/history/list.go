@@ -16,9 +16,9 @@ func (r *Repository) List(historyModel *gormmodel.ListUserHistoryModel) ([]domai
 	err := r.db.
 		Table(tablename.History).
 		Where(query, historyModel.UserID).
-		Find(&t).
 		Limit(historyModel.Limit).
-		Offset(historyModel.Cursor).Error
+		Offset(historyModel.Cursor).
+		Find(&t).Error
 
 	return t, common.MapCommonError(err)
 }
