@@ -7,8 +7,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"log"
 
-	"encoding/hex"
 	"encoding/json"
 
 	"golang.org/x/crypto/nacl/box"
@@ -30,6 +30,8 @@ func EncryptContent(content string) (string, string, error) {
 		return "", "", fmt.Errorf("error generating key: %v", err)
 	}
 
+	log.Println("key", base64.StdEncoding.EncodeToString(key))
+
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return "", "", fmt.Errorf("error creating cipher: %v", err)
@@ -49,57 +51,58 @@ func EncryptContent(content string) (string, string, error) {
 	return base64.StdEncoding.EncodeToString(ciphertext), string(key), nil
 }
 
-// структура, как ожидает MetaMask для eth_decrypt
-type EncryptedPayload struct {
-	Version     string `json:"version"`
-	Nonce       string `json:"nonce"`          // base64
-	EphemPubKey string `json:"ephemPublicKey"` // base64
-	Ciphertext  string `json:"ciphertext"`     // base64
+// EncryptionResult holds the encryption output in the desired format.
+type EncryptionResult struct {
+	Version        string `json:"version"`
+	Nonce          string `json:"nonce"`
+	EphemPublicKey string `json:"ephemPublicKey"`
+	Ciphertext     string `json:"ciphertext"`
 }
 
+// Encrypt encrypts given message using a recipient's public key.
 func EncryptForMetaMask(message string, recipientPublicKeyBase64 string) (string, error) {
-	// Декодируем публичный ключ пользователя
+	// Decode the recipient's public key from base64 to bytes
 	recipientPubKeyBytes, err := base64.StdEncoding.DecodeString(recipientPublicKeyBase64)
 	if err != nil {
-		return "", fmt.Errorf("invalid base64 pubkey: %w", err)
+		return "", fmt.Errorf("error decoding recipient public key: %w", err)
 	}
+
+	// Check that length of decoded key is 32 bytes
 	if len(recipientPubKeyBytes) != 32 {
-		return "", fmt.Errorf("invalid public key length: %d", len(recipientPubKeyBytes))
+		return "", fmt.Errorf("invalid public key length")
 	}
 
-	var recipientPubKey [32]byte
-	copy(recipientPubKey[:], recipientPubKeyBytes)
-
-	// Генерируем ephemeral ключ
-	pub, priv, err := box.GenerateKey(rand.Reader)
+	// Generate ephemeral key pair
+	ephemeralPub, ephemeralPriv, err := box.GenerateKey(rand.Reader)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate ephemeral key: %w", err)
+		return "", fmt.Errorf("error generating ephemeral key: %w", err)
 	}
 
-	// Генерируем nonce (24 байта)
-	var nonce [24]byte
-	if _, err := rand.Read(nonce[:]); err != nil {
-		return "", fmt.Errorf("failed to generate nonce: %w", err)
+	// Make nonce
+	var nonceBytes [24]byte
+	if _, err := rand.Read(nonceBytes[:]); err != nil {
+		return "", fmt.Errorf("error generating nonce: %w", err)
 	}
 
-	// Шифруем сообщение
-	encrypted := box.Seal(nil, []byte(message), &nonce, &recipientPubKey, priv)
+	// Encrypt the message
+	recipientPublicKeyArray := new([32]byte)
+	copy(recipientPublicKeyArray[:], recipientPubKeyBytes)
 
-	payload := EncryptedPayload{
-		Version:     "x25519-xsalsa20-poly1305",
-		Nonce:       base64.StdEncoding.EncodeToString(nonce[:]),
-		EphemPubKey: base64.StdEncoding.EncodeToString(pub[:]),
-		Ciphertext:  base64.StdEncoding.EncodeToString(encrypted),
+	ciphertextBytes := box.Seal(nil, []byte(message), &nonceBytes, recipientPublicKeyArray, ephemeralPriv)
+
+	// Create the result structure
+	result := EncryptionResult{
+		Version:        "x25519-xsalsa20-poly1305",
+		Nonce:          base64.StdEncoding.EncodeToString(nonceBytes[:]),
+		EphemPublicKey: base64.StdEncoding.EncodeToString(ephemeralPub[:]),
+		Ciphertext:     base64.StdEncoding.EncodeToString(ciphertextBytes),
 	}
 
-	// сериализуем в JSON
-	jsonPayload, err := json.Marshal(payload)
+	// Marshal the result to JSON
+	resultJSON, err := json.Marshal(result)
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal JSON: %w", err)
+		return "", fmt.Errorf("json marshaling error: %w", err)
 	}
 
-	// Hex encode
-	hexOutput := hex.EncodeToString(jsonPayload)
-	return "0x" + hexOutput, nil
-
+	return string(resultJSON), nil
 }
