@@ -34,8 +34,8 @@ export const initWalletConnect =
       client = await SignClient.init({
         projectId: process.env.EXPO_PUBLIC_WALLETCONNECT_PROJECT_ID,
         metadata: {
-          name: 'My App',
-          description: 'React Native Expo + WalletConnect',
+          name: 'Tokenator',
+          description: 'React Native Expo + WalletConnect + golang',
           url: 'https://github.com/VictorFBI/data-tokenization',
           icons: ['https://walletconnect.com/walletconnect-logo.png'],
         },

@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Button, View } from 'react-native'
+import { Button, Linking, View } from 'react-native'
 import { useWalletConnect } from '@/src/context/WalletConnectProvider'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
 import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
 import QRCode from 'react-native-qrcode-svg'
 import log from 'loglevel'
+import { WalletConnectModal } from '@walletconnect/modal-react-native'
 
 /**
  * Компонент экрана подключения кошелька.
@@ -39,7 +40,17 @@ export default function ConnectScreen() {
       setWaitingApproval(false)
     }
   }
-
+  const openWallet = () => {
+    if (uri) {
+      openMetaMask(uri)
+    }
+  }
+  const openMetaMask = (wcUri: string) => {
+    const encoded = encodeURIComponent(wcUri)
+    const mmLink = `https://metamask.app.link/wc?uri=${encoded}`
+    Linking.openURL(mmLink)
+  }
+  // и в UI:
   return (
     <BackgroundSafeAreaView style={{ padding: 20 }}>
       {session ? (
@@ -50,15 +61,18 @@ export default function ConnectScreen() {
         <View>
           <Button title="Connect Wallet" onPress={handleConnect} />
           {uri && (
-            <View style={{ marginTop: 20 }}>
-              <SimpleText>Scan this with your wallet app:</SimpleText>
-              <QRCode value={uri} size={200} />
-              {waitingApproval && (
-                <SimpleText style={{ marginTop: 10 }}>
-                  Waiting for wallet approval...
-                </SimpleText>
-              )}
-            </View>
+            <>
+              <View style={{ marginTop: 20 }}>
+                <SimpleText>Scan this with your wallet app:</SimpleText>
+                <QRCode value={uri} size={200} />
+                {waitingApproval && (
+                  <SimpleText style={{ marginTop: 10 }}>
+                    Waiting for wallet approval...
+                  </SimpleText>
+                )}
+              </View>
+              <Button title="Open in MetaMask" onPress={openWallet} />
+            </>
           )}
         </View>
       )}

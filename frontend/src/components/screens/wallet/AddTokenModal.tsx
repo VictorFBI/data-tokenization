@@ -47,17 +47,22 @@ export function AddTokenModal(props: {
   } = useAddForm()
 
   const handleSubmit = async () => {
-    const formData = makeForm()
+    log.info('before making form')
+    const formData = await makeForm()
+    log.info('after making form')
     if (!formData) {
       alert(t('walletScreen.add.badRequestAlert'))
       return
     }
-    const { status } = await handleAddToken(formData)
-    if (status && status === 200) {
+    log.info('before awaiting token promise add')
+    const promise = await handleAddToken(formData)
+    log.info('awaiting token promise add')
+    if (promise && promise.status && promise.status === 200) {
       log.info('Token added successfully')
       nullifyForm()
       props.onRequestClose()
     } else {
+      log.info('Token adding failed')
       alert(t('walletScreen.add.failAlert'))
     }
   }

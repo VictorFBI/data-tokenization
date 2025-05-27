@@ -9,7 +9,6 @@ import React, {
 } from 'react'
 import {
   initWalletConnect,
-  getWalletConnectClient,
   WalletConnectClient,
 } from '@/src/services/walletConnect'
 import { SessionTypes } from '@walletconnect/types'
@@ -44,38 +43,22 @@ export const WalletConnectProvider = ({
 
     ;(async () => {
       const c = await initWalletConnect()
-      if (!c) {
+      if (!c || !isMounted) {
         log.error('WalletConnect client is not initialized')
         return
       }
-      if (!isMounted) return
+      setClient(c)
 
-      if (isMounted) {
-        setClient(c)
-
-        const onSessionEvent = args => log.debug('Session event:', args)
-        const onSessionUpdate = ({ params: { namespaces } }) =>
-          log.debug('Session updated:', namespaces)
-        const onSessionDelete = () => {
-          setSession(null)
-          log.debug('Session deleted')
-        }
-
-        c.on('session_event', onSessionEvent)
-        c.on('session_update', onSessionUpdate)
-        c.on('session_delete', onSessionDelete)
-
-        // Cleanup on unmount
-        return () => {
-          isMounted = false
-          c?.off('session_event', onSessionEvent)
-          c?.off('session_update', onSessionUpdate)
-          c?.off('session_delete', onSessionDelete)
-        }
-      }
+      c.on('session_event', args => log.debug('Session event:', args))
+      c.on('session_update', ({ params: { namespaces } }) =>
+        log.info('Session updated:', namespaces),
+      )
+      c.on('session_delete', () => {
+        setSession(null)
+        log.info('Session deleted')
+      })
     })()
 
-    // Generic cleanup if effect body didn't return
     return () => {
       isMounted = false
     }
@@ -85,8 +68,8 @@ export const WalletConnectProvider = ({
     uri?: string
     approval: () => Promise<SessionTypes.Struct>
   }> => {
-    const c = getWalletConnectClient()
-    const { uri, approval } = await c.connect({
+    if (!client) throw new Error('WalletConnect client is not ready')
+    const { uri, approval } = await client.connect({
       requiredNamespaces: {
         eip155: {
           methods: [
@@ -94,7 +77,7 @@ export const WalletConnectProvider = ({
             'personal_sign',
             'eth_signTypedData',
           ],
-          chains: ['eip155:5'],
+          chains: ['eip155:1', 'eip155:5', 'eip155:11155111'],
           events: ['accountsChanged', 'chainChanged'],
         },
       },

@@ -37,7 +37,7 @@ export function AttachFile(props: {
         </MonoText>
       ) : (
         <MonoText style={{ color: TEXT_COLOR, fontSize: 16, opacity: 0.5 }}>
-          {t('form.attachFilePlaceholder')}
+          {t('form.filePlaceholder')}
         </MonoText>
       )}
     </TouchableOpacity>
