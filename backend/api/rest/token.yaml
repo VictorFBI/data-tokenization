@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Token Management API for user screen
+  description: API for managing and tokens encryption keys
+servers:
+  - url: http://localhost:8080
+    description: Development server
+
+paths:
+  /token/encryptionKey:
+    post:
+      tags:
+        - Token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenEncryptionKeyPostRequest'
+      responses:
+        '200':
+          description: OK
+    get:
+      tags:
+        - Token
+      parameters:
+        - in: query
+          name: token_name
+          schema:
+            $ref: 'common.yaml#/components/schemas/TokenName'
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenEncryptionKeyGetResponse'
+
+  /debug/token/ipfsPath:
+    get:
+      tags:
+        - Token
+      parameters:
+        - in: query
+          name: token_name
+          schema:
+            $ref: 'common.yaml#/components/schemas/TokenName'
+          required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenIpfsPathGetResponse'
+  
+components:
+  schemas:
+    TokenEncryptionKeyPostRequest:
+      type: object
+      required:
+        - token_name
+        - encryption_key
+      properties:
+        token_name:
+          type: string
+        encryption_key:
+          type: string
+
+    TokenEncryptionKeyGetResponse:
+      type: object
+      required:
+        - encryption_key
+
+    TokenIpfsPathGetResponse:
+      type: object
+      required:
+        - ipfs_path

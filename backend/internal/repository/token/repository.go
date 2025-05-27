@@ -13,6 +13,7 @@ type Repo interface {
 	ListByFilter(*gormmodel.GetTokensByFilterModel) ([]model.TokenInfoForList, error)
 	Delete(domain.TokenIdentity) (bool, error)
 	Update(*gormmodel.UpdateTokenModel) (bool, error)
+	Create(*gormmodel.CreateTokenModel) error
 }
 
 type Repository struct {
