@@ -1,13 +1,7 @@
 package ethereum
 
-
-func (ec *EthereumClient) SaveEncryptionKey(tokenName string, encryptionKey string) error {
-	tokenator, err := ec.newTokenatorClient()
-	if err != nil {
-		return err
-	}
-
-	_, err = tokenator.SaveEncryptionKey(ec.Auth, tokenName, encryptionKey)
+func (e *Client) SaveEncryptionKey(tokenName string, encryptionKey string) error {
+	_, err := e.TokenatorClient.SaveEncryptionKey(e.Auth, tokenName, encryptionKey)
 	if err != nil {
 		return err
 	}

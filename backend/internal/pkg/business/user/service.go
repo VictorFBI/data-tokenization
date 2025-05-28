@@ -1,6 +1,7 @@
 package user
 
 import (
+	"data-tokenization/internal/pkg/smartcontract/ethereum"
 	"data-tokenization/internal/repository/history"
 	"data-tokenization/internal/repository/token"
 	"database/sql"
@@ -17,11 +18,13 @@ type unitOfWork interface {
 // Service - реализует бизнес слой приложения
 type Service struct {
 	uow unitOfWork
+	ec  ethereum.Client
 }
 
 // NewService – создает новый экземпляр бизнес слоя
-func NewService(uow unitOfWork) *Service {
+func NewService(uow unitOfWork, client ethereum.Client) *Service {
 	return &Service{
 		uow: uow,
+		ec:  client,
 	}
 }

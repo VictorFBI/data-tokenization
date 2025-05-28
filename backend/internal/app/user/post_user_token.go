@@ -45,7 +45,6 @@ func (a *API) PostUserToken(c *gin.Context) {
 		UpdatedAt:    timeNow,
 	}
 
-
 	err = a.s.CreateToken(tokenModel, reader, form.EthPublicKey)
 	if err != nil {
 		errorhandler.Handle(c, err)

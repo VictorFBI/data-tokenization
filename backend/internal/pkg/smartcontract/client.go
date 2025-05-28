@@ -1,6 +1,6 @@
 package smartcontract
 
-type SmartContractClient interface {
+type Client interface {
 	DeployContract() error
 	SavePath(tokenName string, ipfsPath string) error
 	SaveEncryptionKey(tokenName string, encryptionKey string) error

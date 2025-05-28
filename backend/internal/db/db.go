@@ -8,11 +8,9 @@ import (
 	"gorm.io/gorm"
 )
 
-const databaseURL = "postgres://tokenator-user:pwd@localhost:6543/tokenator?sslmode=disable"
-
 // Connect - используется для подключения к БД и накатывание миграций
-func Connect() *gorm.DB {
-	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
+func Connect(dbURL string) *gorm.DB {
+	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
 		log.Printf("Failed to connect to database: %v", err)
 	}

@@ -2,43 +2,45 @@ package ethereum
 
 import (
 	"context"
+	"data-tokenization/internal/gen/contracts"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
-// TODO: Move to .env
-const (
-	DeployerPrivateKey  = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
-	HardhatRPCServerURL = "http://localhost:8545"
-)
-
-type EthereumClient struct {
-	Client *ethclient.Client
-	Auth   *bind.TransactOpts
+type Client struct {
+	EthClient       *ethclient.Client
+	Auth            *bind.TransactOpts
+	TokenatorClient *contracts.Tokenator
 }
 
-func NewEthereumClient() *EthereumClient {
-	client, err := ethclient.Dial(HardhatRPCServerURL)
+func NewClient(url string, dplPrvKey string, addrSmartContract common.Address) (*Client, error) {
+	client, err := ethclient.Dial(url)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	chainID, err := client.ChainID(context.Background())
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	privateKey, err := crypto.HexToECDSA(DeployerPrivateKey)
+	privateKey, err := crypto.HexToECDSA(dplPrvKey)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 
-	return &EthereumClient{Client: client, Auth: auth}
+	tokenator, err := contracts.NewTokenator(addrSmartContract, client)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Client{EthClient: client, Auth: auth, TokenatorClient: tokenator}, nil
 }

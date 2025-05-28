@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-   postgres:
+  postgres:
     image: postgres:14.8-alpine
     ports:
       - "6543:5432"
@@ -11,3 +11,41 @@ services:
       POSTGRES_DB: tokenator
       POSTGRES_HOST_AUTH_METHOD: trust
     command: -c log_statement=all
+    networks:
+      - shared-net
+      
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    ports:
+      - "5001:5001"
+    command: daemon
+    networks:
+      - shared-net
+  
+  hardhat:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "8545:8545"
+    command: [ "npx", "hardhat", "node" ]
+    networks:
+      - shared-net
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - shared-net
+    depends_on:
+      - postgres
+      - hardhat
+      - ipfs
+
+networks:
+  shared-net:
+    driver: bridge
