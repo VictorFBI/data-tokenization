@@ -68,7 +68,6 @@ function BalanceView({ tokenNumber }: BalanceViewProps) {
  */
 function MarketBalanceView({ tokenNumber }: BalanceViewProps) {
   const { t } = useTranslation()
-  tokenNumber = 1
   return (
     <GradientBalanceView
       title={t('marketScreen.currentMarketBalance')}

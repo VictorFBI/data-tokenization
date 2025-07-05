@@ -9,7 +9,6 @@ const tabIcons: Record<string, keyof typeof MaterialIcons.glyphMap> = {
   index: 'store',
   wallet: 'account-balance-wallet',
   profile: 'account-circle',
-  auth: 'circle',
 }
 
 /**

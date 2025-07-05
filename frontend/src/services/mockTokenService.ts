@@ -13,7 +13,17 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 const loadAll = async (): Promise<Token[]> => {
   try {
     const json = await AsyncStorage.getItem(STORAGE_KEY)
-    // AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([]))
+    try {
+      const json = await AsyncStorage.getItem(STORAGE_KEY)
+      const tokens = json ? JSON.parse(json) : []
+      const filteredTokens = tokens.filter(
+        (token: Token) =>
+          token.name !== 'NewToken' && token.name !== 'My_steps',
+      )
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(filteredTokens))
+    } catch (e) {
+      log.error('Failed to remove specific tokens', e)
+    }
     return json ? JSON.parse(json) : []
   } catch (e) {
     log.error('Failed to load tokens', e)

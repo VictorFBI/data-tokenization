@@ -19,6 +19,7 @@ type WalletConnectContextType = {
   connect: () => Promise<string>
   session: SessionTypes.Struct | null
   disconnect: () => Promise<void>
+  client: Awaited<ReturnType<typeof SignClient.init>> | null
 }
 
 const WalletConnectContext = createContext<
@@ -108,7 +109,9 @@ export const WalletConnectProvider = ({
   }
 
   return (
-    <WalletConnectContext.Provider value={{ connect, session, disconnect }}>
+    <WalletConnectContext.Provider
+      value={{ connect, session, disconnect, client }}
+    >
       {children}
     </WalletConnectContext.Provider>
   )

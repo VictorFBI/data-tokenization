@@ -7,6 +7,7 @@ import { BackgroundSafeAreaView } from '@/src/components/default-elements-overri
 import { ProfileHeader } from '@/src/components/screens/profile/ProfileHeader'
 import { changeAppLanguage } from '@/src/utils/general/languageManager'
 import { useTranslation } from 'react-i18next'
+import { useWalletConnect } from '@/src/context/WalletConnectProvider'
 
 /**
  * Экран ProfileScreen отображает настройки профиля пользователя.
@@ -16,6 +17,7 @@ import { useTranslation } from 'react-i18next'
  */
 export default function ProfileScreen() {
   const { t } = useTranslation()
+  const { disconnect } = useWalletConnect()
   // Todo: change somehow
   const profileSettingsOptions: OptionProps[] = [
     // {
@@ -26,6 +28,9 @@ export default function ProfileScreen() {
     {
       icon: 'key',
       label: t('profileScreen.changeAccount'),
+      onPress() {
+        disconnect()
+      },
     },
     {
       icon: 'language',

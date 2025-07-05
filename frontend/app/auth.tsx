@@ -1,9 +1,20 @@
 import React from 'react'
-import { View, Button, Alert } from 'react-native'
+import {
+  View,
+  Alert,
+  TouchableOpacity,
+  Linking,
+  StyleSheet,
+} from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
 import { useWalletConnect } from '@/src/context/WalletConnectProvider'
-import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
 import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
+import MonoText from '@/src/components/default-elements-overridings/MonoText'
+import {
+  MAIN_COLOR,
+  SECOND_TEXT_COLOR,
+  TEXT_COLOR,
+} from '@/src/constants/colors'
 
 /**
  * Компонент экрана подключения кошелька.
@@ -17,11 +28,9 @@ import { BackgroundSafeAreaView } from '@/src/components/default-elements-overri
  * @returns {JSX.Element} JSX-элемент, представляющий экран подключения кошелька.
  */
 export default function ConnectScreen() {
-  const { connect, session, disconnect } = useWalletConnect()
+  const { connect, session } = useWalletConnect()
   const [uri, setUri] = React.useState<string | null>(null)
-  const [error, setError] = React.useState<string | null>(null)
 
-  // Notify user on successful connection
   React.useEffect(() => {
     if (session) {
       Alert.alert('Wallet Connected', session.namespaces.eip155.accounts[0])
@@ -31,54 +40,75 @@ export default function ConnectScreen() {
 
   const handleConnect = async () => {
     try {
-      setError(null)
       const newUri = await connect()
-      console.log('WalletConnect URI:', newUri)
       setUri(newUri)
-    } catch (err: any) {
-      console.error('Connection failed:', err)
-      setError(err.message)
+    } catch (err) {
       Alert.alert('Ошибка', 'Не удалось подключить кошелек')
     }
   }
 
-  const handleDisconnect = async () => {
-    await disconnect()
-    Alert.alert('Disconnected')
+  const handleLinking = async () => {
+    if (uri) {
+      try {
+        await Linking.openURL(uri)
+      } catch (error) {
+        Alert.alert('Ошибка', 'Не удалось открыть ссылку')
+      }
+    } else {
+      Alert.alert('Ошибка', 'Нет ссылки для открытия')
+    }
   }
 
   return (
-    <BackgroundSafeAreaView style={{ flex: 1, padding: 20 }}>
-      {session ? (
-        <View>
-          <SimpleText style={{ marginBottom: 20 }}>
-            Connected: {session.namespaces.eip155.accounts[0]}
-          </SimpleText>
-          <Button title="Disconnect" onPress={handleDisconnect} />
-        </View>
-      ) : (
-        <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        >
-          <Button title="Connect Wallet" onPress={handleConnect} />
-          {error && (
-            <SimpleText style={{ color: 'red', marginTop: 10 }}>
-              {error}
-            </SimpleText>
-          )}
-          {uri && (
-            <View style={{ marginTop: 20, alignItems: 'center' }}>
-              <SimpleText style={{ marginBottom: 10 }}>
-                Scan QR to connect:
-              </SimpleText>
-              <SimpleText style={{ fontSize: 12, paddingHorizontal: 10 }}>
-                {uri}
-              </SimpleText>
+    <BackgroundSafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <MonoText style={styles.title}>Tokenator</MonoText>
+
+        {uri ? (
+          <>
+            <TouchableOpacity onPress={handleLinking}>
+              <MonoText style={styles.linkText}>Перейти по ссылке</MonoText>
+            </TouchableOpacity>
+            <View style={styles.qrWrapper}>
               <QRCode value={uri} size={200} />
             </View>
-          )}
-        </View>
-      )}
+          </>
+        ) : (
+          <TouchableOpacity onPress={handleConnect}>
+            <MonoText style={styles.linkText}>Подключить кошелёк</MonoText>
+          </TouchableOpacity>
+        )}
+      </View>
     </BackgroundSafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 28,
+    color: TEXT_COLOR,
+    marginBottom: 24,
+  },
+  linkText: {
+    fontSize: 28,
+    color: SECOND_TEXT_COLOR,
+    marginBottom: 24,
+  },
+  qrWrapper: {
+    borderWidth: 8,
+    borderColor: MAIN_COLOR,
+    borderRadius: 8,
+  },
+  linkButton: {
+    marginTop: 24,
+  },
+})

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { Tabs } from 'expo-router'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs'
+import { Modal, View } from 'react-native'
 import TabBar from '@/src/navigation/TabBar'
 import useLoadFonts from '@/src/utils/general/useLoadFonts'
 import { initLanguage } from '@/src/utils/general/languageManager'
-import { WalletConnectProvider } from '@/src/context/WalletConnectProvider'
+import {
+  WalletConnectProvider,
+  useWalletConnect,
+} from '@/src/context/WalletConnectProvider'
+import ConnectScreen from '@/app/auth' // убедитесь, что путь верный
 
 /**
- * Компонент Layout отвечает за настройку и отображение вкладок приложения.
  *
- * @returns {JSX.Element} - Возвращает компонент Tabs с настройками экранов и пользовательской панелью вкладок.
  */
 export default function Layout() {
   const [isReady, setIsReady] = useState(false)
@@ -23,6 +26,20 @@ export default function Layout() {
 
   return (
     <WalletConnectProvider>
+      <MainApp />
+    </WalletConnectProvider>
+  )
+}
+
+/**
+ *
+ */
+function MainApp() {
+  const { session } = useWalletConnect()
+
+  return (
+    <View style={{ flex: 1 }}>
+      {/* Основные вкладки приложения */}
       <Tabs
         screenOptions={{ tabBarShowLabel: false, headerShown: false }}
         tabBar={(props: BottomTabBarProps) => <TabBar {...props} />}
@@ -30,8 +47,20 @@ export default function Layout() {
         <Tabs.Screen name="profile" options={{ title: 'Profile' }} />
         <Tabs.Screen name="wallet" options={{ title: 'Wallet' }} />
         <Tabs.Screen name="index" options={{ title: 'Market' }} />
-        <Tabs.Screen name="auth" options={{ title: 'Authorization' }} />
+        {/* Убираем экран auth из табов */}
       </Tabs>
-    </WalletConnectProvider>
+
+      {/* Если кошелёк не подключён, показываем модалку */}
+      {!session && (
+        <Modal
+          visible={true}
+          animationType="slide"
+          transparent={false}
+          presentationStyle="fullScreen"
+        >
+          <ConnectScreen />
+        </Modal>
+      )}
+    </View>
   )
 }

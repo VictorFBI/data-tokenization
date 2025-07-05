@@ -14,10 +14,10 @@ import { useTranslation } from 'react-i18next'
  * @returns {JSX.Element} JSX-элемент, представляющий экран рынка.
  */
 export default function MarketScreen(): JSX.Element {
-  const { t } = useTranslation()
-  const { tokens, isLoading, filterParams, setFilterParams, refreshTokens } =
+  const { isLoading, filterParams, setFilterParams, refreshTokens } =
     useTokens()
 
+  const tokens: Token[] = []
   const [isFilterVisible, setFilterVisible] = useState(false)
 
   // При монтировании или изменении фильтров перезагружаем
