@@ -1,11 +1,9 @@
 import React from 'react'
 import { ScrollView, View } from 'react-native'
-import Options, {
-  OptionProps,
-} from '@/src/components/screens/profile/ProfileOption'
-import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
-import { ProfileHeader } from '@/src/components/screens/profile/ProfileHeader'
-import { changeAppLanguage } from '@/src/utils/general/languageManager'
+import Options, { OptionProps } from '@/src/screens/profile/ProfileOption'
+import { BackgroundSafeAreaView } from '@/src/shared/components/template'
+import { ProfileHeader } from '@/src/screens/profile/ProfileHeader'
+import { changeAppLanguage } from '@/src/screens/layout/languageManager'
 import { useTranslation } from 'react-i18next'
 
 /**
@@ -36,6 +34,7 @@ export default function ProfileScreen() {
       },
     },
   ]
+
   const sendFeedbackOption: OptionProps[] = [
     {
       icon: 'feedback',

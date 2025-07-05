@@ -1,8 +1,8 @@
-import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
-import { MarketBalanceView } from '@/src/components/screens/wallet/BalanceView'
-import { Token } from '@/src/types/Token'
-import { useTokens } from '@/src/hooks/useTokens'
-import { YourMarketTokens } from '@/src/components/screens/market/YourMarketTokens'
+import { BackgroundSafeAreaView } from '@/src/shared/components/template'
+import { Token } from '@/src/shared/types/Token'
+import { useTokens } from '@/src/shared/hooks/useTokens'
+import { YourMarketTokens } from '@/src/screens/market/YourMarketTokens'
+import { MarketBalanceView } from '@/src/screens/market/MarketBalanceView'
 
 /**
  * Экран MarketScreen отображает баланс пользователя на рынке

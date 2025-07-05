@@ -1,9 +1,9 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src'
 import { TouchableOpacity, View } from 'react-native'
-import { iconStyle, styles } from '@/src/styles/TabBar'
-import { BackgroundView } from '@/src/components/default-elements-overridings/BackgroundView'
-import { MaterialIconName } from '@/src/types/MaterialIconName'
+import { iconStyle, styles } from '@/src/shared/styles/TabBar'
+import { BackgroundView } from '@/src/shared/components/template'
+import { MaterialIconName } from '@/src/shared/components/template/MaterialIconName'
 
 const tabIcons: Record<string, keyof typeof MaterialIcons.glyphMap> = {
   index: 'store',

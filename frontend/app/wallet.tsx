@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
-import { BalanceView } from '@/src/components/screens/wallet/BalanceView'
-import { WalletButtons } from '@/src/components/screens/wallet/WalletButton'
-import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
-import { Token } from '@/src/types/Token'
-import { WalletButtonProps } from '@/src/types/WalletButtonProps'
-import { useTokens } from '@/src/hooks/useTokens'
-import { YourTokensWithSearch } from '@/src/components/screens/wallet/YourTokens'
-import { AddTokenModal } from '@/src/components/screens/wallet/AddTokenModal'
-import { HistoryModal } from '@/src/components/screens/wallet/HistoryModal'
+import { WalletBalanceView } from '@/src/screens/wallet/WalletBalanceView'
+import { WalletButtons } from '@/src/screens/wallet/WalletButton'
+import { BackgroundSafeAreaView } from '@/src/shared/components/template'
+import { Token } from '@/src/shared/types/Token'
+import { WalletButtonProps } from '@/src/screens/wallet/WalletButtonProps'
+import { useTokens } from '@/src/shared/hooks/useTokens'
+import { YourTokensWithSearch } from '@/src/screens/wallet/YourTokens'
+import { AddTokenModal } from '@/src/screens/wallet/modals/AddTokenModal'
+import { HistoryModal } from '@/src/screens/wallet/modals/HistoryModal'
 import { useTranslation } from 'react-i18next'
-import { TokenDetailsModal } from '@/src/components/tokens-data/TokenDetailsModal'
+import { TokenDetailsModal } from '@/src/screens/wallet/TokenDetailsModal'
 
 /**
  * Экран WalletScreen отображает баланс пользователя и список токенов с возможностью поиска и фильтрации.
@@ -47,7 +47,7 @@ export default function WalletScreen() {
 
   return (
     <BackgroundSafeAreaView>
-      <BalanceView tokenNumber={tokens.length} />
+      <WalletBalanceView tokenNumber={tokens.length} />
       <WalletButtons walletButtons={walletButtons} />
       <YourTokensWithSearch
         tokens={tokens}

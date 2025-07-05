@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Button, View } from 'react-native'
-import { useWalletConnect } from '@/src/context/WalletConnectProvider'
-import { BackgroundSafeAreaView } from '@/src/components/default-elements-overridings/BackgroundView'
-import SimpleText from '@/src/components/default-elements-overridings/SimpleText'
+import { useWalletConnect } from '@/src/shared/context/WalletConnectProvider'
+import {
+  BackgroundSafeAreaView,
+  SimpleText,
+} from '@/src/shared/components/template'
 import QRCode from 'react-native-qrcode-svg'
 import log from 'loglevel'
 
