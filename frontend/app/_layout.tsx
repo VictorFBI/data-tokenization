@@ -1,10 +1,10 @@
 import { Tabs } from 'expo-router'
 import TabBar from '@/src/navigation/TabBar'
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs/lib/typescript/src'
-import useLoadFonts from '@/src/utils/general/useLoadFonts'
+import useLoadFonts from '@/src/screens/layout/useLoadFonts'
 import { useEffect, useState } from 'react'
-import { initLanguage } from '@/src/utils/general/languageManager'
-import { WalletConnectProvider } from '@/src/context/WalletConnectProvider'
+import { initLanguage } from '@/src/screens/layout/languageManager'
+import { WalletConnectProvider } from '@/src/shared/context/WalletConnectProvider'
 import 'react-native-get-random-values'
 
 /**
